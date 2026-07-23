@@ -5,9 +5,8 @@ pages_build_output_dir = "dist"
 [[d1_databases]]
 binding = "ADMIN_CONFIG_DB"
 database_name = "mytourguide-admin-config"
-database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+database_id = "eb9ef100-9d1f-4c1b-b44f-d1187968a3e6"
+migrations_dir = "migrations"
 
 [vars]
 ADMIN_USERNAME = "admin"
-ADMIN_PASSWORD = "tour2026"
-ADMIN_SESSION_SECRET = "replace-this-with-a-long-random-secret"
