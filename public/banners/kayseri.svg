@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-label="KAYSERİ banner">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7a8cff" />
+      <stop offset="60%" stop-color="#5361b1" />
+      <stop offset="100%" stop-color="#0b1220" />
+    </linearGradient>
+    <radialGradient id="glow" cx="30%" cy="22%" r="80%">
+      <stop offset="0%" stop-color="#92a1ff" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#7a8cff" stop-opacity="0" />
+    </radialGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="18" /></filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#g)"/>
+  <rect width="1600" height="900" fill="url(#glow)" opacity="0.8"/>
+  <circle cx="1200" cy="180" r="170" fill="#92a1ff" opacity="0.22" filter="url(#blur)"/>
+  <circle cx="260" cy="720" r="220" fill="#ffffff" opacity="0.09" filter="url(#blur)"/>
+  <path d="M0 680 C 280 600, 520 840, 800 760 C 1100 680, 1290 520, 1600 610 L 1600 900 L 0 900 Z" fill="#08111f" opacity="0.55"/>
+  <path d="M120 640 L 180 520 L 240 640 Z" fill="#ffffff" opacity="0.22"/>
+  <path d="M212 640 L 260 560 L 310 640 Z" fill="#ffffff" opacity="0.18"/>
+  <path d="M430 650 C 490 590, 560 590, 620 650" stroke="#ffffff" stroke-opacity="0.22" stroke-width="10" fill="none" stroke-linecap="round"/>
+  <text x="92" y="160" fill="#f2f7ff" font-family="Arial, sans-serif" font-size="58" font-weight="700" letter-spacing="6">MY TOUR GUIDE</text>
+  <text x="92" y="270" fill="#ffffff" font-family="Arial, sans-serif" font-size="112" font-weight="800">KAYSERİ</text>
+  <text x="92" y="340" fill="#e3ecff" font-family="Arial, sans-serif" font-size="38" font-weight="500">Marmara • 16 ilçe</text>
+  <text x="92" y="780" fill="#ffffff" font-family="Arial, sans-serif" font-size="30" font-weight="500">Tailor-made tur planlama • Çok dilli rezervasyon • SEO hazır sayfa</text>
+</svg>
