@@ -92,6 +92,15 @@ export async function onRequestPost({ request, env }) {
     });
   }
 
+  if (body.action === 'updateCustomContent') {
+    next = mergeConfig(current, {
+      public: {
+        customCategories: Array.isArray(body.customCategories) ? body.customCategories : current.public?.customCategories || [],
+        customPages: Array.isArray(body.customPages) ? body.customPages : current.public?.customPages || [],
+      },
+    });
+  }
+
   if (body.action === 'uploadMedia') {
     const media = createMediaItem(body.media || {});
     next = mergeConfig(current, {

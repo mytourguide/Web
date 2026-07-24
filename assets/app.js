@@ -24,6 +24,11 @@ const fallbackState = {
   themePresetDraft: 'aurora',
   openLanguage: 'tr',
   adminTab: 'account',
+  adminPanelSearch: '',
+  adminPagesSearch: '',
+  adminOpenPlaceKey: '',
+  adminOpenPageId: '',
+  adminRecentTabs: ['account', 'appearance', 'homepage'],
   adminMessage: '',
   userMessage: '',
   userProfile: {
@@ -132,6 +137,8 @@ function loadState() {
         security: { ...cmsDefaults.security, ...(saved?.cms?.security || {}) },
         publish: { ...cmsDefaults.publish, ...(saved?.cms?.publish || {}) },
         pageContent: saved?.cms?.pageContent || {},
+        customCategories: Array.isArray(saved?.cms?.customCategories) ? saved.cms.customCategories : [],
+        customPages: Array.isArray(saved?.cms?.customPages) ? saved.cms.customPages : [],
       },
       selectedQuestions: saved?.selectedQuestions || defaultQuestions,
     };
@@ -232,6 +239,8 @@ function applyBackendConfig(config, authenticated = false) {
       },
       mediaLibrary: Array.isArray(config?.public?.mediaLibrary) ? config.public.mediaLibrary : [],
       pageContent: config?.public?.pageContent && typeof config.public.pageContent === 'object' ? config.public.pageContent : {},
+      customCategories: Array.isArray(config?.public?.customCategories) ? config.public.customCategories : [],
+      customPages: Array.isArray(config?.public?.customPages) ? config.public.customPages : [],
     },
     auth: authenticated && config?.auth ? config.auth : backendConfig.auth,
   };
@@ -250,6 +259,8 @@ function applyBackendConfig(config, authenticated = false) {
   }
   state.cms.mediaLibrary = backendConfig.public.mediaLibrary;
   state.cms.pageContent = backendConfig.public.pageContent;
+  state.cms.customCategories = backendConfig.public.customCategories;
+  state.cms.customPages = backendConfig.public.customPages;
   if (authenticated && config?.auth) {
     backendConfig.auth = {
       username: String(config.auth.username || ''),
@@ -296,6 +307,14 @@ function syncHomeMediaRefsToBackend() {
     action: 'updateHomeMediaRefs',
     slideImages,
     categoryImages,
+  });
+}
+
+function syncCustomContentToBackend() {
+  return saveBackendConfig({
+    action: 'updateCustomContent',
+    customCategories: Array.isArray(state.cms.customCategories) ? state.cms.customCategories : [],
+    customPages: Array.isArray(state.cms.customPages) ? state.cms.customPages : [],
   });
 }
 
@@ -352,6 +371,38 @@ function getPlaceRouteKey(kind, provinceSlug, districtSlug = '') {
 
 function getPlaceContent(routeKey) {
   return state.cms.pageContent?.[routeKey] || {};
+}
+
+function buildPlaceEditorProps(kind, provinceSlug, districtSlug = '') {
+  const province = data.provinceMap.get(provinceSlug);
+  if (!province) return null;
+  const districtList = data.districtsByProvince.get(provinceSlug) || [];
+  const district = kind === 'district' ? districtList.find((item) => item.slug === districtSlug) : null;
+  if (kind === 'district' && !district) return null;
+  const copy = regionCopy[province.region] || regionCopy.Marmara;
+  const routeKey = getPlaceRouteKey(kind, provinceSlug, districtSlug);
+  const content = getPlaceContent(routeKey);
+  const title = content.title || (district ? district.name : province.name);
+  const summary = content.summary || copy.intro;
+  const facts = content.facts || buildPlaceFacts({ province, district, districtList });
+  return { routeKey, title, summary, facts, province, district, districtList };
+}
+
+function searchPlaces(rawNeedle) {
+  const needle = normalize(rawNeedle || '');
+  if (!needle) return [];
+  const out = [];
+  for (const province of data.provinces) {
+    if (normalize(province.name).includes(needle)) {
+      out.push({ kind: 'province', provinceSlug: province.slug, districtSlug: '', label: province.name });
+    }
+    for (const district of province.districts) {
+      if (normalize(district.name).includes(needle)) {
+        out.push({ kind: 'district', provinceSlug: province.slug, districtSlug: district.slug, label: `${district.name} (${province.name})` });
+      }
+    }
+  }
+  return out.slice(0, 15);
 }
 
 function buildPlaceSearchTerms(placeName, provinceName = '', districtName = '') {
@@ -616,6 +667,43 @@ function renderPlaceContentEditor({ routeKey, title, summary, facts, province, d
         </div>
         <div class="card-actions">
           <button class="btn btn-primary" data-action="save-place-content" data-route-key="${escapeAttr(routeKey)}" type="button">Sayfa içeriğini kaydet</button>
+        </div>
+      </form>
+    </details>
+  `;
+}
+
+function renderCustomPageEditor(page, categories) {
+  const images = Array.isArray(page.images) ? page.images : [];
+  return `
+    <details class="step" open>
+      <summary style="cursor:pointer; font-family: var(--font-title);">Sayfa düzenle</summary>
+      <form class="builder-steps" data-custom-page-form data-page-id="${escapeAttr(page.id)}">
+        <div class="split">
+          <label><span class="filter-label">Başlık</span><input class="input" name="title" value="${escapeAttr(page.title)}"></label>
+          <label><span class="filter-label">Kategori</span>
+            <select class="select" name="categorySlug">
+              ${categories.map((category) => `<option value="${escapeAttr(category.slug)}" ${page.categorySlug === category.slug ? 'selected' : ''}>${escapeHtml(category.label)}</option>`).join('')}
+            </select>
+          </label>
+          <label><span class="filter-label">Adres (slug)</span><input class="input" name="slug" value="${escapeAttr(page.slug)}" placeholder="ornek-sayfa"></label>
+        </div>
+        <div class="split">
+          <label><span class="filter-label">Özet</span><textarea class="textarea" name="summary" rows="3">${escapeHtml(page.summary || '')}</textarea></label>
+          <label><span class="filter-label">İçerik metni</span><textarea class="textarea" name="body" rows="6">${escapeHtml(page.body || '')}</textarea></label>
+        </div>
+        <div class="split">
+          ${[0, 1, 2, 3].map((index) => `
+            <label><span class="filter-label">Görsel ${index + 1} URL</span><input class="input" name="image-${index}" value="${escapeAttr(images[index] || '')}" placeholder="https://..."></label>
+          `).join('')}
+        </div>
+        <label class="card-actions" style="align-items:center;">
+          <input type="checkbox" name="published" ${page.published !== false ? 'checked' : ''}> Yayında
+        </label>
+        <div class="card-actions">
+          <button class="btn btn-primary" data-action="save-custom-page" type="button">Sayfayı kaydet</button>
+          <button class="btn" data-action="delete-custom-page" data-page-id="${escapeAttr(page.id)}" type="button">Sil</button>
+          <a class="btn" href="/kategori/${escapeAttr(page.categorySlug)}/${escapeAttr(page.slug)}" target="_blank" rel="noopener">Sayfayı görüntüle</a>
         </div>
       </form>
     </details>
@@ -916,6 +1004,17 @@ function bindGlobalEvents() {
     if (name === 'scroll-place-slider') scrollPlaceSlider(action.dataset.routeKey, Number(action.dataset.direction || 1));
     if (name === 'open-route') navigate(action.dataset.route);
     if (name === 'save-place-content') savePlaceContentFromDom(action).catch((error) => console.error(error));
+    if (name === 'toggle-admin-place') toggleAdminPlace(action.dataset.routeKey);
+    if (name === 'toggle-admin-page') toggleAdminPage(action.dataset.pageId);
+    if (name === 'delete-custom-category') {
+      if (confirm('Bu kategori ve içindeki sayfalar silinsin mi?')) deleteCustomCategory(action.dataset.slug);
+    }
+    if (name === 'toggle-category-menu') toggleCategoryMenu(action.dataset.slug);
+    if (name === 'add-custom-page') addCustomPage(action.dataset.category);
+    if (name === 'delete-custom-page') {
+      if (confirm('Bu sayfa silinsin mi?')) deleteCustomPage(action.dataset.pageId);
+    }
+    if (name === 'save-custom-page') saveCustomPageFromDom(action);
     if (name === 'rename-media') {
       const mediaId = action.dataset.mediaId;
       const currentName = action.dataset.mediaName || '';
@@ -957,6 +1056,11 @@ function bindGlobalEvents() {
     if (form.matches('[data-media-upload-form]')) {
       event.preventDefault();
       submitMediaUpload(form);
+    }
+    if (form.matches('[data-add-category-form]')) {
+      event.preventDefault();
+      const formData = new FormData(form);
+      addCustomCategory(formData.get('categoryName'));
     }
   });
 
@@ -1001,6 +1105,26 @@ function bindGlobalEvents() {
     if (el.matches('[data-admin-rich]')) {
       state.cms.adminRich = el.innerHTML;
       saveState();
+    }
+    if (el.matches('[data-admin-panel-search]')) {
+      state.adminPanelSearch = el.value;
+      const caret = el.selectionStart;
+      render();
+      const next = document.querySelector('[data-admin-panel-search]');
+      if (next) {
+        next.focus();
+        try { next.setSelectionRange(caret, caret); } catch (err) { /* noop */ }
+      }
+    }
+    if (el.matches('[data-admin-pages-search]')) {
+      state.adminPagesSearch = el.value;
+      const caret = el.selectionStart;
+      render();
+      const next = document.querySelector('[data-admin-pages-search]');
+      if (next) {
+        next.focus();
+        try { next.setSelectionRange(caret, caret); } catch (err) { /* noop */ }
+      }
     }
   });
 
@@ -1103,6 +1227,10 @@ function parseRoute(pathname, params) {
     if (parts[2]) return { kind: 'district', provinceSlug: parts[1], districtSlug: parts[2] };
     return { kind: 'province', provinceSlug: parts[1] };
   }
+  if (parts[0] === 'kategori' && parts[1]) {
+    if (parts[2]) return { kind: 'customPage', categorySlug: parts[1], pageSlug: parts[2] };
+    return { kind: 'customCategory', categorySlug: parts[1] };
+  }
   const collection = tourCollections.find((item) => item.slug === parts[0]);
   if (collection) return { kind: 'collection', collectionSlug: collection.slug };
   return { kind: 'page', slug: parts[0] };
@@ -1156,10 +1284,13 @@ function renderTopbar() {
 function renderMenuStrip() {
   if (!publishSection('homeMenu')) return '';
   const locale = getLocale();
+  const customNavItems = (Array.isArray(state.cms.customCategories) ? state.cms.customCategories : [])
+    .filter((category) => category.showInMenu !== false);
   return `
     <div class="site-nav-bar">
       <nav class="site-nav" aria-label="Main">
         ${menuItems.map((item) => `<a data-nav href="/${item.slug}" class="${isActiveRoute(`/${item.slug}`) ? 'active' : ''}">${cms(`menu.${item.slug === 'turkiye-turlari' ? 'turkiye' : item.slug === 'mavi-turlar' ? 'mavi' : item.slug === 'grup-turlari' ? 'grup' : item.slug === 'paket-turlar' ? 'paket' : 'yurtdisi'}`, translateKey(locale, item.key))}</a>`).join('')}
+        ${customNavItems.map((category) => `<a data-nav href="/kategori/${escapeAttr(category.slug)}" class="${isActiveRoute(`/kategori/${category.slug}`) ? 'active' : ''}">${escapeHtml(category.label)}</a>`).join('')}
       </nav>
     </div>
   `;
@@ -1175,6 +1306,10 @@ function renderRoute() {
       return renderProvincePage(data.route.provinceSlug);
     case 'district':
       return renderDistrictPage(data.route.provinceSlug, data.route.districtSlug);
+    case 'customCategory':
+      return renderCustomCategoryPage(data.route.categorySlug);
+    case 'customPage':
+      return renderCustomPage(data.route.categorySlug, data.route.pageSlug);
     case 'checkout':
       return renderCheckoutPage(data.route.tailor);
     case 'admin':
@@ -1775,6 +1910,17 @@ function renderAdminPage() {
   const activeGroup = adminGroups.find((group) => group.id === activeTab);
   const publishCount = Object.values(state.cms.publish || {}).filter(Boolean).length;
   const adminStatus = adminSessionSource === 'backend' ? 'Backend session aktif' : adminSessionSource === 'local' ? 'Yerel oturum aktif' : 'Oturum kapalı';
+  const breadcrumb = ['Admin', activeGroup?.label || 'Hesap ve Giriş'];
+  const recentTabs = Array.isArray(state.adminRecentTabs) ? state.adminRecentTabs : [];
+  const recentGroups = recentTabs
+    .map((tab) => adminGroups.find((group) => group.id === tab))
+    .filter(Boolean)
+    .slice(0, 4);
+  const searchNeedle = normalize(state.adminPanelSearch || '');
+  const filteredGroups = adminGroups.filter((group) => {
+    if (!searchNeedle) return true;
+    return normalize(`${group.label} ${group.description} ${group.id}`).includes(searchNeedle);
+  });
   return `
     <section class="page admin-shell">
       <div class="page-hero admin-hero" style="--page-gradient: linear-gradient(135deg, #ffcf8a, #8ad7ff)">
@@ -1782,6 +1928,13 @@ function renderAdminPage() {
           <div class="eyebrow">${t.admin}</div>
           <h1 class="page-title">CMS yönetim merkezi</h1>
           <p>${cms('adminNotes', 'Admin paneldeki tüm alanlar kaydedilebilir; frontend ayarları localStorage üzerinde, oturum ise backend cookie ile tutulur.')}</p>
+          <div class="admin-breadcrumb">
+            ${breadcrumb.map((item, index) => {
+              if (index === breadcrumb.length - 1) return `<span class="admin-breadcrumb-current">${escapeHtml(item)}</span>`;
+              if (index === 0) return `<button class="admin-breadcrumb-root" data-action="set-admin-tab" data-tab="account" type="button">${escapeHtml(item)}</button>`;
+              return `<span>${escapeHtml(item)}</span>`;
+            }).join('<span class="admin-breadcrumb-sep">/</span>')}
+          </div>
           <div class="hero-actions">
             <button class="btn btn-primary" data-action="logout" type="button">Çıkış yap</button>
             <a class="btn" data-nav href="/">Siteyi aç</a>
@@ -1819,8 +1972,12 @@ function renderAdminPage() {
           </section>
           <section class="sidebar glass-card">
             <h3>Kontrol menüsü</h3>
+            <label class="admin-search">
+              <span class="filter-label">Menüde ara</span>
+              <input class="input" data-admin-panel-search value="${escapeAttr(state.adminPanelSearch || '')}" placeholder="Hesap, görünüm, yayın...">
+            </label>
             <div class="admin-nav-list">
-              ${adminGroups.map((group) => `
+              ${filteredGroups.map((group) => `
                 <button class="admin-nav-button ${activeTab === group.id ? 'active' : ''}" data-action="set-admin-tab" data-tab="${group.id}" type="button">
                   <div class="admin-nav-icon" aria-hidden="true">${group.icon || '•'}</div>
                   <div class="admin-nav-copy">
@@ -1830,6 +1987,7 @@ function renderAdminPage() {
                   <span class="admin-nav-pill">${activeTab === group.id ? 'Açık' : 'Aç'}</span>
                 </button>
               `).join('')}
+              ${filteredGroups.length ? '' : '<div class="admin-empty-state">Sonuç yok. Farklı bir kelime deneyin.</div>'}
             </div>
           </section>
           <section class="sidebar glass-card">
@@ -1838,6 +1996,20 @@ function renderAdminPage() {
               <button class="admin-quick-button" data-action="set-admin-tab" data-tab="publish" type="button"><strong>Yayın kontrolü</strong><small>Bölüm görünürlüğü</small></button>
               <button class="admin-quick-button" data-action="set-admin-tab" data-tab="commerce" type="button"><strong>Rezervasyon</strong><small>Ödeme, PDF, CRM</small></button>
               <button class="admin-quick-button" data-action="set-admin-tab" data-tab="security" type="button"><strong>Güvenlik</strong><small>KVKK ve session</small></button>
+            </div>
+          </section>
+          <section class="sidebar glass-card">
+            <h3>Son açılanlar</h3>
+            <div class="admin-recent-list">
+              ${recentGroups.length ? recentGroups.map((group) => `
+                <button class="admin-recent-item" data-action="set-admin-tab" data-tab="${group.id}" type="button">
+                  <span class="admin-nav-icon" aria-hidden="true">${group.icon || '•'}</span>
+                  <span>
+                    <strong>${group.label}</strong>
+                    <small>${group.description}</small>
+                  </span>
+                </button>
+              `).join('') : '<div class="admin-empty-state">Henüz geçmiş yok.</div>'}
             </div>
           </section>
         </aside>
@@ -2015,6 +2187,102 @@ function renderUserPage() {
           </article>
         </section>
       </div>
+    </section>
+  `;
+}
+
+function getAllCategories() {
+  const builtin = tourCollections.map((item) => ({ slug: item.slug, label: item.title.tr, builtin: true }));
+  const custom = Array.isArray(state.cms.customCategories) ? state.cms.customCategories : [];
+  return [...builtin, ...custom];
+}
+
+function getCustomPagesByCategory(categorySlug) {
+  return (Array.isArray(state.cms.customPages) ? state.cms.customPages : [])
+    .filter((page) => page.categorySlug === categorySlug);
+}
+
+function findCustomPage(categorySlug, pageSlug) {
+  return (Array.isArray(state.cms.customPages) ? state.cms.customPages : [])
+    .find((page) => page.categorySlug === categorySlug && page.slug === pageSlug);
+}
+
+function renderCustomCategoryPage(categorySlug) {
+  const category = getAllCategories().find((item) => item.slug === categorySlug);
+  if (!category) return renderNotFound('Kategori bulunamadı');
+  const admin = isAdminAuthenticated();
+  const pages = getCustomPagesByCategory(categorySlug).filter((page) => page.published !== false || admin);
+  return `
+    <section class="page">
+      <div class="page-hero" style="--page-gradient: linear-gradient(135deg, #ffcf8a, #8ad7ff)">
+        <div class="hero-copy">
+          <div class="eyebrow">Kategori</div>
+          <h1 class="page-title">${escapeHtml(category.label)}</h1>
+          <p>${pages.length} sayfa bu kategoride ${admin ? 'listeleniyor' : 'yayında'}.</p>
+        </div>
+      </div>
+      <div class="grid-cards">
+        ${pages.length ? pages.map(renderCustomPageCard).join('') : '<div class="admin-empty-state">Bu kategoride henüz sayfa yok.</div>'}
+      </div>
+    </section>
+  `;
+}
+
+function renderCustomPageCard(page) {
+  const cover = (page.images || []).find(Boolean) || '';
+  const visualStyle = cover ? ` style="background-image:linear-gradient(180deg, rgba(10,14,24,0.05), rgba(10,14,24,0.55)), url('${escapeAttr(cover)}'); background-size:cover; background-position:center;"` : '';
+  return `
+    <a class="tour-card" data-nav href="/kategori/${escapeAttr(page.categorySlug)}/${escapeAttr(page.slug)}">
+      <div class="tour-visual"${visualStyle} data-badge="${page.published === false ? 'Taslak' : 'Sayfa'}">
+        <div>
+          <h3>${escapeHtml(page.title)}</h3>
+        </div>
+      </div>
+      <div class="body">
+        <p>${escapeHtml(page.summary || '')}</p>
+      </div>
+    </a>
+  `;
+}
+
+function renderCustomPage(categorySlug, pageSlug) {
+  const page = findCustomPage(categorySlug, pageSlug);
+  const admin = isAdminAuthenticated();
+  if (!page || (page.published === false && !admin)) return renderNotFound('Sayfa bulunamadı');
+  const category = getAllCategories().find((item) => item.slug === categorySlug);
+  const images = (page.images || []).filter(Boolean);
+  return `
+    <section class="page">
+      <div class="page-hero">
+        <div class="hero-copy">
+          <div class="eyebrow">${escapeHtml(category?.label || 'Kategori')}</div>
+          <h1 class="page-title">${escapeHtml(page.title)}</h1>
+          <p>${escapeHtml(page.summary || '')}</p>
+          ${page.published === false ? '<span class="pill">Taslak — yalnızca admin görüyor</span>' : ''}
+        </div>
+      </div>
+      ${images.length ? `
+        <section class="place-gallery glass-card">
+          <div class="section-header">
+            <div>
+              <div class="eyebrow">Galeri</div>
+              <h2 class="section-title">${escapeHtml(page.title)} görselleri</h2>
+            </div>
+          </div>
+          <div class="place-gallery-track">
+            ${images.map((src, index) => `
+              <article class="place-gallery-slide">
+                <div class="place-gallery-image" style="--cover-image: url('${escapeAttr(src)}')">
+                  <div class="place-gallery-index">0${index + 1}</div>
+                </div>
+              </article>
+            `).join('')}
+          </div>
+        </section>
+      ` : ''}
+      <article class="panel glass-card">
+        ${page.body ? `<p>${escapeHtml(page.body).replaceAll('\n', '</p><p>')}</p>` : '<p>İçerik henüz eklenmedi.</p>'}
+      </article>
     </section>
   `;
 }
@@ -2460,6 +2728,8 @@ function publishBadge(label, key) {
 
 function setAdminTab(tab) {
   state.adminTab = tab;
+  const prevRecent = Array.isArray(state.adminRecentTabs) ? state.adminRecentTabs : [];
+  state.adminRecentTabs = [tab, ...prevRecent.filter((item) => item !== tab)].slice(0, 6);
   saveState();
   render();
 }
@@ -2694,6 +2964,10 @@ function renderAdminTab(tab) {
                 <option value="coastal" ${state.theme === 'coastal' ? 'selected' : ''}>Coastal</option>
                 <option value="lagoon" ${state.theme === 'lagoon' ? 'selected' : ''}>Lagoon</option>
                 <option value="sunrise" ${state.theme === 'sunrise' ? 'selected' : ''}>Sunrise</option>
+                <option value="mint" ${state.theme === 'mint' ? 'selected' : ''}>Mint</option>
+                <option value="sky" ${state.theme === 'sky' ? 'selected' : ''}>Sky</option>
+                <option value="peach" ${state.theme === 'peach' ? 'selected' : ''}>Peach</option>
+                <option value="sage" ${state.theme === 'sage' ? 'selected' : ''}>Sage</option>
                 <option value="sunset" ${state.theme === 'sunset' ? 'selected' : ''}>Sunset</option>
               </select>
             </label>
@@ -2892,6 +3166,85 @@ function renderAdminTab(tab) {
           </div>
         </article>
       `;
+    case 'pages': {
+      const categories = getAllCategories();
+      const placeMatches = searchPlaces(state.adminPagesSearch);
+      const customPages = Array.isArray(state.cms.customPages) ? state.cms.customPages : [];
+      return `
+        <article class="panel glass-card">
+          <h3>Kategoriler</h3>
+          <div class="category-chip-row">
+            ${categories.map((category) => `
+              <span class="category-chip">
+                <strong>${escapeHtml(category.label)}</strong>
+                ${category.builtin ? '<small>Sabit menü</small>' : `
+                  <button class="chip-action" data-action="toggle-category-menu" data-slug="${escapeAttr(category.slug)}" type="button" title="Menüde göster/gizle">${category.showInMenu !== false ? '👁️' : '🚫'}</button>
+                  <button class="chip-action" data-action="delete-custom-category" data-slug="${escapeAttr(category.slug)}" type="button" title="Kategoriyi sil">✕</button>
+                `}
+              </span>
+            `).join('')}
+          </div>
+          <form class="card-actions" data-add-category-form>
+            <input class="input" name="categoryName" placeholder="Yeni kategori adı (örn. Blog, Kampanyalar)">
+            <button class="btn btn-primary" type="submit">Kategori ekle</button>
+          </form>
+        </article>
+
+        <article class="panel glass-card" style="margin-top:16px;">
+          <h3>İl / ilçe sayfalarını düzenle</h3>
+          <p class="step-copy">Yayındaki il ve ilçe sayfalarını buradan arayıp içeriğini değiştirebilirsin.</p>
+          <label class="admin-search">
+            <span class="filter-label">İl veya ilçe ara</span>
+            <input class="input" data-admin-pages-search value="${escapeAttr(state.adminPagesSearch || '')}" placeholder="Örn. Fethiye, Muğla...">
+          </label>
+          <div class="admin-nav-list">
+            ${placeMatches.length ? placeMatches.map((match) => {
+              const props = buildPlaceEditorProps(match.kind, match.provinceSlug, match.districtSlug);
+              if (!props) return '';
+              const isOpen = state.adminOpenPlaceKey === props.routeKey;
+              return `
+                <button class="admin-nav-button ${isOpen ? 'active' : ''}" data-action="toggle-admin-place" data-route-key="${escapeAttr(props.routeKey)}" type="button">
+                  <div class="admin-nav-icon" aria-hidden="true">${match.kind === 'district' ? '🏘️' : '🏙️'}</div>
+                  <div class="admin-nav-copy">
+                    <strong>${escapeHtml(match.label)}</strong>
+                    <small>${match.kind === 'district' ? 'İlçe sayfası' : 'İl sayfası'}</small>
+                  </div>
+                  <span class="admin-nav-pill">${isOpen ? 'Kapat' : 'Düzenle'}</span>
+                </button>
+                ${isOpen ? renderPlaceContentEditor(props) : ''}
+              `;
+            }).join('') : `<div class="admin-empty-state">${state.adminPagesSearch ? 'Eşleşen il/ilçe yok.' : 'Aramaya başlamak için il veya ilçe adı yazın.'}</div>`}
+          </div>
+        </article>
+
+        <article class="panel glass-card" style="margin-top:16px;">
+          <div class="section-header">
+            <div>
+              <h3>Özel sayfalar</h3>
+              <p class="step-copy">Kategoriler altına elle sayfa ekle: başlık, özet, metin ve görseller.</p>
+            </div>
+            <button class="btn btn-primary" data-action="add-custom-page" data-category="${escapeAttr(categories[0]?.slug || '')}" type="button">+ Yeni sayfa ekle</button>
+          </div>
+          <div class="admin-nav-list">
+            ${customPages.length ? customPages.map((page) => {
+              const isOpen = state.adminOpenPageId === page.id;
+              const categoryLabel = categories.find((item) => item.slug === page.categorySlug)?.label || page.categorySlug;
+              return `
+                <button class="admin-nav-button ${isOpen ? 'active' : ''}" data-action="toggle-admin-page" data-page-id="${escapeAttr(page.id)}" type="button">
+                  <div class="admin-nav-icon" aria-hidden="true">📄</div>
+                  <div class="admin-nav-copy">
+                    <strong>${escapeHtml(page.title)}</strong>
+                    <small>${escapeHtml(categoryLabel)} · ${page.published === false ? 'Taslak' : 'Yayında'}</small>
+                  </div>
+                  <span class="admin-nav-pill">${isOpen ? 'Kapat' : 'Düzenle'}</span>
+                </button>
+                ${isOpen ? renderCustomPageEditor(page, categories) : ''}
+              `;
+            }).join('') : '<div class="admin-empty-state">Henüz özel sayfa yok. "Yeni sayfa ekle" ile başlayın.</div>'}
+          </div>
+        </article>
+      `;
+    }
     case 'publish':
       return `
         <article class="panel glass-card">
@@ -3012,7 +3365,7 @@ function applyThemeImmediately() {
 }
 
 function cycleTheme() {
-  const order = ['auto', 'light', 'coastal', 'lagoon', 'sunrise', 'aurora', 'sunset'];
+  const order = ['auto', 'light', 'coastal', 'lagoon', 'sunrise', 'mint', 'sky', 'peach', 'sage', 'aurora', 'sunset'];
   const index = order.indexOf(state.theme);
   state.theme = order[(index + 1) % order.length];
   saveState();
@@ -3149,6 +3502,104 @@ async function savePlaceContentFromDom(action) {
   });
   state.adminMessage = 'Sayfa içeriği kaydedildi.';
   await loadBackendConfig();
+  render();
+}
+
+function toggleAdminPlace(routeKey) {
+  state.adminOpenPlaceKey = state.adminOpenPlaceKey === routeKey ? '' : routeKey;
+  render();
+}
+
+function toggleAdminPage(pageId) {
+  state.adminOpenPageId = state.adminOpenPageId === pageId ? '' : pageId;
+  render();
+}
+
+function addCustomCategory(rawLabel) {
+  const label = String(rawLabel || '').trim();
+  if (!label) return;
+  const slug = slugify(label);
+  if (!slug) return;
+  state.cms.customCategories = Array.isArray(state.cms.customCategories) ? state.cms.customCategories : [];
+  const exists = state.cms.customCategories.some((item) => item.slug === slug) || tourCollections.some((item) => item.slug === slug);
+  if (exists) {
+    state.adminMessage = 'Bu isimde bir kategori zaten var.';
+  } else {
+    state.cms.customCategories.push({ slug, label, showInMenu: true });
+    state.adminMessage = 'Kategori eklendi.';
+    syncCustomContentToBackend().catch((error) => console.error(error));
+  }
+  saveState();
+  render();
+}
+
+function deleteCustomCategory(slug) {
+  state.cms.customCategories = (state.cms.customCategories || []).filter((item) => item.slug !== slug);
+  state.cms.customPages = (state.cms.customPages || []).filter((page) => page.categorySlug !== slug);
+  syncCustomContentToBackend().catch((error) => console.error(error));
+  saveState();
+  render();
+}
+
+function toggleCategoryMenu(slug) {
+  const category = (state.cms.customCategories || []).find((item) => item.slug === slug);
+  if (!category) return;
+  category.showInMenu = category.showInMenu === false;
+  syncCustomContentToBackend().catch((error) => console.error(error));
+  saveState();
+  render();
+}
+
+function addCustomPage(categorySlug) {
+  state.cms.customPages = Array.isArray(state.cms.customPages) ? state.cms.customPages : [];
+  const id = `page-${Date.now().toString(36)}`;
+  const fallbackCategory = getAllCategories()[0]?.slug || '';
+  state.cms.customPages.push({
+    id,
+    slug: `yeni-sayfa-${state.cms.customPages.length + 1}`,
+    categorySlug: categorySlug || fallbackCategory,
+    title: 'Yeni sayfa',
+    summary: '',
+    body: '',
+    images: ['', '', '', ''],
+    published: false,
+    updatedAt: new Date().toISOString(),
+  });
+  state.adminOpenPageId = id;
+  state.adminMessage = 'Yeni sayfa taslağı oluşturuldu.';
+  syncCustomContentToBackend().catch((error) => console.error(error));
+  saveState();
+  render();
+}
+
+function deleteCustomPage(id) {
+  state.cms.customPages = (state.cms.customPages || []).filter((page) => page.id !== id);
+  if (state.adminOpenPageId === id) state.adminOpenPageId = '';
+  syncCustomContentToBackend().catch((error) => console.error(error));
+  saveState();
+  render();
+}
+
+function saveCustomPageFromDom(action) {
+  const form = action?.closest?.('form[data-custom-page-form]');
+  if (!form) return;
+  const id = form.dataset.pageId;
+  const page = (state.cms.customPages || []).find((item) => item.id === id);
+  if (!page) return;
+  const formData = new FormData(form);
+  const title = String(formData.get('title') || '').trim() || 'Yeni sayfa';
+  const slugInput = String(formData.get('slug') || '').trim();
+  page.title = title;
+  page.categorySlug = String(formData.get('categorySlug') || '').trim() || page.categorySlug;
+  page.slug = slugify(slugInput || title) || page.id;
+  page.summary = String(formData.get('summary') || '').trim();
+  page.body = String(formData.get('body') || '').trim();
+  page.images = [0, 1, 2, 3].map((index) => String(formData.get(`image-${index}`) || '').trim());
+  page.published = formData.get('published') === 'on';
+  page.updatedAt = new Date().toISOString();
+  state.adminMessage = 'Sayfa kaydedildi.';
+  syncCustomContentToBackend().catch((error) => console.error(error));
+  saveState();
   render();
 }
 

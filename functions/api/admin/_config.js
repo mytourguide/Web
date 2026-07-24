@@ -12,6 +12,8 @@ const fallbackConfig = {
     },
     pageContent: {},
     mediaLibrary: [],
+    customCategories: [],
+    customPages: [],
   },
 };
 
@@ -80,6 +82,34 @@ function sanitizePageContent(pageContent) {
   return Object.fromEntries(entries);
 }
 
+function sanitizeCustomCategories(list) {
+  return (Array.isArray(list) ? list : [])
+    .filter((item) => item && typeof item === 'object')
+    .map((item) => ({
+      slug: String(item.slug || '').trim(),
+      label: String(item.label || '').trim(),
+      showInMenu: item.showInMenu !== false,
+    }))
+    .filter((item) => item.slug && item.label);
+}
+
+function sanitizeCustomPages(list) {
+  return (Array.isArray(list) ? list : [])
+    .filter((item) => item && typeof item === 'object')
+    .map((item) => ({
+      id: String(item.id || buildId('page')),
+      slug: String(item.slug || '').trim(),
+      categorySlug: String(item.categorySlug || '').trim(),
+      title: String(item.title || '').trim(),
+      summary: String(item.summary || '').trim(),
+      body: String(item.body || '').trim(),
+      images: Array.isArray(item.images) ? item.images.map((url) => String(url || '').trim()).filter(Boolean).slice(0, 4) : [],
+      published: item.published !== false,
+      updatedAt: String(item.updatedAt || new Date().toISOString()),
+    }))
+    .filter((item) => item.slug && item.categorySlug);
+}
+
 function normalizeConfig(input = {}, env = {}) {
   const defaults = {
     auth: resolveAuthConfig(env),
@@ -102,6 +132,8 @@ function normalizeConfig(input = {}, env = {}) {
       },
       pageContent: sanitizePageContent(input.public?.pageContent || defaults.public.pageContent),
       mediaLibrary: sanitizeMediaLibrary(input.public?.mediaLibrary || defaults.public.mediaLibrary),
+      customCategories: sanitizeCustomCategories(input.public?.customCategories || defaults.public.customCategories),
+      customPages: sanitizeCustomPages(input.public?.customPages || defaults.public.customPages),
     },
   };
   return merged;
@@ -141,6 +173,12 @@ function mergeConfig(base, patch) {
     }
     if (patch.public.mediaLibrary) {
       next.public.mediaLibrary = sanitizeMediaLibrary(patch.public.mediaLibrary);
+    }
+    if (patch.public.customCategories) {
+      next.public.customCategories = sanitizeCustomCategories(patch.public.customCategories);
+    }
+    if (patch.public.customPages) {
+      next.public.customPages = sanitizeCustomPages(patch.public.customPages);
     }
   }
   return next;
@@ -236,5 +274,7 @@ export {
   sanitizeMediaLibrary,
   sanitizePageContent,
   sanitizeSectionOrder,
+  sanitizeCustomCategories,
+  sanitizeCustomPages,
   writeAdminConfig,
 };

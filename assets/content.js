@@ -34,6 +34,10 @@ export const themes = [
   { id: 'coastal', label: 'Coastal', sample: '#78cfff' },
   { id: 'lagoon', label: 'Lagoon', sample: '#7fe5c2' },
   { id: 'sunrise', label: 'Sunrise', sample: '#ffca7a' },
+  { id: 'mint', label: 'Mint', sample: '#8fe7c2' },
+  { id: 'sky', label: 'Sky', sample: '#8ccfff' },
+  { id: 'peach', label: 'Peach', sample: '#ffc39a' },
+  { id: 'sage', label: 'Sage', sample: '#b9de9d' },
   { id: 'light', label: 'Açık', sample: '#0d9e9d' },
   { id: 'sunset', label: 'Sunset', sample: '#ff8c8c' },
 ];
@@ -52,6 +56,7 @@ export const adminGroups = [
   { id: 'appearance', label: 'Görünüm', description: 'Tema, renk, dil ve menü etiketleri.', icon: '🎨' },
   { id: 'homepage', label: 'Ana Sayfa', description: 'Hero, arama, istatistik ve öne çıkan bloklar.', icon: '🏝️' },
   { id: 'content', label: 'İçerik', description: 'Tanıtım metinleri, footer ve iletişim alanları.', icon: '📝' },
+  { id: 'pages', label: 'Sayfalar', description: 'İl/ilçe sayfalarını düzenle, yeni kategori ve sayfa oluştur.', icon: '📄' },
   { id: 'publish', label: 'Yayın Merkezi', description: 'Yayında/pasif durumları ve görünürlük anahtarları.', icon: '📣' },
   { id: 'commerce', label: 'Rezervasyon ve CRM', description: 'Checkout, ödeme, PDF ve CRM akışları.', icon: '🧾' },
   { id: 'security', label: 'Güvenlik', description: 'KVKK, form korumaları ve login politikası.', icon: '🛡️' },
