@@ -10,6 +10,7 @@ const fallbackConfig = {
       slideImages: [],
       categoryImages: [],
     },
+    pageContent: {},
     mediaLibrary: [],
   },
 };
@@ -56,6 +57,29 @@ function sanitizeMediaLibrary(library) {
     .filter((item) => item.dataUrl);
 }
 
+function sanitizePageContent(pageContent) {
+  if (!pageContent || typeof pageContent !== 'object') return {};
+  const entries = Object.entries(pageContent)
+    .map(([key, value]) => {
+      const routeKey = String(key || '').trim();
+      if (!routeKey) return null;
+      const slides = Array.isArray(value?.slides)
+        ? value.slides.map((item) => String(item || '').trim()).filter(Boolean).slice(0, 4)
+        : [];
+      return [
+        routeKey,
+        {
+          title: String(value?.title || '').trim(),
+          summary: String(value?.summary || '').trim(),
+          facts: String(value?.facts || '').trim(),
+          slides,
+        },
+      ];
+    })
+    .filter(Boolean);
+  return Object.fromEntries(entries);
+}
+
 function normalizeConfig(input = {}, env = {}) {
   const defaults = {
     auth: resolveAuthConfig(env),
@@ -76,6 +100,7 @@ function normalizeConfig(input = {}, env = {}) {
         slideImages: Array.isArray(input.public?.home?.slideImages) ? input.public.home.slideImages.map((item) => String(item || '')) : defaults.public.home.slideImages,
         categoryImages: Array.isArray(input.public?.home?.categoryImages) ? input.public.home.categoryImages.map((item) => String(item || '')) : defaults.public.home.categoryImages,
       },
+      pageContent: sanitizePageContent(input.public?.pageContent || defaults.public.pageContent),
       mediaLibrary: sanitizeMediaLibrary(input.public?.mediaLibrary || defaults.public.mediaLibrary),
     },
   };
@@ -108,6 +133,12 @@ function mergeConfig(base, patch) {
         ? patch.public.home.categoryImages.map((item) => String(item || ''))
         : [];
     }
+    if (patch.public.pageContent) {
+      next.public.pageContent = {
+        ...(next.public.pageContent || {}),
+        ...sanitizePageContent(patch.public.pageContent),
+      };
+    }
     if (patch.public.mediaLibrary) {
       next.public.mediaLibrary = sanitizeMediaLibrary(patch.public.mediaLibrary);
     }
@@ -135,6 +166,15 @@ function deleteMediaFromConfig(base, mediaId) {
   next.public.home.categoryImages = Array.isArray(next.public.home.categoryImages)
     ? next.public.home.categoryImages.map((item) => (item === `media:${mediaId}` ? '' : item))
     : [];
+  next.public.pageContent = Object.fromEntries(
+    Object.entries(sanitizePageContent(next.public.pageContent || {})).map(([key, value]) => ([
+      key,
+      {
+        ...value,
+        slides: (value.slides || []).map((item) => (item === `media:${mediaId}` ? '' : item)).filter(Boolean),
+      },
+    ])),
+  );
   return next;
 }
 
@@ -194,6 +234,7 @@ export {
   readAdminConfig,
   renameMediaInConfig,
   sanitizeMediaLibrary,
+  sanitizePageContent,
   sanitizeSectionOrder,
   writeAdminConfig,
 };

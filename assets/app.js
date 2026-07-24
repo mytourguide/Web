@@ -58,6 +58,7 @@ let backendConfig = {
       sectionOrder: DEFAULT_HOME_SECTION_ORDER,
     },
     mediaLibrary: [],
+    pageContent: {},
   },
   auth: null,
 };
@@ -69,6 +70,8 @@ let data = {
   searchIndex: [],
   tours: [],
   generatedTours: [],
+  placeGalleries: new Map(),
+  placeGalleryLoading: new Set(),
 };
 
 let searchOpen = false;
@@ -128,6 +131,7 @@ function loadState() {
         commerce: { ...cmsDefaults.commerce, ...(saved?.cms?.commerce || {}) },
         security: { ...cmsDefaults.security, ...(saved?.cms?.security || {}) },
         publish: { ...cmsDefaults.publish, ...(saved?.cms?.publish || {}) },
+        pageContent: saved?.cms?.pageContent || {},
       },
       selectedQuestions: saved?.selectedQuestions || defaultQuestions,
     };
@@ -227,6 +231,7 @@ function applyBackendConfig(config, authenticated = false) {
         categoryImages: Array.isArray(config?.public?.home?.categoryImages) ? config.public.home.categoryImages : [],
       },
       mediaLibrary: Array.isArray(config?.public?.mediaLibrary) ? config.public.mediaLibrary : [],
+      pageContent: config?.public?.pageContent && typeof config.public.pageContent === 'object' ? config.public.pageContent : {},
     },
     auth: authenticated && config?.auth ? config.auth : backendConfig.auth,
   };
@@ -244,6 +249,7 @@ function applyBackendConfig(config, authenticated = false) {
     }));
   }
   state.cms.mediaLibrary = backendConfig.public.mediaLibrary;
+  state.cms.pageContent = backendConfig.public.pageContent;
   if (authenticated && config?.auth) {
     backendConfig.auth = {
       username: String(config.auth.username || ''),
@@ -335,6 +341,284 @@ function renderMediaPreview(ref) {
         <small>${escapeHtml(media.type)}</small>
       </div>
     </div>
+  `;
+}
+
+function getPlaceRouteKey(kind, provinceSlug, districtSlug = '') {
+  return kind === 'district'
+    ? `district:${provinceSlug}/${districtSlug}`
+    : `province:${provinceSlug}`;
+}
+
+function getPlaceContent(routeKey) {
+  return state.cms.pageContent?.[routeKey] || {};
+}
+
+function buildPlaceSearchTerms(placeName, provinceName = '', districtName = '') {
+  const base = String(placeName || '').trim();
+  const province = String(provinceName || '').trim();
+  const district = String(districtName || '').trim();
+  return [
+    base,
+    `${base} tarihi`,
+    `${base} turizm`,
+    `${base} gezilecek yerler`,
+    province && province !== base ? `${base} ${province}` : '',
+    province && province !== base ? `${base} ${province} tarihi` : '',
+    district && district !== base ? `${base} ${district}` : '',
+    district && district !== base ? `${base} ${district} tarihi` : '',
+  ].filter(Boolean);
+}
+
+function buildPlaceFacts({ province, district, districtList }) {
+  const pieces = [];
+  if (district) {
+    pieces.push(`${district.name}, ${province.name} ilinin ${province.region} Bölgesi içindeki ilçelerinden biridir.`);
+    pieces.push(`Plaka kodu ${province.plate}. Aynı il içinde ${districtList.length} bağlı ilçe ile birlikte listelenir.`);
+    pieces.push('Sayfa, ilçe bazlı tur ve rezervasyon akışına bağlı çalışır.');
+  } else if (province) {
+    pieces.push(`${province.name}, ${province.region} Bölgesi içinde yer alır.`);
+    pieces.push(`Plaka kodu ${province.plate} ve toplam ${districtList.length} ilçe ile birlikte gösterilir.`);
+    pieces.push('İl sayfasında bağlı ilçeler solda listelenir ve her ilçe kendi alt sayfasına açılır.');
+  }
+  return pieces.join(' ');
+}
+
+function buildPlaceCaption(title, placeName) {
+  const safeTitle = String(title || '').replace(/^File:/i, '').trim();
+  const safePlace = String(placeName || '').trim();
+  return safePlace && safeTitle ? `${safePlace} · ${safeTitle}` : safeTitle || safePlace || 'Wikimedia görseli';
+}
+
+function resolvePlaceSlides(contentSlides, fallbackSlides) {
+  const combined = [];
+  const seen = new Set();
+  for (const slide of [...(Array.isArray(contentSlides) ? contentSlides : []), ...(Array.isArray(fallbackSlides) ? fallbackSlides : [])]) {
+    const image = resolveMediaSource(slide?.image || '');
+    if (!image || seen.has(image)) continue;
+    seen.add(image);
+    combined.push({
+      ...slide,
+      image,
+    });
+    if (combined.length >= 4) break;
+  }
+  return combined;
+}
+
+function normalizeWikimediaPageImage(page) {
+  const image = page?.original?.source || page?.thumbnail?.source || page?.imageinfo?.[0]?.url || page?.imageinfo?.[0]?.thumburl || '';
+  if (!image) return null;
+  return {
+    title: String(page?.title || '').trim(),
+    image,
+    caption: String(page?.pageTitle || page?.title || '').replace(/^File:/i, '').trim(),
+    pageUrl: page?.canonicalurl || page?.fullurl || '',
+    source: page?.source || 'wikipedia',
+  };
+}
+
+async function fetchWikimediaPages(term, options = {}) {
+  const endpoint = options.endpoint || 'https://tr.wikipedia.org/w/api.php';
+  const params = new URLSearchParams({
+    action: 'query',
+    format: 'json',
+    origin: '*',
+    generator: 'search',
+    gsrsearch: term,
+    gsrnamespace: options.namespace || '0',
+    gsrlimit: String(options.limit || 8),
+    prop: options.prop || 'pageimages|info',
+    piprop: options.piprop || 'thumbnail|original',
+    pithumbsize: String(options.thumbSize || 1280),
+    inprop: 'url',
+  });
+  if (options.extra) {
+    for (const [key, value] of Object.entries(options.extra)) {
+      params.set(key, value);
+    }
+  }
+  const response = await fetch(`${endpoint}?${params.toString()}`);
+  if (!response.ok) throw new Error(`Wikimedia API HTTP ${response.status}`);
+  const payload = await response.json();
+  return Object.values(payload?.query?.pages || {});
+}
+
+async function fetchWikimediaGallery(placeName, provinceName = '', districtName = '') {
+  const terms = buildPlaceSearchTerms(placeName, provinceName, districtName);
+  const slides = [];
+  const seen = new Set();
+
+  const appendPages = (pages, source) => {
+    for (const page of pages) {
+      const item = normalizeWikimediaPageImage(page);
+      if (!item || !item.image || seen.has(item.image)) continue;
+      seen.add(item.image);
+      slides.push({
+        title: item.title || placeName,
+        image: item.image,
+        caption: buildPlaceCaption(item.caption || item.title, placeName),
+        source,
+        pageUrl: item.pageUrl,
+      });
+      if (slides.length >= 4) break;
+    }
+  };
+
+  for (const term of terms) {
+    if (slides.length >= 4) break;
+    try {
+      appendPages(await fetchWikimediaPages(term, { endpoint: 'https://tr.wikipedia.org/w/api.php', limit: 6 }), 'wikipedia');
+    } catch (error) {
+      console.warn('Wikimedia Wikipedia search failed', term, error);
+    }
+  }
+
+  if (slides.length < 4) {
+    for (const term of terms) {
+      if (slides.length >= 4) break;
+      try {
+        const pages = await fetchWikimediaPages(term, {
+          endpoint: 'https://commons.wikimedia.org/w/api.php',
+          namespace: 6,
+          limit: 6,
+          prop: 'imageinfo|info',
+          piprop: 'thumbnail|original',
+          thumbSize: 1280,
+          extra: {
+            iiprop: 'url|dimensions',
+            iiurlwidth: '1280',
+          },
+        });
+        appendPages(pages, 'commons');
+      } catch (error) {
+        console.warn('Wikimedia Commons search failed', term, error);
+      }
+    }
+  }
+
+  return slides.slice(0, 4);
+}
+
+function ensurePlaceGallery(routeKey, placeName, provinceName = '', districtName = '') {
+  if (data.placeGalleries.has(routeKey) || data.placeGalleryLoading.has(routeKey)) return;
+  data.placeGalleryLoading.add(routeKey);
+  fetchWikimediaGallery(placeName, provinceName, districtName)
+    .then((slides) => {
+      data.placeGalleries.set(routeKey, slides);
+    })
+    .catch((error) => console.error(error))
+    .finally(() => {
+      data.placeGalleryLoading.delete(routeKey);
+      if (data.route?.kind === 'province' && routeKey === getPlaceRouteKey('province', data.route.provinceSlug)) render();
+      if (data.route?.kind === 'district' && routeKey === getPlaceRouteKey('district', data.route.provinceSlug, data.route.districtSlug)) render();
+    });
+}
+
+function getPlaceGallery(routeKey) {
+  return data.placeGalleries.get(routeKey) || [];
+}
+
+function renderPlaceGallery(slides, { loading = false, routeKey = '', title = '' } = {}) {
+  const list = Array.isArray(slides) ? slides.slice(0, 4) : [];
+  if (!list.length) {
+    return `
+      <section class="place-gallery glass-card">
+        <div class="section-header">
+          <div>
+            <div class="eyebrow">Banner</div>
+            <h2 class="section-title">${escapeHtml(title || 'Görseller yükleniyor')}</h2>
+          </div>
+          ${loading ? '<span class="pill">Wikimedia aranıyor</span>' : ''}
+        </div>
+        <div class="place-gallery-empty">${loading ? 'Tarihî ve turistik görseller getiriliyor.' : 'Bu sayfa için görsel bulunamadı.'}</div>
+      </section>
+    `;
+  }
+  return `
+    <section class="place-gallery glass-card">
+      <div class="section-header">
+        <div>
+          <div class="eyebrow">Banner</div>
+          <h2 class="section-title">${escapeHtml(title || 'Yerel görsel galerisi')}</h2>
+        </div>
+        <div class="toolbar">
+          <button class="btn" data-action="scroll-place-slider" data-route-key="${escapeAttr(routeKey)}" data-direction="-1" type="button">←</button>
+          <button class="btn" data-action="scroll-place-slider" data-route-key="${escapeAttr(routeKey)}" data-direction="1" type="button">→</button>
+        </div>
+      </div>
+      <div class="place-gallery-track" data-place-gallery="${escapeAttr(routeKey)}">
+        ${list.map((slide, index) => `
+          <article class="place-gallery-slide">
+            <div class="place-gallery-image" style="--cover-image: url('${escapeAttr(resolveMediaSource(slide.image || ''))}')">
+              <div class="place-gallery-index">0${index + 1}</div>
+            </div>
+            <div class="place-gallery-body">
+              <div class="eyebrow">${escapeHtml(slide.source || 'wikimedia')}</div>
+              <h3>${escapeHtml(slide.caption || slide.title || title || '')}</h3>
+              ${slide.pageUrl ? `<a class="btn" href="${escapeAttr(slide.pageUrl)}" target="_blank" rel="noreferrer">Kaynak sayfası</a>` : ''}
+            </div>
+          </article>
+        `).join('')}
+      </div>
+    </section>
+  `;
+}
+
+function renderPlaceFactsSection({ routeKey, title, summary, facts, province, district, districtList }) {
+  const hasAdmin = isAdminAuthenticated();
+  return `
+    <section class="panel glass-card">
+      <div class="section-header">
+        <div>
+          <div class="eyebrow">Künye</div>
+          <h2 class="section-title">${escapeHtml(title)}</h2>
+        </div>
+      </div>
+      <div class="split">
+        <div class="step">
+          <h4>Tanım</h4>
+          <p>${escapeHtml(summary)}</p>
+        </div>
+        <div class="step">
+          <h4>Bilgiler</h4>
+          <p>${escapeHtml(facts)}</p>
+        </div>
+      </div>
+      ${hasAdmin ? renderPlaceContentEditor({ routeKey, title, summary, facts, province, district, districtList }) : ''}
+    </section>
+  `;
+}
+
+function renderPlaceContentEditor({ routeKey, title, summary, facts, province, district, districtList }) {
+  const content = getPlaceContent(routeKey);
+  const slideValues = Array.isArray(content.slides) && content.slides.length
+    ? content.slides
+    : (data.placeGalleries.get(routeKey) || []).map((slide) => slide.image).filter(Boolean);
+  return `
+    <details class="step" open>
+      <summary style="cursor:pointer; font-family: var(--font-title);">Admin düzenleme</summary>
+      <form class="builder-steps" data-place-content-form data-route-key="${escapeAttr(routeKey)}">
+        <div class="split">
+          <label><span class="filter-label">Sayfa başlığı</span><input class="input" name="title" value="${escapeAttr(content.title || title)}"></label>
+          <label><span class="filter-label">Künye özeti</span><textarea class="textarea" name="summary" rows="4">${escapeHtml(content.summary || summary)}</textarea></label>
+          <label><span class="filter-label">Künye metni</span><textarea class="textarea" name="facts" rows="4">${escapeHtml(content.facts || facts)}</textarea></label>
+        </div>
+        <div class="split">
+          ${[0, 1, 2, 3].map((index) => `
+            <label><span class="filter-label">Slayt ${index + 1} görsel URL</span><input class="input" name="slide-${index}" value="${escapeAttr(slideValues[index] || '')}" placeholder="https://..."></label>
+          `).join('')}
+        </div>
+        <div class="meta-row">
+          <span class="pill">${province ? escapeHtml(province.name) : ''}</span>
+          ${district ? `<span class="pill">${escapeHtml(district.name)}</span>` : ''}
+          <span class="pill">${districtList.length} bağlantı</span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-primary" data-action="save-place-content" data-route-key="${escapeAttr(routeKey)}" type="button">Sayfa içeriğini kaydet</button>
+        </div>
+      </form>
+    </details>
   `;
 }
 
@@ -547,7 +831,7 @@ function rebuildSearchIndex() {
     items.push({
       type: 'province',
       name: province.name,
-      slug: `/il/${province.slug}.html`,
+      slug: `/il/${province.slug}`,
       description: `${province.region} bölgesinde ${province.districts.length} ilçe`,
       keywords: [province.name, province.region, 'il', 'tur', 'tatil', ...province.districts.slice(0, 4).map((d) => d.name)],
     });
@@ -555,7 +839,7 @@ function rebuildSearchIndex() {
       items.push({
         type: 'district',
         name: `${province.name} / ${district.name}`,
-        slug: `/il/${province.slug}/${district.slug}.html`,
+        slug: `/il/${province.slug}/${district.slug}`,
         description: `${province.name} ilçesi, ${province.region}`,
         keywords: [province.name, district.name, province.region, 'ilçe'],
       });
@@ -629,7 +913,9 @@ function bindGlobalEvents() {
     if (name === 'set-language') setAdminLanguage(action.dataset.locale);
     if (name === 'toggle-publish') togglePublish(action.dataset.key);
     if (name === 'scroll-slider') scrollHomeSlider(Number(action.dataset.direction || 1));
+    if (name === 'scroll-place-slider') scrollPlaceSlider(action.dataset.routeKey, Number(action.dataset.direction || 1));
     if (name === 'open-route') navigate(action.dataset.route);
+    if (name === 'save-place-content') savePlaceContentFromDom(action).catch((error) => console.error(error));
     if (name === 'rename-media') {
       const mediaId = action.dataset.mediaId;
       const currentName = action.dataset.mediaName || '';
@@ -800,6 +1086,8 @@ function navigate(url) {
 function hydrateFromUrl() {
   const url = new URL(location.href);
   data.route = parseRoute(url.pathname, url.searchParams);
+  searchQuery = url.searchParams.get('search') || searchQuery || '';
+  searchOpen = data.route?.kind === 'home' && Boolean(searchQuery);
   state.routeFilters = {};
 }
 
@@ -1008,7 +1296,7 @@ function renderHomeSection(sectionId, { locale, t, slides, categories }) {
               <div class="eyebrow">İller</div>
               <h2 class="section-title">${cms('home.provincesTitle', 'İl sayfaları')}</h2>
             </div>
-            <a class="btn" data-nav href="/il/istanbul.html">Tüm iller</a>
+            <a class="btn" data-nav href="/il/istanbul">Tüm iller</a>
           </div>
           <div class="grid-cards">
             ${data.provinces.filter((province) => province.status).slice(0, 6).map(renderProvincePreviewCard).join('')}
@@ -1116,8 +1404,8 @@ function renderProvincePreviewCard(province) {
         <p>${copy.intro}</p>
         <div class="meta-row"><span class="pill">${province.districts.length} ilçe</span><span class="pill">Plaka ${province.plate}</span></div>
         <div class="card-actions">
-          <a class="btn btn-primary" data-nav href="/il/${province.slug}.html">İl sayfası</a>
-          <a class="btn" data-nav href="/il/${province.slug}/${province.districts[0]?.slug || 'merkez'}.html">İlk ilçe</a>
+          <a class="btn btn-primary" data-nav href="/il/${province.slug}">İl sayfası</a>
+          <a class="btn" data-nav href="/il/${province.slug}/${province.districts[0]?.slug || 'merkez'}">İlk ilçe</a>
         </div>
       </div>
     </article>
@@ -1148,13 +1436,22 @@ function renderProvincePage(provinceSlug) {
   const districtList = data.districtsByProvince.get(provinceSlug) || [];
   const filters = state.routeFilters;
   const filteredTours = tours.filter((tour) => matchProvinceFilters(tour, province, filters));
+  const routeKey = getPlaceRouteKey('province', provinceSlug);
+  const content = getPlaceContent(routeKey);
+  const title = content.title || province.name;
+  const summary = content.summary || copy.intro;
+  const facts = content.facts || buildPlaceFacts({ province, district: null, districtList });
+  const slides = resolvePlaceSlides(content.slides, getPlaceGallery(routeKey));
+  if (slides.length < 4 && !data.placeGalleries.has(routeKey)) {
+    ensurePlaceGallery(routeKey, province.name, province.name);
+  }
   return `
     <section class="page">
       <div class="page-hero" style="--page-gradient: linear-gradient(135deg, ${copy.accent}, #0b1220)">
         <div class="hero-copy">
           <div class="eyebrow">${province.region}</div>
-          <h1 class="page-title">${province.name}</h1>
-          <p>${copy.intro}</p>
+          <h1 class="page-title">${escapeHtml(title)}</h1>
+          <p>${escapeHtml(summary)}</p>
           <div class="meta-row">
             <span class="pill">${districtList.length} ${translations[locale].districts}</span>
             <span class="pill">SEO keyword: ${province.name} turu</span>
@@ -1162,6 +1459,8 @@ function renderProvincePage(provinceSlug) {
           </div>
         </div>
       </div>
+      ${renderRouteSearchStrip()}
+      ${renderPlaceGallery(slides, { loading: !content.slides?.length && !data.placeGalleries.has(routeKey), routeKey, title: `${province.name} görsel galerisi` })}
       <div class="page-layout">
         <aside class="sticky-stack">
           <section class="sidebar glass-card">
@@ -1186,7 +1485,7 @@ function renderProvincePage(provinceSlug) {
             <h3>${translations[locale].districts}</h3>
             <div class="list">
               ${districtList.map((district) => `
-                <a class="list-item" data-nav href="/il/${province.slug}/${district.slug}.html">
+                <a class="list-item" data-nav href="/il/${province.slug}/${district.slug}">
                   <strong>${district.name}</strong>
                   <small>${district.status ? translations[locale].active : translations[locale].passive}</small>
                 </a>
@@ -1199,7 +1498,7 @@ function renderProvincePage(provinceSlug) {
             <div class="section-header">
               <div>
                 <div class="eyebrow">Banner</div>
-                <h2 class="section-title">${province.name} için yayınlanan turlar</h2>
+                <h2 class="section-title">${escapeHtml(title)} için yayınlanan turlar</h2>
               </div>
               <div class="toolbar">
                 <a class="btn btn-primary" data-nav href="/sepet?tailor=1">${translations[locale].combine}</a>
@@ -1208,18 +1507,7 @@ function renderProvincePage(provinceSlug) {
             </div>
             <div class="grid-cards">${renderTourCards(filteredTours)}</div>
           </article>
-          <article class="panel glass-card">
-            <h3>Tanıtım</h3>
-            <p>${copy.intro} İsterseniz bu alanı admin panelden zengin metin editörü ile düzenleyebilirsiniz.</p>
-            <div class="split">
-              <div>
-                <p><strong>Otomatik keywordler:</strong> ${buildKeywords([province.name, province.region, ...districtList.slice(0, 3).map((d) => d.name)]).join(', ')}</p>
-              </div>
-              <div>
-                <p><strong>Adres / ulaşım:</strong> Otogar, havaalanı, demiryolu ve transfer bilgileri için bu sayfa üzerine ek entegrasyon alanı bırakılmıştır.</p>
-              </div>
-            </div>
-          </article>
+          ${renderPlaceFactsSection({ routeKey, title, summary, facts, province, district: null, districtList })}
         </section>
       </div>
     </section>
@@ -1235,13 +1523,22 @@ function renderDistrictPage(provinceSlug, districtSlug) {
   const filters = state.routeFilters;
   const filteredTours = tours.filter((tour) => !filters.type || tour.type === filters.type);
   const copy = regionCopy[province.region] || regionCopy.Marmara;
+  const routeKey = getPlaceRouteKey('district', provinceSlug, districtSlug);
+  const content = getPlaceContent(routeKey);
+  const title = content.title || district.name;
+  const summary = content.summary || `${province.name} ilinin ${district.name} ilçesi için açılmış hazır görünüm. Tailor-made, filtre ve sepet akışları aktif.`;
+  const facts = content.facts || buildPlaceFacts({ province, district, districtList: data.districtsByProvince.get(provinceSlug) || [] });
+  const slides = resolvePlaceSlides(content.slides, getPlaceGallery(routeKey));
+  if (slides.length < 4 && !data.placeGalleries.has(routeKey)) {
+    ensurePlaceGallery(routeKey, district.name, province.name, district.name);
+  }
   return `
     <section class="page">
       <div class="page-hero" style="--page-gradient: linear-gradient(135deg, ${copy.accent}, #0b1220)">
         <div class="hero-copy">
           <div class="eyebrow">${province.name}</div>
-          <h1 class="page-title">${district.name}</h1>
-          <p>${province.name} ilinin ${district.name} ilçesi için açılmış hazır görünüm. Tailor-made, filtre ve sepet akışları aktif.</p>
+          <h1 class="page-title">${escapeHtml(title)}</h1>
+          <p>${escapeHtml(summary)}</p>
           <div class="meta-row">
             <span class="pill">${province.region}</span>
             <span class="pill">Plaka ${province.plate}</span>
@@ -1249,6 +1546,8 @@ function renderDistrictPage(provinceSlug, districtSlug) {
           </div>
         </div>
       </div>
+      ${renderRouteSearchStrip()}
+      ${renderPlaceGallery(slides, { loading: !content.slides?.length && !data.placeGalleries.has(routeKey), routeKey, title: `${province.name} / ${district.name} görsel galerisi` })}
       <div class="page-layout">
         <aside class="sticky-stack">
           <section class="sidebar glass-card">
@@ -1265,10 +1564,14 @@ function renderDistrictPage(provinceSlug, districtSlug) {
             </div>
           </section>
           <section class="sidebar glass-card">
-            <h3>Bağlantılar</h3>
+            <h3>İlçe listesi</h3>
             <div class="list">
-              <a class="list-item" data-nav href="/il/${province.slug}.html"><strong>İl sayfası</strong><small>${province.name}</small></a>
-              <a class="list-item" data-nav href="/sepet?tailor=1"><strong>Tailor-made</strong><small>Birleştir</small></a>
+              ${ (data.districtsByProvince.get(provinceSlug) || []).map((item) => `
+                <a class="list-item" data-nav href="/il/${province.slug}/${item.slug}">
+                  <strong>${item.name}</strong>
+                  <small>${item.slug === district.slug ? 'Aktif' : 'İlçe sayfası'}</small>
+                </a>
+              `).join('')}
             </div>
           </section>
         </aside>
@@ -1277,21 +1580,13 @@ function renderDistrictPage(provinceSlug, districtSlug) {
             <div class="section-header">
               <div>
                 <div class="eyebrow">Hazır içerik</div>
-                <h2 class="section-title">${district.name} turları</h2>
+                <h2 class="section-title">${escapeHtml(title)} turları</h2>
               </div>
               <a class="btn btn-primary" data-nav href="/sepet?tailor=1">${translations[locale].addCart}</a>
             </div>
             <div class="grid-cards">${renderTourCards(filteredTours)}</div>
           </article>
-          <article class="panel glass-card">
-            <h3>Otobüs, havaalanı ve demiryolu bağlantıları</h3>
-            <p>${district.name} için bu alan admin panelinden veri girilerek otogar, havalimanı ve konum bileşenleriyle doldurulabilir.</p>
-            <div class="meta-row">
-              <span class="pill">Telefon</span>
-              <span class="pill">Adres</span>
-              <span class="pill">Konum</span>
-            </div>
-          </article>
+          ${renderPlaceFactsSection({ routeKey, title, summary, facts, province, district, districtList: data.districtsByProvince.get(provinceSlug) || [] })}
         </section>
       </div>
     </section>
@@ -1844,12 +2139,14 @@ function routeTitleByState() {
     case 'collection': return `${getCollectionTitle(data.route.collectionSlug, locale)} | My Tour Guide`;
     case 'province': {
       const province = data.provinceMap.get(data.route.provinceSlug);
-      return province ? `${province.name} Turları | My Tour Guide` : 'My Tour Guide';
+      const content = province ? getPlaceContent(getPlaceRouteKey('province', data.route.provinceSlug)) : null;
+      return province ? `${content?.title || province.name} | My Tour Guide` : 'My Tour Guide';
     }
     case 'district': {
       const province = data.provinceMap.get(data.route.provinceSlug);
       const district = (data.districtsByProvince.get(data.route.provinceSlug) || []).find((item) => item.slug === data.route.districtSlug);
-      return province && district ? `${province.name} / ${district.name} | My Tour Guide` : 'My Tour Guide';
+      const content = province && district ? getPlaceContent(getPlaceRouteKey('district', data.route.provinceSlug, data.route.districtSlug)) : null;
+      return province && district ? `${content?.title || district.name} | My Tour Guide` : 'My Tour Guide';
     }
     case 'checkout': return `Sepet ve Ödeme | My Tour Guide`;
     case 'admin': return `Admin Panel | My Tour Guide`;
@@ -1866,12 +2163,14 @@ function routeDescriptionByState() {
     case 'collection': return `${getCollectionTitle(data.route.collectionSlug, locale)} için filtrelenmiş modern rezervasyon sayfası.`;
     case 'province': {
       const province = data.provinceMap.get(data.route.provinceSlug);
-      return province ? `${province.name} için il, ilçe ve tur bazlı SEO hazır sayfa.` : pageDefaults.home.description;
+      const content = province ? getPlaceContent(getPlaceRouteKey('province', data.route.provinceSlug)) : null;
+      return province ? (content?.summary || `${province.name} için il, ilçe ve tur bazlı SEO hazır sayfa.`) : pageDefaults.home.description;
     }
     case 'district': {
       const province = data.provinceMap.get(data.route.provinceSlug);
       const district = (data.districtsByProvince.get(data.route.provinceSlug) || []).find((item) => item.slug === data.route.districtSlug);
-      return province && district ? `${province.name} ${district.name} için tailored tur ve rezervasyon akışı.` : pageDefaults.home.description;
+      const content = province && district ? getPlaceContent(getPlaceRouteKey('district', data.route.provinceSlug, data.route.districtSlug)) : null;
+      return province && district ? (content?.summary || `${province.name} ${district.name} için tailored tur ve rezervasyon akışı.`) : pageDefaults.home.description;
     }
     case 'checkout': return 'Sepet, tailor-made ve ödeme akışları.';
     case 'admin': return 'Admin paneli, tema ve içerik yönetimi.';
@@ -1883,6 +2182,16 @@ function routeKeywordsByState() {
   const province = data.route?.kind === 'province' ? data.provinceMap.get(data.route.provinceSlug) : null;
   const district = data.route?.kind === 'district' ? (data.districtsByProvince.get(data.route.provinceSlug) || []).find((item) => item.slug === data.route.districtSlug) : null;
   const words = ['mytourguide', 'seyahat', 'tur', 'rezervasyon', 'tailor-made'];
+  if (province) {
+    const content = getPlaceContent(getPlaceRouteKey('province', data.route.provinceSlug));
+    if (content?.title) words.push(content.title);
+    if (content?.facts) words.push(content.facts);
+  }
+  if (district) {
+    const content = getPlaceContent(getPlaceRouteKey('district', data.route.provinceSlug, data.route.districtSlug));
+    if (content?.title) words.push(content.title);
+    if (content?.facts) words.push(content.facts);
+  }
   if (province) words.push(province.name, province.region, ...province.districts.slice(0, 4).map((d) => d.name));
   if (district) words.push(district.name);
   if (data.route?.kind === 'collection') words.push(data.route.collectionSlug);
@@ -2763,6 +3072,40 @@ function scrollHomeSlider(direction) {
   slider.scrollBy({ left: amount, behavior: 'smooth' });
 }
 
+function scrollPlaceSlider(routeKey, direction) {
+  if (!routeKey) return;
+  const selector = `[data-place-gallery="${(window.CSS?.escape ? window.CSS.escape(routeKey) : routeKey.replace(/"/g, '\\"'))}"]`;
+  const slider = document.querySelector(selector);
+  if (!slider) return;
+  const amount = slider.clientWidth * 0.85 * (direction < 0 ? -1 : 1);
+  slider.scrollBy({ left: amount, behavior: 'smooth' });
+}
+
+async function savePlaceContentFromDom(action) {
+  const form = action?.closest?.('form[data-place-content-form]');
+  if (!form) return;
+  const routeKey = String(form.dataset.routeKey || action.dataset.routeKey || '').trim();
+  if (!routeKey) return;
+  const formData = new FormData(form);
+  const slides = [0, 1, 2, 3]
+    .map((index) => String(formData.get(`slide-${index}`) || '').trim())
+    .filter(Boolean)
+    .slice(0, 4);
+  await saveBackendConfig({
+    action: 'updatePageContent',
+    routeKey,
+    pageContent: {
+      title: String(formData.get('title') || '').trim(),
+      summary: String(formData.get('summary') || '').trim(),
+      facts: String(formData.get('facts') || '').trim(),
+      slides,
+    },
+  });
+  state.adminMessage = 'Sayfa içeriği kaydedildi.';
+  await loadBackendConfig();
+  render();
+}
+
 function renderSearchOverlay(query) {
   searchQuery = String(query || '');
   const overlay = document.querySelector('[data-search-overlay]');
@@ -2799,6 +3142,23 @@ function renderSearchResults(query) {
       <small>${hit.description}</small>
     </a>
   `).join('');
+}
+
+function renderRouteSearchStrip() {
+  const locale = getLocale();
+  const t = translations[locale];
+  return `
+    <section class="home-search-strip glass-card">
+      <div class="home-search-copy">
+        <div class="eyebrow">${cms('home.searchTitle', 'Türkiye genelinde il, ilçe veya tur arayın')}</div>
+        <p>${cms('home.searchCopy', 'Arama, kategori ve hızlı bağlantılar tek satırda çalışır.')}</p>
+      </div>
+      <div class="home-search-row">
+        <input class="search-input" data-home-search value="${escapeAttr(searchQuery)}" placeholder="${cms('home.searchPlaceholder', t.searchPlaceholder)}" autocomplete="off">
+        <button class="btn btn-primary" data-action="toggle-search" type="button">Ara</button>
+      </div>
+    </section>
+  `;
 }
 
 function normalize(value) {

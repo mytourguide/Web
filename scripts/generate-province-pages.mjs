@@ -171,14 +171,14 @@ function buildHtml({ province, copy, districts, topDistricts }) {
   <meta property="og:title" content="${escapeHtml(pageTitle)}">
   <meta property="og:description" content="${escapeHtml(pageDescription)}">
   <meta property="og:image" content="${banner}">
-  <link rel="canonical" href="/il/${province.slug}.html">
+  <link rel="canonical" href="/il/${province.slug}">
   <link rel="stylesheet" href="/assets/styles.css">
   <script type="application/ld+json">${JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'WebPage',
     name: `${province.name} İl Sayfası`,
     description: pageDescription,
-    url: `/il/${province.slug}.html`,
+    url: `/il/${province.slug}`,
     isPartOf: {
       '@type': 'WebSite',
       name: businessProfile.name,
@@ -207,6 +207,16 @@ function buildHtml({ province, copy, districts, topDistricts }) {
       </div>
     </div>
   </header>
+  <section class="home-search-strip glass-card">
+    <div class="home-search-copy">
+      <div class="eyebrow">Gelişmiş arama</div>
+      <p>İl, ilçe veya tur arayın. Arama ana sayfada aynı kabuk içinde açılır.</p>
+    </div>
+    <form class="home-search-row" action="/" method="get">
+      <input class="search-input" name="search" placeholder="İl, ilçe ya da tur adı yazın" autocomplete="off" value="${escapeHtml(province.name)}">
+      <button class="btn btn-primary" type="submit">Ara</button>
+    </form>
+  </section>
   <main class="app-shell">
     <section class="page">
       <div class="page-hero" style="--page-gradient: linear-gradient(135deg, ${copy.accent}, #0b1220)">
@@ -237,7 +247,7 @@ function buildHtml({ province, copy, districts, topDistricts }) {
             <h3>İlçe listesi</h3>
             <div class="list">
               ${districts.map((district) => `
-                <a class="list-item" id="district-${district.slug}" href="/il/${province.slug}/${district.slug}.html">
+                <a class="list-item" id="district-${district.slug}" href="/il/${province.slug}/${district.slug}">
                   <strong>${escapeHtml(district.name)}</strong>
                   <small>İlçe sayfası</small>
                 </a>
@@ -309,7 +319,7 @@ function buildHtml({ province, copy, districts, topDistricts }) {
             <h3>İlçe açılır yapısı</h3>
             <p>Her ilçe için ayrı açılış akışı, bu il sayfasındaki ankora bağlanarak tek dosya altında sunuluyor. Arama sonucu tıklaması doğrudan bu sayfayı açar.</p>
             <div class="meta-row">
-              ${topDistricts.map((district) => `<a class="pill" href="/il/${province.slug}/${district.slug}.html">${escapeHtml(district.name)}</a>`).join('')}
+              ${topDistricts.map((district) => `<a class="pill" href="/il/${province.slug}/${district.slug}">${escapeHtml(district.name)}</a>`).join('')}
             </div>
           </article>
         </section>
@@ -377,14 +387,14 @@ function buildDistrictHtml({ province, district, copy, districts }) {
   <meta property="og:title" content="${escapeHtml(pageTitle)}">
   <meta property="og:description" content="${escapeHtml(pageDescription)}">
   <meta property="og:image" content="${banner}">
-  <link rel="canonical" href="/il/${province.slug}/${district.slug}.html">
+  <link rel="canonical" href="/il/${province.slug}/${district.slug}">
   <link rel="stylesheet" href="/assets/styles.css">
   <script type="application/ld+json">${JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'WebPage',
     name: `${district.name} İlçe Sayfası`,
     description: pageDescription,
-    url: `/il/${province.slug}/${district.slug}.html`,
+    url: `/il/${province.slug}/${district.slug}`,
     isPartOf: {
       '@type': 'WebSite',
       name: businessProfile.name,
@@ -404,7 +414,7 @@ function buildDistrictHtml({ province, district, copy, districts }) {
       </a>
       <nav class="nav" aria-label="Main">
         ${tourCollections.map((item) => `<a href="/${item.slug}">${escapeHtml(item.title.tr)}</a>`).join('')}
-        <a href="/il/${province.slug}.html">${escapeHtml(province.name)}</a>
+        <a href="/il/${province.slug}">${escapeHtml(province.name)}</a>
         <a href="/admin">Admin Panel</a>
         <a href="/">Ana Sayfa</a>
       </nav>
@@ -414,6 +424,16 @@ function buildDistrictHtml({ province, district, copy, districts }) {
       </div>
     </div>
   </header>
+  <section class="home-search-strip glass-card">
+    <div class="home-search-copy">
+      <div class="eyebrow">Gelişmiş arama</div>
+      <p>İl, ilçe veya tur arayın. Arama ana sayfada aynı kabuk içinde açılır.</p>
+    </div>
+    <form class="home-search-row" action="/" method="get">
+      <input class="search-input" name="search" placeholder="İl, ilçe ya da tur adı yazın" autocomplete="off" value="${escapeHtml(district.name)}">
+      <button class="btn btn-primary" type="submit">Ara</button>
+    </form>
+  </section>
   <main class="app-shell">
     <section class="page">
       <div class="page-hero" style="--page-gradient: linear-gradient(135deg, ${copy.accent}, #0b1220)">
@@ -428,7 +448,7 @@ function buildDistrictHtml({ province, district, copy, districts }) {
               <span class="pill">SEO ready</span>
             </div>
             <div class="hero-actions">
-              <a class="btn btn-primary" href="/il/${province.slug}.html">İl sayfası</a>
+              <a class="btn btn-primary" href="/il/${province.slug}">İl sayfası</a>
               <a class="btn" href="/sepet?tailor=1">Satın al</a>
             </div>
           </div>
@@ -444,7 +464,7 @@ function buildDistrictHtml({ province, district, copy, districts }) {
             <h3>İlçe listesi</h3>
             <div class="list">
               ${districts.map((item) => `
-                <a class="list-item" id="district-${item.slug}" href="/il/${province.slug}/${item.slug}.html">
+                <a class="list-item" id="district-${item.slug}" href="/il/${province.slug}/${item.slug}">
                   <strong>${escapeHtml(item.name)}</strong>
                   <small>${item.slug === district.slug ? 'Aktif' : 'İlçe sayfası'}</small>
                 </a>

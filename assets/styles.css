@@ -447,6 +447,80 @@ html[data-theme="light"] .site-nav-bar {
   color: var(--muted);
 }
 
+.place-gallery {
+  padding: 18px;
+  display: grid;
+  gap: 14px;
+}
+
+.place-gallery-empty {
+  min-height: 160px;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  text-align: center;
+  border: 1px dashed var(--line);
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+}
+
+.place-gallery-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(240px, 1fr);
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+}
+
+.place-gallery-slide {
+  min-width: 240px;
+  display: grid;
+  overflow: clip;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 94%, transparent), color-mix(in srgb, var(--surface-2) 88%, transparent));
+  box-shadow: var(--shadow);
+  scroll-snap-align: start;
+}
+
+.place-gallery-image {
+  min-height: 240px;
+  background:
+    linear-gradient(135deg, rgba(7, 12, 22, 0.12), rgba(7, 12, 22, 0.76)),
+    var(--cover-image, linear-gradient(135deg, #2b72ff, #18c9c0));
+  background-size: cover;
+  background-position: center;
+  padding: 18px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+.place-gallery-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 56px;
+  min-height: 56px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #fff;
+  font-family: var(--font-title);
+  font-size: 1.3rem;
+}
+
+.place-gallery-body {
+  padding: 18px;
+}
+
+.place-gallery-body p {
+  color: var(--muted);
+}
+
 .search-panel {
   padding: 18px;
 }
@@ -992,4 +1066,5 @@ html[data-theme="light"] .site-nav-bar {
   .home-search-row { grid-template-columns: 1fr; }
   .split { grid-template-columns: 1fr; }
   .tour-card { grid-template-rows: 150px auto; }
+  .place-gallery-track { grid-auto-columns: minmax(220px, 82vw); }
 }

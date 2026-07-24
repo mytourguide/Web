@@ -71,6 +71,27 @@ export async function onRequestPost({ request, env }) {
     });
   }
 
+  if (body.action === 'updatePageContent') {
+    const routeKey = String(body.routeKey || '').trim();
+    if (!routeKey) {
+      return json({ ok: false, message: 'Sayfa bulunamadı.' }, { status: 400 });
+    }
+    next = mergeConfig(current, {
+      public: {
+            pageContent: {
+              [routeKey]: {
+                title: String(body.pageContent?.title || '').trim(),
+                summary: String(body.pageContent?.summary || '').trim(),
+                facts: String(body.pageContent?.facts || '').trim(),
+                slides: Array.isArray(body.pageContent?.slides)
+                  ? body.pageContent.slides.map((item) => String(item || '').trim()).filter(Boolean).slice(0, 4)
+                  : [],
+              },
+            },
+      },
+    });
+  }
+
   if (body.action === 'uploadMedia') {
     const media = createMediaItem(body.media || {});
     next = mergeConfig(current, {
