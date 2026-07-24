@@ -1772,6 +1772,9 @@ function renderAdminPage() {
   const locale = getLocale();
   const t = translations[locale];
   const activeTab = state.adminTab || 'account';
+  const activeGroup = adminGroups.find((group) => group.id === activeTab);
+  const publishCount = Object.values(state.cms.publish || {}).filter(Boolean).length;
+  const adminStatus = adminSessionSource === 'backend' ? 'Backend session aktif' : adminSessionSource === 'local' ? 'Yerel oturum aktif' : 'Oturum kapalı';
   return `
     <section class="page admin-shell">
       <div class="page-hero admin-hero" style="--page-gradient: linear-gradient(135deg, #ffcf8a, #8ad7ff)">
@@ -1783,6 +1786,12 @@ function renderAdminPage() {
             <button class="btn btn-primary" data-action="logout" type="button">Çıkış yap</button>
             <a class="btn" data-nav href="/">Siteyi aç</a>
             <a class="btn" data-nav href="/login">Giriş ekranı</a>
+          </div>
+          <div class="admin-hero-strip">
+            <div class="admin-hero-chip"><strong>${adminStatus}</strong><small>Oturum</small></div>
+            <div class="admin-hero-chip"><strong>${activeGroup?.label || 'Panel'}</strong><small>Aktif bölüm</small></div>
+            <div class="admin-hero-chip"><strong>${state.themePreset}</strong><small>Palet</small></div>
+            <div class="admin-hero-chip"><strong>${publishCount}</strong><small>Yayınlanan blok</small></div>
           </div>
         </div>
       </div>
@@ -1796,8 +1805,13 @@ function renderAdminPage() {
                 <small>${adminSessionSource === 'backend' ? 'Backend session aktif' : adminSessionSource === 'local' ? 'Yerel oturum aktif' : 'Oturum kapalı'}</small>
               </div>
             </div>
+            <div class="admin-rail-note">
+              <span>Kontrol paneli</span>
+              <strong>${activeGroup?.label || 'Hesap ve Giriş'}</strong>
+              <small>${activeGroup?.description || 'Panel bölümü'}</small>
+            </div>
             <div class="admin-summary-grid">
-              <div class="admin-metric"><strong>${Object.values(state.cms.publish || {}).filter(Boolean).length}</strong><small>Yayın blokları</small></div>
+              <div class="admin-metric"><strong>${publishCount}</strong><small>Yayın blokları</small></div>
               <div class="admin-metric"><strong>${state.activeWidgets.length}</strong><small>Widget</small></div>
               <div class="admin-metric"><strong>${state.openLanguage.toUpperCase()}</strong><small>Dil</small></div>
               <div class="admin-metric"><strong>${state.themePreset}</strong><small>Tema</small></div>
@@ -1828,6 +1842,23 @@ function renderAdminPage() {
           </section>
         </aside>
         <section class="content-area admin-content">
+          <section class="admin-status-grid">
+            <article class="admin-status-card glass-card">
+              <span class="eyebrow">Çalışma alanı</span>
+              <strong>${activeGroup?.label || 'Hesap ve Giriş'}</strong>
+              <p>${activeGroup?.description || 'Aktif admin bölümü.'}</p>
+            </article>
+            <article class="admin-status-card glass-card">
+              <span class="eyebrow">Durum</span>
+              <strong>${adminStatus}</strong>
+              <p>CMS oturumu ve tema önizlemesi bu panelden yönetilir.</p>
+            </article>
+            <article class="admin-status-card glass-card">
+              <span class="eyebrow">Hızlı erişim</span>
+              <strong>${state.themePreset}</strong>
+              <p>Açık tonlar, tatil paletleri ve live preview</p>
+            </article>
+          </section>
           ${renderAdminTab(activeTab)}
         </section>
       </div>
@@ -2669,6 +2700,7 @@ function renderAdminTab(tab) {
           </div>
           <div class="step">
             <strong>Varsayılan tema</strong>
+            <p class="step-copy">Panel ve site renkleri için daha açık, tatil havası veren paletlerden birini seçin.</p>
             <div class="theme-grid">
               ${themes.map((item) => {
                 const active = (state.themePresetDraft || state.themePreset) === item.id;
