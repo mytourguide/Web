@@ -46,6 +46,29 @@ Yerel geliştirme için Vite `0.0.0.0:5173` üzerinde dinler; `http://127.0.0.1:
 
 `wrangler.toml` içinde `ADMIN_CONFIG_DB` binding'i ve D1 database adı hazırdır. Sadece `database_id` alanını kendi D1 oluşturma çıktınla değiştirmen gerekir.
 
+Güvenli production kurulumu için hassas değerler artık `wrangler.toml` içinde tutulmaz. Bunun yerine Cloudflare Pages Secrets olarak tanımlanmalıdır:
+
+```bash
+cd /home/ibrahim/PROGRAMLAR/MEMET/WEB
+npx wrangler pages secret put ADMIN_PASSWORD --project-name mytourguide-web
+npx wrangler pages secret put ADMIN_SESSION_SECRET --project-name mytourguide-web
+```
+
+Dashboard üzerinden de aynı ayar yapılabilir:
+
+1. Workers & Pages > Pages project > Settings > Variables and Secrets
+2. `ADMIN_PASSWORD` ve `ADMIN_SESSION_SECRET` ekle
+3. Secret olarak işaretle ve kaydet
+
+Yerel geliştirmede aynı değişkenleri `.dev.vars` ile sağlayabilirsin:
+
+```bash
+ADMIN_PASSWORD="..."
+ADMIN_SESSION_SECRET="..."
+```
+
+`.dev.vars` dosyasını git'e ekleme.
+
 İlk kurulumdan sonra admin panelde kaydettiğin sıralama, medya ve kimlik bilgileri D1 üzerinde kalıcı olur.
 
 ## Not

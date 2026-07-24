@@ -4,10 +4,6 @@ const CONFIG_TABLE = 'admin_config';
 const HOME_SECTION_IDS = ['homeSearch', 'homeSlider', 'homeCategories', 'homeStats', 'homeProvinces', 'homeFeatured', 'homeTailor', 'homeSeo'];
 
 const fallbackConfig = {
-  auth: {
-    username: 'admin',
-    password: 'tour2026',
-  },
   public: {
     home: {
       sectionOrder: HOME_SECTION_IDS,

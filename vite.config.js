@@ -5,18 +5,41 @@ import { createMediaItem, deleteMediaFromConfig, mergeConfig, normalizeConfig, r
 
 const DEV_CONFIG_FILE = path.join('/tmp', 'mytourguide-admin-config.json');
 const COOKIE_NAME = 'mytourguide_admin_session';
+const DEV_AUTH_DEFAULTS = {
+  ADMIN_USERNAME: 'admin',
+  ADMIN_PASSWORD: 'tour2026',
+  ADMIN_SESSION_SECRET: 'mytourguide-local-session-secret',
+};
 
 async function readDevConfig() {
   try {
     const raw = await fs.readFile(DEV_CONFIG_FILE, 'utf8');
-    return normalizeConfig(JSON.parse(raw));
+    const parsed = JSON.parse(raw);
+    return normalizeConfig({
+      ...parsed,
+      auth: {
+        username: String(parsed?.auth?.username || DEV_AUTH_DEFAULTS.ADMIN_USERNAME).trim(),
+        password: String(parsed?.auth?.password || DEV_AUTH_DEFAULTS.ADMIN_PASSWORD).trim(),
+      },
+    }, DEV_AUTH_DEFAULTS);
   } catch {
-    return normalizeConfig({});
+    return normalizeConfig({
+      auth: {
+        username: DEV_AUTH_DEFAULTS.ADMIN_USERNAME,
+        password: DEV_AUTH_DEFAULTS.ADMIN_PASSWORD,
+      },
+    }, DEV_AUTH_DEFAULTS);
   }
 }
 
 async function writeDevConfig(config) {
-  const normalized = normalizeConfig(config);
+  const normalized = normalizeConfig({
+    ...config,
+    auth: {
+      username: String(config?.auth?.username || DEV_AUTH_DEFAULTS.ADMIN_USERNAME).trim(),
+      password: String(config?.auth?.password || DEV_AUTH_DEFAULTS.ADMIN_PASSWORD).trim(),
+    },
+  }, DEV_AUTH_DEFAULTS);
   await fs.writeFile(DEV_CONFIG_FILE, JSON.stringify(normalized, null, 2), 'utf8');
   return normalized;
 }

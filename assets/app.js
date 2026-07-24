@@ -3,6 +3,7 @@ import { translations } from './i18n.js';
 
 const STORE_KEY = 'mytourguide-state-v1';
 const ADMIN_SESSION_KEY = 'mytourguide-admin-session-v1';
+const ILCELER_DATA_URL = new URL('../data/ilceler.json', import.meta.url);
 const ROOT = document.getElementById('app');
 const HOME_SECTION_DEFS = [
   { id: 'homeSearch', label: 'Arama satırı', description: 'Ana arama ve hızlı erişim alanı.' },
@@ -20,9 +21,23 @@ const fallbackState = {
   locale: 'tr',
   theme: 'auto',
   themePreset: 'aurora',
+  themePresetDraft: 'aurora',
   openLanguage: 'tr',
   adminTab: 'account',
   adminMessage: '',
+  userMessage: '',
+  userProfile: {
+    firstName: '',
+    lastName: '',
+    tcNo: '',
+    phone: '',
+    email: '',
+    address: '',
+    accommodationAddress: '',
+  },
+  userAccount: {
+    password: '',
+  },
   activeWidgets: ['search', 'currency', 'faq', 'support', 'testimonial'],
   provinceStatus: {},
   districtStatus: {},
@@ -65,7 +80,7 @@ init().catch((error) => {
 });
 
 async function init() {
-  data.locations = await fetchJSON('/data/ilceler.json');
+  data.locations = await fetchJSON(ILCELER_DATA_URL);
   buildLocationData();
   buildGeneratedTours();
   hydrateFromUrl();
@@ -81,6 +96,15 @@ function loadState() {
     const saved = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
     return {
       ...fallbackState,
+      themePresetDraft: saved?.themePresetDraft || saved?.themePreset || fallbackState.themePresetDraft,
+      userProfile: {
+        ...fallbackState.userProfile,
+        ...(saved?.userProfile || {}),
+      },
+      userAccount: {
+        ...fallbackState.userAccount,
+        ...(saved?.userAccount || {}),
+      },
       ...saved,
       cms: {
         ...structuredClone(cmsDefaults),
@@ -115,6 +139,29 @@ function saveState() {
   localStorage.setItem(STORE_KEY, JSON.stringify(state));
 }
 
+function setThemePresetDraft(theme) {
+  state.themePresetDraft = theme;
+  saveState();
+}
+
+function getUserProfile() {
+  return {
+    firstName: String(state.userProfile?.firstName || '').trim(),
+    lastName: String(state.userProfile?.lastName || '').trim(),
+    tcNo: String(state.userProfile?.tcNo || '').trim(),
+    phone: String(state.userProfile?.phone || '').trim(),
+    email: String(state.userProfile?.email || '').trim(),
+    address: String(state.userProfile?.address || '').trim(),
+    accommodationAddress: String(state.userProfile?.accommodationAddress || '').trim(),
+  };
+}
+
+function getUserAccount() {
+  return {
+    password: String(state.userAccount?.password || '').trim(),
+  };
+}
+
 function isAdminAuthenticated() {
   return adminSession;
 }
@@ -122,7 +169,7 @@ function isAdminAuthenticated() {
 function getAdminCredentials() {
   return {
     username: String(backendConfig.auth?.username || cmsDefaults.auth.username).trim(),
-    password: String(backendConfig.auth?.password || cmsDefaults.auth.password).trim(),
+    password: String(backendConfig.auth?.password || '').trim(),
   };
 }
 
@@ -565,6 +612,8 @@ function bindGlobalEvents() {
     if (name === 'print-pdf') window.print();
     if (name === 'copy-mail') copyMailSummary();
     if (name === 'save-admin') saveAdminFromDom();
+    if (name === 'save-user-profile') submitUserProfile();
+    if (name === 'apply-theme') applyThemePreset();
     if (name === 'submit-reservation') submitReservation();
     if (name === 'sync-crm') syncCrm();
     if (name === 'login-demo') submitLogin();
@@ -608,6 +657,16 @@ function bindGlobalEvents() {
       submitAdminAuth(form);
       return;
     }
+    if (form.matches('[data-user-form]')) {
+      event.preventDefault();
+      submitUserProfile(form);
+      return;
+    }
+    if (form.matches('[data-user-reset-form]')) {
+      event.preventDefault();
+      resetUserPassword(form);
+      return;
+    }
     if (form.matches('[data-media-upload-form]')) {
       event.preventDefault();
       submitMediaUpload(form);
@@ -635,6 +694,12 @@ function bindGlobalEvents() {
     if (el.matches('[data-admin-input]')) {
       saveAdminField(el);
     }
+    if (el.matches('[data-theme-preset-draft]')) {
+      setThemePresetDraft(el.value);
+    }
+    if (el.matches('[data-user-input]')) {
+      saveUserField(el);
+    }
     if (el.matches('[data-admin-rich]')) {
       state.cms.adminRich = el.innerHTML;
       saveState();
@@ -651,6 +716,12 @@ function bindGlobalEvents() {
     }
     if (el.matches('[data-admin-input]')) {
       saveAdminField(el);
+    }
+    if (el.matches('[data-theme-preset-draft]')) {
+      setThemePresetDraft(el.value);
+    }
+    if (el.matches('[data-user-input]')) {
+      saveUserField(el);
     }
   });
 
@@ -724,6 +795,7 @@ function parseRoute(pathname, params) {
   const parts = pathname.replace(/^\/+|\/+$/g, '').split('/').filter(Boolean);
   if (parts.length === 0) return { kind: 'home' };
   if (parts[0] === 'admin') return { kind: 'admin' };
+  if (parts[0] === 'user') return { kind: 'user' };
   if (parts[0] === 'sepet' || parts[0] === 'odeme') return { kind: 'checkout', tailor: params.get('tailor') === '1' };
   if (parts[0] === 'iletisim') return { kind: 'contact' };
   if (parts[0] === 'blog') return { kind: 'blog' };
@@ -807,6 +879,8 @@ function renderRoute() {
       return renderCheckoutPage(data.route.tailor);
     case 'admin':
       return isAdminAuthenticated() ? renderAdminPage() : renderLoginPage();
+    case 'user':
+      return renderUserPage();
     case 'contact':
       return renderContactPage();
     case 'blog':
@@ -1361,6 +1435,23 @@ function renderCheckoutPage(tailorMode) {
             </div>
           </article>
           <article class="panel glass-card">
+            <h3>Müşteri hesabı</h3>
+            <p>İsim, soyisim, TC no, telefon, e-posta, adres ve konaklama adresi bilgileri kayıt aşamasında toplanır.</p>
+            <div class="split">
+              <label><span class="filter-label">İsim</span><input class="input" data-user-input data-user-field="firstName" placeholder="İsim" value="${escapeAttr(getUserProfile().firstName)}"></label>
+              <label><span class="filter-label">Soyisim</span><input class="input" data-user-input data-user-field="lastName" placeholder="Soyisim" value="${escapeAttr(getUserProfile().lastName)}"></label>
+              <label><span class="filter-label">TC No</span><input class="input" data-user-input data-user-field="tcNo" inputmode="numeric" maxlength="11" placeholder="11 haneli TC" value="${escapeAttr(getUserProfile().tcNo)}"></label>
+              <label><span class="filter-label">Telefon</span><input class="input" data-user-input data-user-field="phone" placeholder="+90 ..." value="${escapeAttr(getUserProfile().phone)}"></label>
+              <label><span class="filter-label">E-posta</span><input class="input" data-user-input data-user-field="email" type="email" placeholder="mail@domain.com" value="${escapeAttr(getUserProfile().email)}"></label>
+              <label><span class="filter-label">Konaklama adresi</span><input class="input" data-user-input data-user-field="accommodationAddress" placeholder="Otel / apart / adres" value="${escapeAttr(getUserProfile().accommodationAddress)}"></label>
+            </div>
+            <label><span class="filter-label">Adres</span><textarea class="textarea" data-user-input data-user-field="address" rows="3" placeholder="Fatura veya ikamet adresi">${escapeHtml(getUserProfile().address)}</textarea></label>
+            <div class="card-actions">
+              <button class="btn btn-primary" data-action="save-user-profile" type="button">Bilgileri kaydet</button>
+              <a class="btn" data-nav href="/user">Hesap ekranı</a>
+            </div>
+          </article>
+          <article class="panel glass-card">
             <h3>Not</h3>
             <p>Bu tek dosyalı sürüm, frontend deneyimini tamamlar. Gerçek ödeme, PDF üretimi, CRM aktarımı ve e-posta gönderimi için backend veya serverless fonksiyon katmanı bağlanmalıdır.</p>
           </article>
@@ -1493,6 +1584,7 @@ function renderBlogPage() {
 function renderLoginPage() {
   const locale = getLocale();
   const t = translations[locale];
+  const isLocalHost = typeof window !== 'undefined' && /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname);
   return `
     <section class="page">
       <div class="page-hero" style="--page-gradient: linear-gradient(135deg, #0d9e9d, #7c8cff)">
@@ -1508,12 +1600,75 @@ function renderLoginPage() {
             <h3>Giriş yap</h3>
             <form class="builder-steps" data-login-form>
               <label><span class="filter-label">Kullanıcı adı</span><input class="input" name="username" autocomplete="username" placeholder="${escapeAttr(cmsDefaults.auth.username)}"></label>
-              <label><span class="filter-label">Parola</span><input class="input" name="password" type="password" autocomplete="current-password" placeholder="${escapeAttr(cmsDefaults.auth.password)}"></label>
+              <label><span class="filter-label">Parola</span><input class="input" name="password" type="password" autocomplete="current-password" placeholder="Parolanızı girin"></label>
               <div class="card-actions">
                 <button class="btn btn-primary" type="submit">Giriş yap</button>
                 <a class="btn" data-nav href="/">Ana sayfa</a>
               </div>
+              ${isLocalHost ? '<div class="step"><strong>Yerel giriş</strong><p>Varsayılan bilgiler: <code>admin</code> / <code>tour2026</code></p></div>' : ''}
               ${state.adminMessage ? `<div class="step"><strong>Not</strong><p>${escapeHtml(state.adminMessage)}</p></div>` : ''}
+            </form>
+          </article>
+        </section>
+      </div>
+    </section>
+  `;
+}
+
+function renderUserPage() {
+  const profile = getUserProfile();
+  const account = getUserAccount();
+  const hasProfile = Boolean(profile.firstName || profile.lastName || profile.email || profile.tcNo);
+  return `
+    <section class="page">
+      <div class="page-hero" style="--page-gradient: linear-gradient(135deg, #1dd8c5, #2b72ff)">
+        <div class="hero-copy">
+          <div class="eyebrow">Kullanıcı</div>
+          <h1 class="page-title">Hesap oluşturma ve profil</h1>
+          <p>İsim, soyisim, TC no, telefon, e-posta, adres ve konaklama adresi bilgilerini burada topla. Şifre sıfırlama da aynı ekranda yapılır.</p>
+        </div>
+      </div>
+      <div class="page-layout">
+        <aside class="sticky-stack">
+          <section class="sidebar glass-card">
+            <h3>Durum</h3>
+            <div class="list">
+              <div class="list-item"><strong>Profil</strong><small>${hasProfile ? 'Dolu' : 'Boş'}</small></div>
+              <div class="list-item"><strong>E-posta</strong><small>${escapeHtml(profile.email || 'Tanımlı değil')}</small></div>
+              <div class="list-item"><strong>Telefon</strong><small>${escapeHtml(profile.phone || 'Tanımlı değil')}</small></div>
+            </div>
+          </section>
+        </aside>
+        <section class="content-area">
+          <article class="panel glass-card">
+            <h3>Kayıt / profil düzenleme</h3>
+            <form class="builder-steps" data-user-form>
+              <div class="split">
+                <label><span class="filter-label">İsim</span><input class="input" name="firstName" autocomplete="given-name" value="${escapeAttr(profile.firstName)}"></label>
+                <label><span class="filter-label">Soyisim</span><input class="input" name="lastName" autocomplete="family-name" value="${escapeAttr(profile.lastName)}"></label>
+                <label><span class="filter-label">TC No</span><input class="input" name="tcNo" inputmode="numeric" maxlength="11" autocomplete="off" value="${escapeAttr(profile.tcNo)}"></label>
+                <label><span class="filter-label">Telefon</span><input class="input" name="phone" autocomplete="tel" value="${escapeAttr(profile.phone)}"></label>
+                <label><span class="filter-label">E-posta</span><input class="input" name="email" type="email" autocomplete="email" value="${escapeAttr(profile.email)}"></label>
+                <label><span class="filter-label">Konaklama adresi</span><input class="input" name="accommodationAddress" autocomplete="street-address" value="${escapeAttr(profile.accommodationAddress)}"></label>
+              </div>
+              <label><span class="filter-label">Adres</span><textarea class="textarea" name="address" rows="3" autocomplete="street-address">${escapeHtml(profile.address)}</textarea></label>
+              <div class="card-actions">
+                <button class="btn btn-primary" type="submit">Profili kaydet</button>
+                <a class="btn" data-nav href="/sepet">Rezervasyona git</a>
+              </div>
+              ${state.userMessage ? `<div class="step"><strong>Not</strong><p>${escapeHtml(state.userMessage)}</p></div>` : ''}
+            </form>
+          </article>
+          <article class="panel glass-card">
+            <h3>Şifre sıfırlama</h3>
+            <form class="builder-steps" data-user-reset-form>
+              <div class="split">
+                <label><span class="filter-label">Yeni şifre</span><input class="input" name="password" type="password" autocomplete="new-password" value="${escapeAttr(account.password)}"></label>
+                <label><span class="filter-label">Yeni şifre tekrar</span><input class="input" name="passwordConfirm" type="password" autocomplete="new-password"></label>
+              </div>
+              <div class="card-actions">
+                <button class="btn btn-primary" type="submit">Şifreyi sıfırla</button>
+              </div>
             </form>
           </article>
         </section>
@@ -1867,6 +2022,7 @@ function buildReservationPayload() {
       transport: state.transport || '',
       selfTransport: state.selfTransport || '',
     },
+    profile: getUserProfile(),
     cart: state.cart.map((item) => ({
       id: item.id,
       quantity: item.quantity,
@@ -1979,6 +2135,54 @@ function saveAdminField(el) {
   if (/^home\.(slides|categories)\.\d+\.image$/.test(path)) {
     syncHomeMediaRefsToBackend().catch((error) => console.error(error));
   }
+}
+
+function saveUserField(el) {
+  const field = el.dataset.userField;
+  if (!field) return;
+  state.userProfile = state.userProfile || {};
+  state.userProfile[field] = el.value;
+  saveState();
+}
+
+function submitUserProfile(form = document.querySelector('[data-user-form]')) {
+  if (!form) return;
+  const formData = new FormData(form);
+  state.userProfile = {
+    firstName: String(formData.get('firstName') || '').trim(),
+    lastName: String(formData.get('lastName') || '').trim(),
+    tcNo: String(formData.get('tcNo') || '').trim(),
+    phone: String(formData.get('phone') || '').trim(),
+    email: String(formData.get('email') || '').trim(),
+    address: String(formData.get('address') || '').trim(),
+    accommodationAddress: String(formData.get('accommodationAddress') || '').trim(),
+  };
+  state.userMessage = 'Kullanıcı bilgileri kaydedildi.';
+  saveState();
+  render();
+}
+
+function resetUserPassword(form = document.querySelector('[data-user-reset-form]')) {
+  if (!form) return;
+  const formData = new FormData(form);
+  const password = String(formData.get('password') || '').trim();
+  const passwordConfirm = String(formData.get('passwordConfirm') || '').trim();
+  if (!password) {
+    state.userMessage = 'Şifre boş bırakılamaz.';
+    saveState();
+    render();
+    return;
+  }
+  if (password !== passwordConfirm) {
+    state.userMessage = 'Şifreler eşleşmiyor.';
+    saveState();
+    render();
+    return;
+  }
+  state.userAccount = { password };
+  state.userMessage = 'Şifre sıfırlandı.';
+  saveState();
+  render();
 }
 
 function submitLogin(form = document.querySelector('[data-login-form]')) {
@@ -2137,8 +2341,8 @@ function renderAdminTab(tab) {
           </div>
           <div class="split">
             <label><span class="filter-label">Varsayılan tema</span>
-              <select class="select" data-admin-input data-admin-path="themePreset">
-                ${themes.map((item) => `<option value="${item.id}" ${state.themePreset === item.id ? 'selected' : ''}>${item.label}</option>`).join('')}
+              <select class="select" data-theme-preset-draft>
+                ${themes.map((item) => `<option value="${item.id}" ${(state.themePresetDraft || state.themePreset) === item.id ? 'selected' : ''}>${item.label}</option>`).join('')}
               </select>
             </label>
             <div class="step">
@@ -2149,6 +2353,14 @@ function renderAdminTab(tab) {
                 ${renderCmsInput('menu.grup', 'Grup Turları')}
                 ${renderCmsInput('menu.paket', 'Paket Turlar')}
                 ${renderCmsInput('menu.yurtdisi', 'Yurtdışı Turlar')}
+              </div>
+            </div>
+            <div class="step">
+              <strong>Uygulama</strong>
+              <p>Seçtiğin tema yalnızca bu butona bastığında aktif olur.</p>
+              <div class="card-actions">
+                <button class="btn btn-primary" data-action="apply-theme" type="button">Temayı uygula</button>
+                <span class="pill">Aktif: ${state.themePreset}</span>
               </div>
             </div>
           </div>
@@ -2448,6 +2660,10 @@ function setThemePreset(theme) {
   saveState();
   applyThemeImmediately();
   render();
+}
+
+function applyThemePreset() {
+  setThemePreset(state.themePresetDraft || state.themePreset || 'aurora');
 }
 
 function getTheme() {

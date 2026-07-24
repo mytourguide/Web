@@ -76,11 +76,17 @@ function reservationSummary(data) {
   ];
 }
 
+function resolveEnvValue(env, key, fallback = '') {
+  const direct = env?.[key];
+  const processValue = typeof process !== 'undefined' ? process?.env?.[key] : undefined;
+  return String(direct ?? processValue ?? fallback).trim();
+}
+
 function resolveAuthConfig(env = {}, overrides = {}) {
   return {
-    username: String(overrides.username ?? env.ADMIN_USERNAME ?? 'admin'),
-    password: String(overrides.password ?? env.ADMIN_PASSWORD ?? 'tour2026'),
-    secret: String(env.ADMIN_SESSION_SECRET || 'mytourguide-local-session-secret'),
+    username: String(overrides.username ?? resolveEnvValue(env, 'ADMIN_USERNAME', 'admin')),
+    password: String(overrides.password ?? resolveEnvValue(env, 'ADMIN_PASSWORD')),
+    secret: String(resolveEnvValue(env, 'ADMIN_SESSION_SECRET')),
     cookieName: 'mytourguide_admin_session',
     ttlSeconds: 60 * 60 * 8,
   };

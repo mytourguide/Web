@@ -163,7 +163,7 @@ export const cmsDefaults = {
   },
   auth: {
     username: 'admin',
-    password: 'tour2026',
+    password: '',
   },
   commerce: {
     checkoutTitle: 'Sepet ve ödeme',
