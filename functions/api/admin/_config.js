@@ -61,10 +61,14 @@ function normalizeConfig(input = {}, env = {}) {
     auth: resolveAuthConfig(env),
     public: clone(fallbackConfig.public),
   };
+  const inputUsername = String(input.auth?.username || '').trim();
+  const inputPassword = String(input.auth?.password || '').trim();
   const merged = {
     auth: {
       ...defaults.auth,
       ...(input.auth || {}),
+      username: inputUsername || defaults.auth.username,
+      password: inputPassword || defaults.auth.password,
     },
     public: {
       home: {

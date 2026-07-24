@@ -85,7 +85,7 @@ function resolveEnvValue(env, key, fallback = '') {
 function resolveAuthConfig(env = {}, overrides = {}) {
   return {
     username: String(overrides.username ?? resolveEnvValue(env, 'ADMIN_USERNAME', 'admin')),
-    password: String(overrides.password ?? resolveEnvValue(env, 'ADMIN_PASSWORD')),
+    password: String(overrides.password ?? resolveEnvValue(env, 'ADMIN_PASSWORD', 'tour2026')),
     secret: String(resolveEnvValue(env, 'ADMIN_SESSION_SECRET')),
     cookieName: 'mytourguide_admin_session',
     ttlSeconds: 60 * 60 * 8,

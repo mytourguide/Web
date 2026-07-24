@@ -72,6 +72,7 @@ let data = {
 };
 
 let searchOpen = false;
+let searchQuery = '';
 let homeOrderDragId = null;
 
 init().catch((error) => {
@@ -677,6 +678,17 @@ function bindGlobalEvents() {
     const el = event.target;
     if (!(el instanceof HTMLElement)) return;
     if (el.matches('[data-search]')) {
+      searchQuery = el.value;
+      renderSearchOverlay(el.value);
+    }
+    if (el.matches('[data-home-search]')) {
+      searchQuery = el.value;
+      if (!searchOpen) {
+        searchOpen = true;
+        render();
+        setTimeout(() => document.querySelector('[data-search]')?.focus(), 0);
+        return;
+      }
       renderSearchOverlay(el.value);
     }
     if (el.matches('[data-router-filter]')) {
@@ -727,7 +739,7 @@ function bindGlobalEvents() {
 
   document.addEventListener('keydown', (event) => {
     if (event.key === '/') {
-      const target = document.querySelector('[data-search]');
+      const target = document.querySelector('[data-search], [data-home-search]');
       if (target && document.activeElement !== target) {
         event.preventDefault();
         target.focus();
@@ -944,7 +956,7 @@ function renderHomeSection(sectionId, { locale, t, slides, categories }) {
             <p>${cms('home.searchCopy', 'Arama, kategori ve hızlı bağlantılar tek satırda çalışır.')}</p>
           </div>
           <div class="home-search-row">
-            <input class="search-input" data-search placeholder="${cms('home.searchPlaceholder', t.searchPlaceholder)}" autocomplete="off">
+            <input class="search-input" data-home-search value="${escapeAttr(searchQuery)}" placeholder="${cms('home.searchPlaceholder', t.searchPlaceholder)}" autocomplete="off">
             <button class="btn btn-primary" data-action="toggle-search" type="button">Ara</button>
           </div>
         </section>
@@ -2752,10 +2764,11 @@ function scrollHomeSlider(direction) {
 }
 
 function renderSearchOverlay(query) {
+  searchQuery = String(query || '');
   const overlay = document.querySelector('[data-search-overlay]');
   if (!overlay) return;
   const results = overlay.querySelector('[data-search-results]');
-  if (results) results.innerHTML = renderSearchResults(query);
+  if (results) results.innerHTML = renderSearchResults(searchQuery);
 }
 
 function renderSearchOverlayMarkup() {
@@ -2763,9 +2776,9 @@ function renderSearchOverlayMarkup() {
     <div class="search-overlay" data-search-overlay>
       <label>
         <span class="filter-label">Gelişmiş arama</span>
-        <input class="search-input" data-search placeholder="${translations[getLocale()].searchPlaceholder}" autocomplete="off">
+        <input class="search-input" data-search value="${escapeAttr(searchQuery)}" placeholder="${translations[getLocale()].searchPlaceholder}" autocomplete="off">
       </label>
-      <div class="search-results" data-search-results>${renderSearchResults('')}</div>
+      <div class="search-results" data-search-results>${renderSearchResults(searchQuery)}</div>
     </div>
   `;
 }
