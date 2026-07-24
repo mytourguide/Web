@@ -31,6 +31,9 @@ export const tourCollections = [
 
 export const themes = [
   { id: 'aurora', label: 'Aurora', sample: '#6ae0d9' },
+  { id: 'coastal', label: 'Coastal', sample: '#78cfff' },
+  { id: 'lagoon', label: 'Lagoon', sample: '#7fe5c2' },
+  { id: 'sunrise', label: 'Sunrise', sample: '#ffca7a' },
   { id: 'light', label: 'Açık', sample: '#0d9e9d' },
   { id: 'sunset', label: 'Sunset', sample: '#ff8c8c' },
 ];
@@ -45,13 +48,13 @@ export const widgetCatalog = [
 ];
 
 export const adminGroups = [
-  { id: 'account', label: 'Hesap ve Giriş', description: 'Admin kullanıcı adı, parola ve backend oturum ayarları.' },
-  { id: 'appearance', label: 'Görünüm', description: 'Tema, renk, dil ve menü etiketleri.' },
-  { id: 'homepage', label: 'Ana Sayfa', description: 'Hero, arama, istatistik ve öne çıkan bloklar.' },
-  { id: 'content', label: 'İçerik', description: 'Tanıtım metinleri, footer ve iletişim alanları.' },
-  { id: 'publish', label: 'Yayın Merkezi', description: 'Yayında/pasif durumları ve görünürlük anahtarları.' },
-  { id: 'commerce', label: 'Rezervasyon ve CRM', description: 'Checkout, ödeme, PDF ve CRM akışları.' },
-  { id: 'security', label: 'Güvenlik', description: 'KVKK, form korumaları ve login politikası.' },
+  { id: 'account', label: 'Hesap ve Giriş', description: 'Admin kullanıcı adı, parola ve backend oturum ayarları.', icon: '🔐' },
+  { id: 'appearance', label: 'Görünüm', description: 'Tema, renk, dil ve menü etiketleri.', icon: '🎨' },
+  { id: 'homepage', label: 'Ana Sayfa', description: 'Hero, arama, istatistik ve öne çıkan bloklar.', icon: '🏝️' },
+  { id: 'content', label: 'İçerik', description: 'Tanıtım metinleri, footer ve iletişim alanları.', icon: '📝' },
+  { id: 'publish', label: 'Yayın Merkezi', description: 'Yayında/pasif durumları ve görünürlük anahtarları.', icon: '📣' },
+  { id: 'commerce', label: 'Rezervasyon ve CRM', description: 'Checkout, ödeme, PDF ve CRM akışları.', icon: '🧾' },
+  { id: 'security', label: 'Güvenlik', description: 'KVKK, form korumaları ve login politikası.', icon: '🛡️' },
 ];
 
 export const cmsDefaults = {

@@ -1774,7 +1774,7 @@ function renderAdminPage() {
   const activeTab = state.adminTab || 'account';
   return `
     <section class="page admin-shell">
-      <div class="page-hero" style="--page-gradient: linear-gradient(135deg, #f0b45e, #7c8cff)">
+      <div class="page-hero admin-hero" style="--page-gradient: linear-gradient(135deg, #ffcf8a, #8ad7ff)">
         <div class="hero-copy">
           <div class="eyebrow">${t.admin}</div>
           <h1 class="page-title">CMS yönetim merkezi</h1>
@@ -1789,37 +1789,41 @@ function renderAdminPage() {
       <div class="page-layout admin-layout">
         <aside class="sticky-stack admin-sidebar">
           <section class="sidebar glass-card">
-            <div class="admin-brand">
-              <strong>My Tour Guide CMS</strong>
-              <small>${adminSessionSource === 'backend' ? 'Backend session aktif' : adminSessionSource === 'local' ? 'Yerel oturum aktif' : 'Oturum kapalı'}</small>
+            <div class="admin-brand admin-brand-compact">
+              <div class="admin-brand-mark">MT</div>
+              <div>
+                <strong>My Tour Guide CMS</strong>
+                <small>${adminSessionSource === 'backend' ? 'Backend session aktif' : adminSessionSource === 'local' ? 'Yerel oturum aktif' : 'Oturum kapalı'}</small>
+              </div>
             </div>
-            <div class="admin-summary">
-              <div class="list-item"><strong>Yayın blokları</strong><small>${Object.values(state.cms.publish || {}).filter(Boolean).length} aktif</small></div>
-              <div class="list-item"><strong>Widgetler</strong><small>${state.activeWidgets.length} aktif</small></div>
-              <div class="list-item"><strong>Dil</strong><small>${state.openLanguage.toUpperCase()}</small></div>
-              <div class="list-item"><strong>Tema</strong><small>${state.themePreset}</small></div>
+            <div class="admin-summary-grid">
+              <div class="admin-metric"><strong>${Object.values(state.cms.publish || {}).filter(Boolean).length}</strong><small>Yayın blokları</small></div>
+              <div class="admin-metric"><strong>${state.activeWidgets.length}</strong><small>Widget</small></div>
+              <div class="admin-metric"><strong>${state.openLanguage.toUpperCase()}</strong><small>Dil</small></div>
+              <div class="admin-metric"><strong>${state.themePreset}</strong><small>Tema</small></div>
             </div>
           </section>
           <section class="sidebar glass-card">
-            <h3>Modüller</h3>
-            <div class="list admin-group-list">
+            <h3>Kontrol menüsü</h3>
+            <div class="admin-nav-list">
               ${adminGroups.map((group) => `
-                <button class="list-item ${activeTab === group.id ? 'active' : ''}" data-action="set-admin-tab" data-tab="${group.id}" type="button">
-                  <div>
+                <button class="admin-nav-button ${activeTab === group.id ? 'active' : ''}" data-action="set-admin-tab" data-tab="${group.id}" type="button">
+                  <div class="admin-nav-icon" aria-hidden="true">${group.icon || '•'}</div>
+                  <div class="admin-nav-copy">
                     <strong>${group.label}</strong>
                     <small>${group.description}</small>
                   </div>
-                  <span class="pill">${activeTab === group.id ? 'Açık' : 'Aç'}</span>
+                  <span class="admin-nav-pill">${activeTab === group.id ? 'Açık' : 'Aç'}</span>
                 </button>
               `).join('')}
             </div>
           </section>
           <section class="sidebar glass-card">
             <h3>Hızlı işlemler</h3>
-            <div class="list">
-              <button class="list-item" data-action="set-admin-tab" data-tab="publish" type="button"><div><strong>Yayın kontrolü</strong><small>Bölüm görünürlüğü</small></div></button>
-              <button class="list-item" data-action="set-admin-tab" data-tab="commerce" type="button"><div><strong>Rezervasyon</strong><small>Ödeme, PDF, CRM</small></div></button>
-              <button class="list-item" data-action="set-admin-tab" data-tab="security" type="button"><div><strong>Güvenlik</strong><small>KVKK ve session</small></div></button>
+            <div class="admin-quick-actions">
+              <button class="admin-quick-button" data-action="set-admin-tab" data-tab="publish" type="button"><strong>Yayın kontrolü</strong><small>Bölüm görünürlüğü</small></button>
+              <button class="admin-quick-button" data-action="set-admin-tab" data-tab="commerce" type="button"><strong>Rezervasyon</strong><small>Ödeme, PDF, CRM</small></button>
+              <button class="admin-quick-button" data-action="set-admin-tab" data-tab="security" type="button"><strong>Güvenlik</strong><small>KVKK ve session</small></button>
             </div>
           </section>
         </aside>
@@ -2656,33 +2660,42 @@ function renderAdminTab(tab) {
                 <option value="auto" ${state.theme === 'auto' ? 'selected' : ''}>Auto</option>
                 <option value="light" ${state.theme === 'light' ? 'selected' : ''}>Light</option>
                 <option value="aurora" ${state.theme === 'aurora' ? 'selected' : ''}>Aurora</option>
+                <option value="coastal" ${state.theme === 'coastal' ? 'selected' : ''}>Coastal</option>
+                <option value="lagoon" ${state.theme === 'lagoon' ? 'selected' : ''}>Lagoon</option>
+                <option value="sunrise" ${state.theme === 'sunrise' ? 'selected' : ''}>Sunrise</option>
                 <option value="sunset" ${state.theme === 'sunset' ? 'selected' : ''}>Sunset</option>
               </select>
             </label>
           </div>
-          <div class="split">
-            <label><span class="filter-label">Varsayılan tema</span>
-              <select class="select" data-theme-preset-draft>
-                ${themes.map((item) => `<option value="${item.id}" ${(state.themePresetDraft || state.themePreset) === item.id ? 'selected' : ''}>${item.label}</option>`).join('')}
-              </select>
-            </label>
-            <div class="step">
-              <strong>Menü etiketleri</strong>
-              <div class="split">
-                ${renderCmsInput('menu.turkiye', 'Türkiye Turları')}
-                ${renderCmsInput('menu.mavi', 'Mavi Turlar')}
-                ${renderCmsInput('menu.grup', 'Grup Turları')}
-                ${renderCmsInput('menu.paket', 'Paket Turlar')}
-                ${renderCmsInput('menu.yurtdisi', 'Yurtdışı Turlar')}
-              </div>
+          <div class="step">
+            <strong>Varsayılan tema</strong>
+            <div class="theme-grid">
+              ${themes.map((item) => {
+                const active = (state.themePresetDraft || state.themePreset) === item.id;
+                return `
+                  <button class="theme-card ${active ? 'active' : ''}" data-theme-preset-draft="${item.id}" data-action="select-theme" data-theme="${item.id}" type="button">
+                    <span class="theme-swatch" style="--theme-swatch:${item.sample}"></span>
+                    <span class="theme-card-copy">
+                      <strong>${item.label}</strong>
+                      <small>${active ? 'Seçili' : 'Uygula'}</small>
+                    </span>
+                  </button>
+                `;
+              }).join('')}
             </div>
-            <div class="step">
-              <strong>Uygulama</strong>
-              <p>Seçtiğin tema yalnızca bu butona bastığında aktif olur.</p>
-              <div class="card-actions">
-                <button class="btn btn-primary" data-action="apply-theme" type="button">Temayı uygula</button>
-                <span class="pill">Aktif: ${state.themePreset}</span>
-              </div>
+            <div class="card-actions" style="margin-top:14px;">
+              <button class="btn btn-primary" data-action="apply-theme" type="button">Temayı uygula</button>
+              <span class="pill">Aktif: ${state.themePreset}</span>
+            </div>
+          </div>
+          <div class="step">
+            <strong>Menü etiketleri</strong>
+            <div class="split">
+              ${renderCmsInput('menu.turkiye', 'Türkiye Turları')}
+              ${renderCmsInput('menu.mavi', 'Mavi Turlar')}
+              ${renderCmsInput('menu.grup', 'Grup Turları')}
+              ${renderCmsInput('menu.paket', 'Paket Turlar')}
+              ${renderCmsInput('menu.yurtdisi', 'Yurtdışı Turlar')}
             </div>
           </div>
         </article>
@@ -2967,7 +2980,7 @@ function applyThemeImmediately() {
 }
 
 function cycleTheme() {
-  const order = ['auto', 'light', 'aurora', 'sunset'];
+  const order = ['auto', 'light', 'coastal', 'lagoon', 'sunrise', 'aurora', 'sunset'];
   const index = order.indexOf(state.theme);
   state.theme = order[(index + 1) % order.length];
   saveState();
@@ -2976,8 +2989,9 @@ function cycleTheme() {
 }
 
 function setThemePreset(theme) {
+  state.themePresetDraft = theme;
   state.themePreset = theme;
-  state.theme = theme === 'light' ? 'light' : theme;
+  state.theme = theme;
   saveState();
   applyThemeImmediately();
   render();
