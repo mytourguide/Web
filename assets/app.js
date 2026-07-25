@@ -1152,21 +1152,25 @@ function bindGlobalEvents() {
       state.adminPanelSearch = el.value;
       const caret = el.selectionStart;
       render();
-      const next = document.querySelector('[data-admin-panel-search]');
-      if (next) {
-        next.focus();
-        try { next.setSelectionRange(caret, caret); } catch (err) { /* noop */ }
-      }
+      requestAnimationFrame(() => {
+        const next = document.querySelector('[data-admin-panel-search]');
+        if (next) {
+          next.focus();
+          try { next.setSelectionRange(caret, caret); } catch (err) { /* noop */ }
+        }
+      });
     }
     if (el.matches('[data-admin-pages-search]')) {
       state.adminPagesSearch = el.value;
       const caret = el.selectionStart;
       render();
-      const next = document.querySelector('[data-admin-pages-search]');
-      if (next) {
-        next.focus();
-        try { next.setSelectionRange(caret, caret); } catch (err) { /* noop */ }
-      }
+      requestAnimationFrame(() => {
+        const next = document.querySelector('[data-admin-pages-search]');
+        if (next) {
+          next.focus();
+          try { next.setSelectionRange(caret, caret); } catch (err) { /* noop */ }
+        }
+      });
     }
   });
 
@@ -3910,7 +3914,7 @@ function renderRouteSearchStrip() {
 
 function normalize(value) {
   return String(value || '')
-    .toLowerCase()
+    .toLocaleLowerCase('tr')
     .replace(/ğ/g, 'g')
     .replace(/ü/g, 'u')
     .replace(/ş/g, 's')
