@@ -159,6 +159,10 @@ html[data-theme="sage"] {
 
 * { box-sizing: border-box; }
 html, body { margin: 0; min-height: 100%; }
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
 body {
   font-family: var(--font-body);
   color: var(--text);
@@ -168,12 +172,27 @@ body {
     linear-gradient(180deg, #06101d 0%, var(--bg) 100%);
   background-attachment: fixed;
   line-height: 1.5;
+  -webkit-tap-highlight-color: transparent;
 }
 
 a { color: inherit; text-decoration: none; }
 button, input, select, textarea { font: inherit; }
 button { cursor: pointer; }
 img { max-width: 100%; display: block; }
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
 
 .app-shell {
   width: min(var(--max), calc(100% - 24px));
@@ -185,6 +204,8 @@ img { max-width: 100%; display: block; }
   position: sticky;
   top: 0;
   z-index: 60;
+  padding-top: env(safe-area-inset-top, 0px);
+  -webkit-backdrop-filter: blur(18px);
   backdrop-filter: blur(18px);
   background: linear-gradient(180deg, rgba(4, 10, 20, 0.9), rgba(4, 10, 20, 0.52));
   border-bottom: 1px solid var(--line);
@@ -246,6 +267,7 @@ html[data-theme="light"] .topbar {
   position: sticky;
   top: 74px;
   z-index: 58;
+  -webkit-backdrop-filter: blur(18px);
   backdrop-filter: blur(18px);
   background: linear-gradient(180deg, rgba(4, 10, 20, 0.72), rgba(4, 10, 20, 0.5));
   border-bottom: 1px solid var(--line);
@@ -270,6 +292,12 @@ html[data-theme="light"] .site-nav-bar {
   padding: 8px 0;
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;
+}
+
+.site-nav::-webkit-scrollbar {
+  height: 0;
+  width: 0;
+  background: transparent;
 }
 
 .site-nav a,
@@ -466,6 +494,7 @@ html[data-theme="light"] .site-nav-bar {
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow);
+  -webkit-backdrop-filter: blur(22px);
   backdrop-filter: blur(22px);
 }
 
@@ -508,6 +537,19 @@ html[data-theme="light"] .site-nav-bar {
   padding-bottom: 6px;
   scroll-snap-type: x mandatory;
   scrollbar-width: thin;
+}
+
+.home-slider::-webkit-scrollbar {
+  height: 6px;
+}
+
+.home-slider::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.home-slider::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--primary) 30%, transparent);
+  border-radius: 999px;
 }
 
 .home-slide {
@@ -613,6 +655,19 @@ html[data-theme="light"] .site-nav-bar {
   padding-bottom: 6px;
   scroll-snap-type: x mandatory;
   scrollbar-width: thin;
+}
+
+.place-gallery-track::-webkit-scrollbar {
+  height: 6px;
+}
+
+.place-gallery-track::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.place-gallery-track::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--primary) 30%, transparent);
+  border-radius: 999px;
 }
 
 .place-gallery-slide {
@@ -1682,6 +1737,7 @@ html[data-theme="light"] .site-nav-bar {
   border-radius: 24px;
   padding: 14px;
   box-shadow: var(--shadow);
+  -webkit-backdrop-filter: blur(22px);
   backdrop-filter: blur(22px);
   max-height: min(68vh, 700px);
   overflow: auto;
@@ -1730,6 +1786,7 @@ html[data-theme="light"] .site-nav-bar {
 
 .center-shell {
   min-height: 100vh;
+  min-height: 100dvh;
   display: grid;
   place-items: center;
   padding: 24px;
