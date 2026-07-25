@@ -370,6 +370,10 @@ function renderImagePickerField(label, fieldName, currentValue) {
         </select>
         <input class="input" name="${escapeAttr(fieldName)}-url" value="${isMediaRef ? '' : escapeAttr(value)}" placeholder="https://...">
       </div>
+      <label class="media-inline-upload">
+        <input type="file" accept="image/*,image/svg+xml" data-inline-media-upload>
+        <span>📤 Bilgisayardan yükle (otomatik boyutlandırılır)</span>
+      </label>
       ${renderMediaPreview(value)}
     </div>
   `;
@@ -388,7 +392,7 @@ function renderMediaPreview(ref) {
   }
   return `
     <div class="media-preview">
-      <img src="${escapeAttr(media.dataUrl)}" alt="${escapeAttr(media.name)}">
+      <img src="${escapeAttr(media.thumbDataUrl || media.dataUrl)}" alt="${escapeAttr(media.name)}">
       <div class="media-preview-copy">
         <strong>${escapeHtml(media.name)}</strong>
         <small>${escapeHtml(media.type)}</small>
@@ -1178,6 +1182,9 @@ function bindGlobalEvents() {
     }
     if (el.matches('[data-user-input]')) {
       saveUserField(el);
+    }
+    if (el.matches('[data-inline-media-upload]')) {
+      handleInlineMediaUpload(el).catch((error) => console.error(error));
     }
   });
 
@@ -2971,19 +2978,72 @@ async function submitAdminAuth(form) {
   }
 }
 
+async function handleInlineMediaUpload(input) {
+  const file = input.files?.[0];
+  if (!(file instanceof File)) return;
+  const wrapper = input.closest('.media-pick-field');
+  const originalLabel = input.parentElement?.querySelector('span')?.textContent;
+  if (input.parentElement) {
+    const span = input.parentElement.querySelector('span');
+    if (span) span.textContent = 'Yükleniyor...';
+  }
+  try {
+    const { dataUrl, thumbDataUrl } = await resizeImageFile(file);
+    const result = await saveBackendConfig({
+      action: 'uploadMedia',
+      media: {
+        name: file.name || 'Medya',
+        type: file.type === 'image/svg+xml' ? file.type : 'image/jpeg',
+        dataUrl,
+        thumbDataUrl,
+      },
+    });
+    const newItem = result?.media;
+    if (newItem) {
+      const ref = `media:${newItem.id}`;
+      document.querySelectorAll('.media-pick-row select').forEach((select) => {
+        if (!select.querySelector(`option[value="${ref}"]`)) {
+          const option = document.createElement('option');
+          option.value = ref;
+          option.textContent = newItem.name;
+          select.appendChild(option);
+        }
+      });
+      if (wrapper) {
+        const select = wrapper.querySelector('.media-pick-row select');
+        const urlInput = wrapper.querySelector('.media-pick-row input');
+        if (select) select.value = ref;
+        if (urlInput) urlInput.value = '';
+        const previewEl = wrapper.querySelector('.media-preview');
+        if (previewEl) previewEl.outerHTML = renderMediaPreview(ref);
+      }
+    }
+  } catch (error) {
+    console.error(error);
+    alert('Görsel yüklenemedi. Lütfen tekrar deneyin.');
+  } finally {
+    input.value = '';
+    if (input.parentElement) {
+      const span = input.parentElement.querySelector('span');
+      if (span) span.textContent = originalLabel || '📤 Bilgisayardan yükle (otomatik boyutlandırılır)';
+    }
+  }
+}
+
 async function submitMediaUpload(form) {
   const formData = new FormData(form);
   const file = formData.get('file');
   const name = String(formData.get('name') || '').trim() || String(file?.name || 'Medya');
   if (!(file instanceof File)) return;
   try {
-    const dataUrl = await fileToDataUrl(file);
+    const { dataUrl, thumbDataUrl } = await resizeImageFile(file);
     await saveBackendConfig({
       action: 'uploadMedia',
       media: {
         name,
-        type: file.type || 'image/png',
+        type: file.type === 'image/svg+xml' ? file.type : 'image/jpeg',
         dataUrl,
+        thumbDataUrl,
       },
     });
     await loadBackendConfig();
@@ -3025,6 +3085,35 @@ function fileToDataUrl(file) {
     reader.onerror = () => reject(reader.error || new Error('Dosya okunamadı.'));
     reader.readAsDataURL(file);
   });
+}
+
+function resizeImageFile(file, { maxDim = 1600, thumbDim = 320, quality = 0.82 } = {}) {
+  if (file.type === 'image/svg+xml') {
+    return fileToDataUrl(file).then((dataUrl) => ({ dataUrl, thumbDataUrl: dataUrl }));
+  }
+  return fileToDataUrl(file).then((sourceDataUrl) => new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onerror = () => reject(new Error('Görsel işlenemedi.'));
+    img.onload = () => {
+      const makeVariant = (dim) => {
+        const scale = Math.min(1, dim / Math.max(img.naturalWidth, img.naturalHeight));
+        const width = Math.max(1, Math.round(img.naturalWidth * scale));
+        const height = Math.max(1, Math.round(img.naturalHeight * scale));
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        return canvas.toDataURL('image/jpeg', quality);
+      };
+      try {
+        resolve({ dataUrl: makeVariant(maxDim), thumbDataUrl: makeVariant(thumbDim) });
+      } catch (error) {
+        reject(error);
+      }
+    };
+    img.src = sourceDataUrl;
+  }));
 }
 
 function renderAdminTab(tab) {
@@ -3212,7 +3301,7 @@ function renderAdminTab(tab) {
                     <div class="body">
                       <div class="eyebrow">Medya</div>
                       <div class="media-library-thumb">
-                        <img src="${escapeAttr(item.dataUrl)}" alt="${escapeAttr(item.name)}">
+                        <img src="${escapeAttr(item.thumbDataUrl || item.dataUrl)}" alt="${escapeAttr(item.name)}">
                       </div>
                       <h3>${escapeHtml(item.name)}</h3>
                       <p>${escapeHtml(item.type)}</p>

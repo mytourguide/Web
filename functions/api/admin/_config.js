@@ -54,6 +54,7 @@ function sanitizeMediaLibrary(library) {
       name: String(item.name || 'Medya'),
       type: String(item.type || 'image/png'),
       dataUrl: String(item.dataUrl || ''),
+      thumbDataUrl: String(item.thumbDataUrl || ''),
       createdAt: String(item.createdAt || new Date().toISOString()),
     }))
     .filter((item) => item.dataUrl);
@@ -275,6 +276,7 @@ function createMediaItem(media = {}) {
     name: String(media.name || 'Medya'),
     type: String(media.type || 'image/png'),
     dataUrl: String(media.dataUrl || ''),
+    thumbDataUrl: String(media.thumbDataUrl || ''),
     createdAt: String(media.createdAt || new Date().toISOString()),
   };
 }

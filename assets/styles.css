@@ -1488,6 +1488,35 @@ html[data-theme="light"] .site-nav-bar {
   gap: 6px;
 }
 
+.media-inline-upload {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1px dashed color-mix(in srgb, var(--primary) 45%, var(--line));
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
+  color: var(--muted);
+  font-size: 0.84rem;
+  cursor: pointer;
+  text-align: center;
+}
+
+.media-inline-upload:hover {
+  border-color: color-mix(in srgb, var(--primary) 65%, var(--line));
+  color: var(--text);
+}
+
+.media-inline-upload input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .media-pick-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
