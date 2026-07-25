@@ -74,6 +74,7 @@ function sanitizePageContent(pageContent) {
           title: String(value?.title || '').trim(),
           summary: String(value?.summary || '').trim(),
           facts: String(value?.facts || '').trim(),
+          cover: String(value?.cover || '').trim(),
           slides,
         },
       ];
@@ -83,6 +84,7 @@ function sanitizePageContent(pageContent) {
 }
 
 function sanitizeCustomCategories(list) {
+  const seen = new Set();
   return (Array.isArray(list) ? list : [])
     .filter((item) => item && typeof item === 'object')
     .map((item) => ({
@@ -90,24 +92,37 @@ function sanitizeCustomCategories(list) {
       label: String(item.label || '').trim(),
       showInMenu: item.showInMenu !== false,
     }))
-    .filter((item) => item.slug && item.label);
+    .filter((item) => item.slug && item.label)
+    .filter((item) => {
+      if (seen.has(item.slug)) return false;
+      seen.add(item.slug);
+      return true;
+    });
 }
 
 function sanitizeCustomPages(list) {
+  const seen = new Set();
   return (Array.isArray(list) ? list : [])
     .filter((item) => item && typeof item === 'object')
     .map((item) => ({
       id: String(item.id || buildId('page')),
       slug: String(item.slug || '').trim(),
       categorySlug: String(item.categorySlug || '').trim(),
-      title: String(item.title || '').trim(),
+      title: String(item.title || '').trim() || 'Yeni sayfa',
       summary: String(item.summary || '').trim(),
       body: String(item.body || '').trim(),
-      images: Array.isArray(item.images) ? item.images.map((url) => String(url || '').trim()).filter(Boolean).slice(0, 4) : [],
+      images: Array.isArray(item.images)
+        ? item.images.map((image) => String(image || '').trim()).slice(0, 4)
+        : [],
       published: item.published !== false,
       updatedAt: String(item.updatedAt || new Date().toISOString()),
     }))
-    .filter((item) => item.slug && item.categorySlug);
+    .filter((item) => item.slug && item.categorySlug)
+    .filter((item) => {
+      if (seen.has(item.id)) return false;
+      seen.add(item.id);
+      return true;
+    });
 }
 
 function normalizeConfig(input = {}, env = {}) {

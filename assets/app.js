@@ -346,7 +346,39 @@ function getMediaItemByRef(ref) {
 function getUsedMediaRefs() {
   const slideRefs = (state.cms.home?.slides || []).map((slide) => String(slide?.image || '')).filter((item) => item.startsWith('media:'));
   const categoryRefs = (state.cms.home?.categories || []).map((category) => String(category?.image || '')).filter((item) => item.startsWith('media:'));
-  return new Set([...slideRefs, ...categoryRefs]);
+  const placeRefs = Object.values(state.cms.pageContent || {}).flatMap((entry) => [
+    String(entry?.cover || ''),
+    ...(Array.isArray(entry?.slides) ? entry.slides.map((slide) => String(slide || '')) : []),
+  ]).filter((item) => item.startsWith('media:'));
+  const customPageRefs = (Array.isArray(state.cms.customPages) ? state.cms.customPages : [])
+    .flatMap((page) => (Array.isArray(page.images) ? page.images : []))
+    .map((image) => String(image || ''))
+    .filter((item) => item.startsWith('media:'));
+  return new Set([...slideRefs, ...categoryRefs, ...placeRefs, ...customPageRefs]);
+}
+
+function renderImagePickerField(label, fieldName, currentValue) {
+  const value = String(currentValue || '');
+  const isMediaRef = value.startsWith('media:');
+  return `
+    <div class="media-pick-field">
+      <span class="filter-label">${escapeHtml(label)}</span>
+      <div class="media-pick-row">
+        <select class="select" name="${escapeAttr(fieldName)}">
+          <option value="">Manuel URL kullan</option>
+          ${backendConfig.public.mediaLibrary.map((item) => `<option value="media:${item.id}" ${value === `media:${item.id}` ? 'selected' : ''}>${escapeHtml(item.name)}</option>`).join('')}
+        </select>
+        <input class="input" name="${escapeAttr(fieldName)}-url" value="${isMediaRef ? '' : escapeAttr(value)}" placeholder="https://...">
+      </div>
+      ${renderMediaPreview(value)}
+    </div>
+  `;
+}
+
+function pickImageValue(formData, baseName) {
+  const picked = String(formData.get(baseName) || '').trim();
+  if (picked) return picked;
+  return String(formData.get(`${baseName}-url`) || '').trim();
 }
 
 function renderMediaPreview(ref) {
@@ -658,9 +690,10 @@ function renderPlaceContentEditor({ routeKey, title, summary, facts, province, d
           <label><span class="filter-label">Künye metni</span><textarea class="textarea" name="facts" rows="4">${escapeHtml(content.facts || facts)}</textarea></label>
         </div>
         <div class="split">
-          ${[0, 1, 2, 3].map((index) => `
-            <label><span class="filter-label">Slayt ${index + 1} görsel URL</span><input class="input" name="slide-${index}" value="${escapeAttr(slideValues[index] || '')}" placeholder="https://..."></label>
-          `).join('')}
+          ${renderImagePickerField('Kapak fotoğrafı (kare kart görseli)', 'cover', content.cover || '')}
+        </div>
+        <div class="split">
+          ${[0, 1, 2, 3].map((index) => renderImagePickerField(`Slayt ${index + 1}`, `slide-${index}`, slideValues[index] || '')).join('')}
         </div>
         <div class="meta-row">
           <span class="pill">${province ? escapeHtml(province.name) : ''}</span>
@@ -695,9 +728,7 @@ function renderCustomPageEditor(page, categories) {
           <label><span class="filter-label">İçerik metni</span><textarea class="textarea" name="body" rows="6">${escapeHtml(page.body || '')}</textarea></label>
         </div>
         <div class="split">
-          ${[0, 1, 2, 3].map((index) => `
-            <label><span class="filter-label">Görsel ${index + 1} URL</span><input class="input" name="image-${index}" value="${escapeAttr(images[index] || '')}" placeholder="https://..."></label>
-          `).join('')}
+          ${[0, 1, 2, 3].map((index) => renderImagePickerField(`Görsel ${index + 1}`, `image-${index}`, images[index] || '')).join('')}
         </div>
         <label class="card-actions" style="align-items:center;">
           <input type="checkbox" name="published" ${page.published !== false ? 'checked' : ''}> Yayında
@@ -1533,6 +1564,20 @@ function isFeaturedTour(tour) {
   return ['istanbul-classic', 'antalya-coast', 'cappadocia-balloon', 'ege-gastro'].includes(tour.id) || tour.id.endsWith('-discover');
 }
 
+function renderDistrictSquareCard(district, provinceSlug) {
+  const routeKey = getPlaceRouteKey('district', provinceSlug, district.slug);
+  const cover = resolveMediaSource(getPlaceContent(routeKey).cover || '');
+  const style = cover
+    ? ` style="background-image:linear-gradient(180deg, rgba(10,14,24,0.05), rgba(10,14,24,0.65)), url('${escapeAttr(cover)}'); background-size:cover; background-position:center;"`
+    : '';
+  return `
+    <a class="district-square-card${cover ? '' : ' no-cover'}" data-nav href="/il/${escapeAttr(provinceSlug)}/${escapeAttr(district.slug)}"${style}>
+      <span class="district-square-name">${escapeHtml(district.name)}</span>
+      <span class="district-square-status">${district.status ? 'Yayında' : 'Pasif'}</span>
+    </a>
+  `;
+}
+
 function renderProvincePreviewCard(province) {
   const copy = regionCopy[province.region] || regionCopy.Marmara;
   return `
@@ -1587,6 +1632,7 @@ function renderProvincePage(provinceSlug) {
   return `
     <section class="page">
       <div class="page-hero" style="--page-gradient: linear-gradient(135deg, ${copy.accent}, #0b1220)">
+        ${content.cover ? `<div class="page-hero-cover" style="background-image:url('${escapeAttr(resolveMediaSource(content.cover))}')"></div>` : ''}
         <div class="hero-copy">
           <div class="eyebrow">${province.region}</div>
           <h1 class="page-title">${escapeHtml(title)}</h1>
@@ -1646,6 +1692,17 @@ function renderProvincePage(provinceSlug) {
             </div>
             <div class="grid-cards">${renderTourCards(filteredTours)}</div>
           </article>
+          <article class="panel glass-card">
+            <div class="section-header">
+              <div>
+                <div class="eyebrow">Kare kartlar</div>
+                <h2 class="section-title">${escapeHtml(province.name)} ilçeleri</h2>
+              </div>
+            </div>
+            <div class="district-square-grid">
+              ${districtList.map((district) => renderDistrictSquareCard(district, province.slug)).join('')}
+            </div>
+          </article>
           ${renderPlaceFactsSection({ routeKey, title, summary, facts, province, district: null, districtList })}
         </section>
       </div>
@@ -1674,6 +1731,7 @@ function renderDistrictPage(provinceSlug, districtSlug) {
   return `
     <section class="page">
       <div class="page-hero" style="--page-gradient: linear-gradient(135deg, ${copy.accent}, #0b1220)">
+        ${content.cover ? `<div class="page-hero-cover" style="background-image:url('${escapeAttr(resolveMediaSource(content.cover))}')"></div>` : ''}
         <div class="hero-copy">
           <div class="eyebrow">${province.name}</div>
           <h1 class="page-title">${escapeHtml(title)}</h1>
@@ -2268,7 +2326,7 @@ function renderCustomCategoryPage(categorySlug) {
 }
 
 function renderCustomPageCard(page) {
-  const cover = (page.images || []).find(Boolean) || '';
+  const cover = resolveMediaSource((page.images || []).find(Boolean) || '');
   const visualStyle = cover ? ` style="background-image:linear-gradient(180deg, rgba(10,14,24,0.05), rgba(10,14,24,0.55)), url('${escapeAttr(cover)}'); background-size:cover; background-position:center;"` : '';
   return `
     <a class="tour-card" data-nav href="/kategori/${escapeAttr(page.categorySlug)}/${escapeAttr(page.slug)}">
@@ -2311,7 +2369,7 @@ function renderCustomPage(categorySlug, pageSlug) {
           <div class="place-gallery-track">
             ${images.map((src, index) => `
               <article class="place-gallery-slide">
-                <div class="place-gallery-image" style="--cover-image: url('${escapeAttr(src)}')">
+                <div class="place-gallery-image" style="--cover-image: url('${escapeAttr(resolveMediaSource(src))}')">
                   <div class="place-gallery-index">0${index + 1}</div>
                 </div>
               </article>
@@ -3532,7 +3590,7 @@ async function savePlaceContentFromDom(action) {
   if (!routeKey) return;
   const formData = new FormData(form);
   const slides = [0, 1, 2, 3]
-    .map((index) => String(formData.get(`slide-${index}`) || '').trim())
+    .map((index) => pickImageValue(formData, `slide-${index}`))
     .filter(Boolean)
     .slice(0, 4);
   await saveBackendConfig({
@@ -3542,6 +3600,7 @@ async function savePlaceContentFromDom(action) {
       title: String(formData.get('title') || '').trim(),
       summary: String(formData.get('summary') || '').trim(),
       facts: String(formData.get('facts') || '').trim(),
+      cover: pickImageValue(formData, 'cover'),
       slides,
     },
   });
@@ -3669,7 +3728,7 @@ function saveCustomPageFromDom(action) {
   page.slug = slugify(slugInput || title) || page.id;
   page.summary = String(formData.get('summary') || '').trim();
   page.body = String(formData.get('body') || '').trim();
-  page.images = [0, 1, 2, 3].map((index) => String(formData.get(`image-${index}`) || '').trim());
+  page.images = [0, 1, 2, 3].map((index) => pickImageValue(formData, `image-${index}`));
   page.published = formData.get('published') === 'on';
   page.updatedAt = new Date().toISOString();
   state.adminMessage = 'Sayfa kaydedildi.';

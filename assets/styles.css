@@ -1483,6 +1483,101 @@ html[data-theme="light"] .site-nav-bar {
   background: color-mix(in srgb, var(--surface) 84%, transparent);
 }
 
+.media-pick-field {
+  display: grid;
+  gap: 6px;
+}
+
+.media-pick-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+@media (max-width: 640px) {
+  .media-pick-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.page-hero-cover {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 88px;
+  height: 88px;
+  border-radius: 20px;
+  background-size: cover;
+  background-position: center;
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
+}
+
+@media (max-width: 720px) {
+  .page-hero-cover {
+    width: 64px;
+    height: 64px;
+    top: 16px;
+    right: 16px;
+  }
+}
+
+.district-square-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.district-square-card {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 12px;
+  border: 1px solid var(--line);
+  background: linear-gradient(160deg, color-mix(in srgb, var(--primary) 20%, var(--surface-2)), var(--surface-2));
+  color: var(--text);
+}
+
+.district-square-card.no-cover {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.district-square-card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--primary) 45%, transparent);
+}
+
+.district-square-name {
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: 0.98rem;
+  color: #fff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.district-square-card.no-cover .district-square-name {
+  color: var(--text);
+  text-shadow: none;
+}
+
+.district-square-status {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.district-square-card.no-cover .district-square-status {
+  color: var(--muted);
+  text-shadow: none;
+}
+
 .media-preview {
   display: grid;
   grid-template-columns: 92px 1fr;

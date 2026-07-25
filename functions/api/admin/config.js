@@ -83,6 +83,7 @@ export async function onRequestPost({ request, env }) {
                 title: String(body.pageContent?.title || '').trim(),
                 summary: String(body.pageContent?.summary || '').trim(),
                 facts: String(body.pageContent?.facts || '').trim(),
+                cover: String(body.pageContent?.cover || '').trim(),
                 slides: Array.isArray(body.pageContent?.slides)
                   ? body.pageContent.slides.map((item) => String(item || '').trim()).filter(Boolean).slice(0, 4)
                   : [],
