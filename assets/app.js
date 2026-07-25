@@ -1118,7 +1118,14 @@ function bindGlobalEvents() {
       if (!searchOpen) {
         searchOpen = true;
         render();
-        setTimeout(() => document.querySelector('[data-search]')?.focus(), 0);
+        requestAnimationFrame(() => {
+          const next = document.querySelector('[data-search]');
+          if (next) {
+            next.focus();
+            const pos = next.value.length;
+            try { next.setSelectionRange(pos, pos); } catch (err) { /* noop */ }
+          }
+        });
         return;
       }
       renderSearchOverlay(el.value);
@@ -1150,27 +1157,13 @@ function bindGlobalEvents() {
     }
     if (el.matches('[data-admin-panel-search]')) {
       state.adminPanelSearch = el.value;
-      const caret = el.selectionStart;
-      render();
-      requestAnimationFrame(() => {
-        const next = document.querySelector('[data-admin-panel-search]');
-        if (next) {
-          next.focus();
-          try { next.setSelectionRange(caret, caret); } catch (err) { /* noop */ }
-        }
-      });
+      const container = document.querySelector('[data-admin-menu-groups]');
+      if (container) container.innerHTML = renderAdminMenuGroupsFragment(state.adminTab || 'account', state.adminPanelSearch);
     }
     if (el.matches('[data-admin-pages-search]')) {
       state.adminPagesSearch = el.value;
-      const caret = el.selectionStart;
-      render();
-      requestAnimationFrame(() => {
-        const next = document.querySelector('[data-admin-pages-search]');
-        if (next) {
-          next.focus();
-          try { next.setSelectionRange(caret, caret); } catch (err) { /* noop */ }
-        }
-      });
+      const container = document.querySelector('[data-place-search-results]');
+      if (container) container.innerHTML = renderPlaceSearchResultsFragment(state.adminPagesSearch);
     }
   });
 
@@ -1980,18 +1973,8 @@ function renderCheckoutPage(tailorMode) {
   `;
 }
 
-function renderAdminPage() {
-  const locale = getLocale();
-  const t = translations[locale];
-  const activeTab = state.adminTab || 'account';
-  const activeGroup = adminGroups.find((group) => group.id === activeTab);
-  const publishCount = Object.values(state.cms.publish || {}).filter(Boolean).length;
-  const adminStatus = adminSessionSource === 'backend' ? 'Backend session aktif' : adminSessionSource === 'local' ? 'Yerel oturum aktif' : 'Oturum kapalı';
-  const breadcrumb = ['Admin', activeGroup?.label || 'Hesap ve Giriş'];
-  const recentEntries = (Array.isArray(state.adminRecentTabs) ? state.adminRecentTabs : [])
-    .map((item) => (typeof item === 'string' ? { type: 'tab', id: item } : item))
-    .slice(0, 6);
-  const searchNeedle = normalize(state.adminPanelSearch || '');
+function renderAdminMenuGroupsFragment(activeTab, searchValue) {
+  const searchNeedle = normalize(searchValue || '');
   const filteredGroups = adminGroups.filter((group) => {
     if (!searchNeedle) return true;
     return normalize(`${group.label} ${group.description} ${group.id}`).includes(searchNeedle);
@@ -2022,6 +2005,20 @@ function renderAdminPage() {
       </details>
     `;
   }).join('');
+  return renderedGroups || '<div class="admin-empty-state">Sonuç yok. Farklı bir kelime deneyin.</div>';
+}
+
+function renderAdminPage() {
+  const locale = getLocale();
+  const t = translations[locale];
+  const activeTab = state.adminTab || 'account';
+  const activeGroup = adminGroups.find((group) => group.id === activeTab);
+  const publishCount = Object.values(state.cms.publish || {}).filter(Boolean).length;
+  const adminStatus = adminSessionSource === 'backend' ? 'Backend session aktif' : adminSessionSource === 'local' ? 'Yerel oturum aktif' : 'Oturum kapalı';
+  const breadcrumb = ['Admin', activeGroup?.label || 'Hesap ve Giriş'];
+  const recentEntries = (Array.isArray(state.adminRecentTabs) ? state.adminRecentTabs : [])
+    .map((item) => (typeof item === 'string' ? { type: 'tab', id: item } : item))
+    .slice(0, 6);
   return `
     <section class="page admin-shell">
       <div class="page-hero admin-hero" style="--page-gradient: linear-gradient(135deg, #ffcf8a, #8ad7ff)">
@@ -2088,8 +2085,8 @@ function renderAdminPage() {
           </section>
           <section class="sidebar glass-card">
             <h3>Kontrol menüsü</h3>
-            <div class="admin-menu-groups">
-              ${renderedGroups || '<div class="admin-empty-state">Sonuç yok. Farklı bir kelime deneyin.</div>'}
+            <div class="admin-menu-groups" data-admin-menu-groups>
+              ${renderAdminMenuGroupsFragment(activeTab, state.adminPanelSearch)}
             </div>
           </section>
           <section class="sidebar glass-card">
@@ -3131,6 +3128,26 @@ function resizeImageFile(file, { maxDim = 1600, thumbDim = 320, quality = 0.82 }
   }));
 }
 
+function renderPlaceSearchResultsFragment(searchValue) {
+  const placeMatches = searchPlaces(searchValue);
+  return placeMatches.length ? placeMatches.map((match) => {
+    const props = buildPlaceEditorProps(match.kind, match.provinceSlug, match.districtSlug);
+    if (!props) return '';
+    const isOpen = state.adminOpenPlaceKey === props.routeKey;
+    return `
+      <button class="admin-nav-button ${isOpen ? 'active' : ''}" data-action="toggle-admin-place" data-route-key="${escapeAttr(props.routeKey)}" data-label="${escapeAttr(match.label)}" type="button">
+        <div class="admin-nav-icon" aria-hidden="true">${match.kind === 'district' ? '🏘️' : '🏙️'}</div>
+        <div class="admin-nav-copy">
+          <strong>${escapeHtml(match.label)}</strong>
+          <small>${match.kind === 'district' ? 'İlçe sayfası' : 'İl sayfası'}</small>
+        </div>
+        <span class="admin-nav-pill">${isOpen ? 'Kapat' : 'Düzenle'}</span>
+      </button>
+      ${isOpen ? renderPlaceContentEditor(props) : ''}
+    `;
+  }).join('') : `<div class="admin-empty-state">${searchValue ? 'Eşleşen il/ilçe yok.' : 'Aramaya başlamak için il veya ilçe adı yazın.'}</div>`;
+}
+
 function renderAdminTab(tab) {
   switch (tab) {
     case 'account':
@@ -3375,7 +3392,6 @@ function renderAdminTab(tab) {
       `;
     case 'pages': {
       const categories = getAllCategories();
-      const placeMatches = searchPlaces(state.adminPagesSearch);
       const customPages = Array.isArray(state.cms.customPages) ? state.cms.customPages : [];
       return `
         <article class="panel glass-card">
@@ -3404,23 +3420,8 @@ function renderAdminTab(tab) {
             <span class="filter-label">İl veya ilçe ara</span>
             <input class="input" data-admin-pages-search value="${escapeAttr(state.adminPagesSearch || '')}" placeholder="Örn. Fethiye, Muğla...">
           </label>
-          <div class="admin-nav-list">
-            ${placeMatches.length ? placeMatches.map((match) => {
-              const props = buildPlaceEditorProps(match.kind, match.provinceSlug, match.districtSlug);
-              if (!props) return '';
-              const isOpen = state.adminOpenPlaceKey === props.routeKey;
-              return `
-                <button class="admin-nav-button ${isOpen ? 'active' : ''}" data-action="toggle-admin-place" data-route-key="${escapeAttr(props.routeKey)}" data-label="${escapeAttr(match.label)}" type="button">
-                  <div class="admin-nav-icon" aria-hidden="true">${match.kind === 'district' ? '🏘️' : '🏙️'}</div>
-                  <div class="admin-nav-copy">
-                    <strong>${escapeHtml(match.label)}</strong>
-                    <small>${match.kind === 'district' ? 'İlçe sayfası' : 'İl sayfası'}</small>
-                  </div>
-                  <span class="admin-nav-pill">${isOpen ? 'Kapat' : 'Düzenle'}</span>
-                </button>
-                ${isOpen ? renderPlaceContentEditor(props) : ''}
-              `;
-            }).join('') : `<div class="admin-empty-state">${state.adminPagesSearch ? 'Eşleşen il/ilçe yok.' : 'Aramaya başlamak için il veya ilçe adı yazın.'}</div>`}
+          <div class="admin-nav-list" data-place-search-results>
+            ${renderPlaceSearchResultsFragment(state.adminPagesSearch)}
           </div>
         </article>
 
@@ -3660,7 +3661,14 @@ function toggleSearch() {
   searchOpen = !searchOpen;
   render();
   if (searchOpen) {
-    setTimeout(() => document.querySelector('[data-search]')?.focus(), 0);
+    requestAnimationFrame(() => {
+      const next = document.querySelector('[data-search]');
+      if (next) {
+        next.focus();
+        const pos = next.value.length;
+        try { next.setSelectionRange(pos, pos); } catch (err) { /* noop */ }
+      }
+    });
     updateFromSearchInput();
   }
 }
