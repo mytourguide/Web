@@ -64,6 +64,8 @@ let backendConfig = {
     },
     mediaLibrary: [],
     pageContent: {},
+    customCategories: [],
+    customPages: [],
   },
   auth: null,
 };
@@ -1004,8 +1006,9 @@ function bindGlobalEvents() {
     if (name === 'scroll-place-slider') scrollPlaceSlider(action.dataset.routeKey, Number(action.dataset.direction || 1));
     if (name === 'open-route') navigate(action.dataset.route);
     if (name === 'save-place-content') savePlaceContentFromDom(action).catch((error) => console.error(error));
-    if (name === 'toggle-admin-place') toggleAdminPlace(action.dataset.routeKey);
-    if (name === 'toggle-admin-page') toggleAdminPage(action.dataset.pageId);
+    if (name === 'toggle-admin-place') toggleAdminPlace(action.dataset.routeKey, action.dataset.label);
+    if (name === 'toggle-admin-page') toggleAdminPage(action.dataset.pageId, action.dataset.pageLabel);
+    if (name === 'open-recent-entry') openRecentEntry(Number(action.dataset.recentIndex));
     if (name === 'delete-custom-category') {
       if (confirm('Bu kategori ve içindeki sayfalar silinsin mi?')) deleteCustomCategory(action.dataset.slug);
     }
@@ -1238,9 +1241,10 @@ function parseRoute(pathname, params) {
 
 function render() {
   updateDocumentMeta();
+  const hideMenuStrip = data.route?.kind === 'admin' || data.route?.kind === 'login';
   ROOT.innerHTML = `
     ${renderTopbar()}
-    ${renderMenuStrip()}
+    ${hideMenuStrip ? '' : renderMenuStrip()}
     ${searchOpen ? renderSearchOverlayMarkup() : ''}
     <main class="app-shell">
       ${renderRoute()}
@@ -1911,16 +1915,40 @@ function renderAdminPage() {
   const publishCount = Object.values(state.cms.publish || {}).filter(Boolean).length;
   const adminStatus = adminSessionSource === 'backend' ? 'Backend session aktif' : adminSessionSource === 'local' ? 'Yerel oturum aktif' : 'Oturum kapalı';
   const breadcrumb = ['Admin', activeGroup?.label || 'Hesap ve Giriş'];
-  const recentTabs = Array.isArray(state.adminRecentTabs) ? state.adminRecentTabs : [];
-  const recentGroups = recentTabs
-    .map((tab) => adminGroups.find((group) => group.id === tab))
-    .filter(Boolean)
-    .slice(0, 4);
+  const recentEntries = (Array.isArray(state.adminRecentTabs) ? state.adminRecentTabs : [])
+    .map((item) => (typeof item === 'string' ? { type: 'tab', id: item } : item))
+    .slice(0, 6);
   const searchNeedle = normalize(state.adminPanelSearch || '');
   const filteredGroups = adminGroups.filter((group) => {
     if (!searchNeedle) return true;
     return normalize(`${group.label} ${group.description} ${group.id}`).includes(searchNeedle);
   });
+  const menuGroupDefs = [
+    { label: 'Site Ayarları', ids: ['account', 'appearance'] },
+    { label: 'İçerik ve Sayfalar', ids: ['homepage', 'content', 'pages'] },
+    { label: 'Yayın ve İşlemler', ids: ['publish', 'commerce', 'security'] },
+  ];
+  const renderedGroups = menuGroupDefs.map((groupDef) => {
+    const items = groupDef.ids.map((id) => filteredGroups.find((group) => group.id === id)).filter(Boolean);
+    if (!items.length) return '';
+    return `
+      <details class="admin-menu-group" open>
+        <summary>${escapeHtml(groupDef.label)}<span class="admin-menu-group-count">${items.length}</span></summary>
+        <div class="admin-nav-list">
+          ${items.map((group) => `
+            <button class="admin-nav-button ${activeTab === group.id ? 'active' : ''}" data-action="set-admin-tab" data-tab="${group.id}" type="button">
+              <div class="admin-nav-icon" aria-hidden="true">${group.icon || '•'}</div>
+              <div class="admin-nav-copy">
+                <strong>${group.label}</strong>
+                <small>${group.description}</small>
+              </div>
+              <span class="admin-nav-pill">${activeTab === group.id ? 'Açık' : 'Aç'}</span>
+            </button>
+          `).join('')}
+        </div>
+      </details>
+    `;
+  }).join('');
   return `
     <section class="page admin-shell">
       <div class="page-hero admin-hero" style="--page-gradient: linear-gradient(135deg, #ffcf8a, #8ad7ff)">
@@ -1948,8 +1976,16 @@ function renderAdminPage() {
           </div>
         </div>
       </div>
+
+      <div class="admin-toolbar glass-card">
+        <label class="admin-search admin-search-wide">
+          <span class="filter-label">Panelde ara</span>
+          <input class="input" data-admin-panel-search value="${escapeAttr(state.adminPanelSearch || '')}" placeholder="Hesap, görünüm, sayfa, yayın, güvenlik...">
+        </label>
+      </div>
+
       <div class="page-layout admin-layout">
-        <aside class="sticky-stack admin-sidebar">
+        <aside class="admin-sidebar">
           <section class="sidebar glass-card">
             <div class="admin-brand admin-brand-compact">
               <div class="admin-brand-mark">MT</div>
@@ -1972,22 +2008,8 @@ function renderAdminPage() {
           </section>
           <section class="sidebar glass-card">
             <h3>Kontrol menüsü</h3>
-            <label class="admin-search">
-              <span class="filter-label">Menüde ara</span>
-              <input class="input" data-admin-panel-search value="${escapeAttr(state.adminPanelSearch || '')}" placeholder="Hesap, görünüm, yayın...">
-            </label>
-            <div class="admin-nav-list">
-              ${filteredGroups.map((group) => `
-                <button class="admin-nav-button ${activeTab === group.id ? 'active' : ''}" data-action="set-admin-tab" data-tab="${group.id}" type="button">
-                  <div class="admin-nav-icon" aria-hidden="true">${group.icon || '•'}</div>
-                  <div class="admin-nav-copy">
-                    <strong>${group.label}</strong>
-                    <small>${group.description}</small>
-                  </div>
-                  <span class="admin-nav-pill">${activeTab === group.id ? 'Açık' : 'Aç'}</span>
-                </button>
-              `).join('')}
-              ${filteredGroups.length ? '' : '<div class="admin-empty-state">Sonuç yok. Farklı bir kelime deneyin.</div>'}
+            <div class="admin-menu-groups">
+              ${renderedGroups || '<div class="admin-empty-state">Sonuç yok. Farklı bir kelime deneyin.</div>'}
             </div>
           </section>
           <section class="sidebar glass-card">
@@ -2001,15 +2023,32 @@ function renderAdminPage() {
           <section class="sidebar glass-card">
             <h3>Son açılanlar</h3>
             <div class="admin-recent-list">
-              ${recentGroups.length ? recentGroups.map((group) => `
-                <button class="admin-recent-item" data-action="set-admin-tab" data-tab="${group.id}" type="button">
-                  <span class="admin-nav-icon" aria-hidden="true">${group.icon || '•'}</span>
-                  <span>
-                    <strong>${group.label}</strong>
-                    <small>${group.description}</small>
-                  </span>
-                </button>
-              `).join('') : '<div class="admin-empty-state">Henüz geçmiş yok.</div>'}
+              ${recentEntries.length ? recentEntries.map((entry, index) => {
+                let icon = '•';
+                let label = entry.label || entry.id;
+                let small = '';
+                if (entry.type === 'place') {
+                  icon = String(entry.id).startsWith('district:') ? '🏘️' : '🏙️';
+                  small = 'İl/İlçe sayfası';
+                } else if (entry.type === 'page') {
+                  icon = '📄';
+                  small = 'Özel sayfa';
+                } else {
+                  const group = adminGroups.find((item) => item.id === entry.id);
+                  icon = group?.icon || '•';
+                  label = group?.label || entry.id;
+                  small = group?.description || '';
+                }
+                return `
+                  <button class="admin-recent-item" data-action="open-recent-entry" data-recent-index="${index}" type="button">
+                    <span class="admin-nav-icon" aria-hidden="true">${icon}</span>
+                    <span>
+                      <strong>${escapeHtml(label)}</strong>
+                      <small>${escapeHtml(small)}</small>
+                    </span>
+                  </button>
+                `;
+              }).join('') : '<div class="admin-empty-state">Henüz geçmiş yok.</div>'}
             </div>
           </section>
         </aside>
@@ -2726,10 +2765,16 @@ function publishBadge(label, key) {
   return `<span class="pill">${label} • ${publishSection(key) ? 'Yayında' : 'Pasif'}</span>`;
 }
 
+function pushRecentEntry(entry) {
+  const prev = Array.isArray(state.adminRecentTabs) ? state.adminRecentTabs : [];
+  const normalized = prev.map((item) => (typeof item === 'string' ? { type: 'tab', id: item } : item));
+  const filtered = normalized.filter((item) => !(item.type === entry.type && item.id === entry.id));
+  state.adminRecentTabs = [entry, ...filtered].slice(0, 6);
+}
+
 function setAdminTab(tab) {
   state.adminTab = tab;
-  const prevRecent = Array.isArray(state.adminRecentTabs) ? state.adminRecentTabs : [];
-  state.adminRecentTabs = [tab, ...prevRecent.filter((item) => item !== tab)].slice(0, 6);
+  pushRecentEntry({ type: 'tab', id: tab });
   saveState();
   render();
 }
@@ -3203,7 +3248,7 @@ function renderAdminTab(tab) {
               if (!props) return '';
               const isOpen = state.adminOpenPlaceKey === props.routeKey;
               return `
-                <button class="admin-nav-button ${isOpen ? 'active' : ''}" data-action="toggle-admin-place" data-route-key="${escapeAttr(props.routeKey)}" type="button">
+                <button class="admin-nav-button ${isOpen ? 'active' : ''}" data-action="toggle-admin-place" data-route-key="${escapeAttr(props.routeKey)}" data-label="${escapeAttr(match.label)}" type="button">
                   <div class="admin-nav-icon" aria-hidden="true">${match.kind === 'district' ? '🏘️' : '🏙️'}</div>
                   <div class="admin-nav-copy">
                     <strong>${escapeHtml(match.label)}</strong>
@@ -3230,7 +3275,7 @@ function renderAdminTab(tab) {
               const isOpen = state.adminOpenPageId === page.id;
               const categoryLabel = categories.find((item) => item.slug === page.categorySlug)?.label || page.categorySlug;
               return `
-                <button class="admin-nav-button ${isOpen ? 'active' : ''}" data-action="toggle-admin-page" data-page-id="${escapeAttr(page.id)}" type="button">
+                <button class="admin-nav-button ${isOpen ? 'active' : ''}" data-action="toggle-admin-page" data-page-id="${escapeAttr(page.id)}" data-page-label="${escapeAttr(page.title)}" type="button">
                   <div class="admin-nav-icon" aria-hidden="true">📄</div>
                   <div class="admin-nav-copy">
                     <strong>${escapeHtml(page.title)}</strong>
@@ -3505,13 +3550,43 @@ async function savePlaceContentFromDom(action) {
   render();
 }
 
-function toggleAdminPlace(routeKey) {
-  state.adminOpenPlaceKey = state.adminOpenPlaceKey === routeKey ? '' : routeKey;
+function toggleAdminPlace(routeKey, label = '') {
+  const opening = state.adminOpenPlaceKey !== routeKey;
+  state.adminOpenPlaceKey = opening ? routeKey : '';
+  if (opening) {
+    pushRecentEntry({ type: 'place', id: routeKey, label: label || routeKey, routeKey, searchTerm: state.adminPagesSearch || label || '' });
+    saveState();
+  }
   render();
 }
 
-function toggleAdminPage(pageId) {
-  state.adminOpenPageId = state.adminOpenPageId === pageId ? '' : pageId;
+function toggleAdminPage(pageId, label = '') {
+  const opening = state.adminOpenPageId !== pageId;
+  state.adminOpenPageId = opening ? pageId : '';
+  if (opening) {
+    pushRecentEntry({ type: 'page', id: pageId, label: label || 'Sayfa', pageId });
+    saveState();
+  }
+  render();
+}
+
+function openRecentEntry(index) {
+  const entries = (Array.isArray(state.adminRecentTabs) ? state.adminRecentTabs : [])
+    .map((item) => (typeof item === 'string' ? { type: 'tab', id: item } : item));
+  const entry = entries[index];
+  if (!entry) return;
+  if (entry.type === 'place') {
+    state.adminTab = 'pages';
+    state.adminPagesSearch = entry.searchTerm || entry.label || '';
+    state.adminOpenPlaceKey = entry.routeKey;
+  } else if (entry.type === 'page') {
+    state.adminTab = 'pages';
+    state.adminOpenPageId = entry.pageId;
+  } else {
+    state.adminTab = entry.id;
+  }
+  pushRecentEntry(entry);
+  saveState();
   render();
 }
 
