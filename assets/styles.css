@@ -933,6 +933,11 @@ html[data-theme="light"] .site-nav-bar {
   gap: 14px;
 }
 
+.admin-sidebar .sidebar {
+  position: static;
+  top: auto;
+}
+
 .admin-toolbar {
   margin: 16px 0;
   padding: 16px 18px;
