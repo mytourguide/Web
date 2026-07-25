@@ -1044,6 +1044,10 @@ function bindGlobalEvents() {
     if (name === 'toggle-admin-place') toggleAdminPlace(action.dataset.routeKey, action.dataset.label);
     if (name === 'toggle-admin-page') toggleAdminPage(action.dataset.pageId, action.dataset.pageLabel);
     if (name === 'open-recent-entry') openRecentEntry(Number(action.dataset.recentIndex));
+    if (name === 'dismiss-admin-message') {
+      state.adminMessage = '';
+      render();
+    }
     if (name === 'delete-custom-category') {
       if (confirm('Bu kategori ve içindeki sayfalar silinsin mi?')) deleteCustomCategory(action.dataset.slug);
     }
@@ -2042,6 +2046,13 @@ function renderAdminPage() {
         </div>
       </div>
 
+      ${state.adminMessage ? `
+        <div class="admin-global-message" data-action="dismiss-admin-message">
+          <span>${escapeHtml(state.adminMessage)}</span>
+          <button class="chip-action" type="button" aria-label="Kapat">✕</button>
+        </div>
+      ` : ''}
+
       <div class="admin-toolbar glass-card">
         <label class="admin-search admin-search-wide">
           <span class="filter-label">Panelde ara</span>
@@ -2225,7 +2236,7 @@ function renderLoginPage() {
               </div>
               ${isLocalHost ? '<div class="step"><strong>Yerel giriş</strong><p>Varsayılan bilgiler: <code>admin</code> / <code>tour2026</code></p></div>' : ''}
               ${state.adminMessage ? `<div class="step"><strong>Not</strong><p>${escapeHtml(state.adminMessage)}</p></div>` : ''}
-            </form>
+                          </form>
           </article>
         </section>
       </div>
@@ -3674,7 +3685,10 @@ function scrollPlaceSlider(routeKey, direction) {
 
 async function savePlaceContentFromDom(action) {
   const form = action?.closest?.('form[data-place-content-form]');
-  if (!form) return;
+  if (!form) {
+    console.error('save-place-content: form bulunamadı, buton form dışında kalmış olabilir.');
+    return;
+  }
   const routeKey = String(form.dataset.routeKey || action.dataset.routeKey || '').trim();
   if (!routeKey) return;
   const formData = new FormData(form);
@@ -3682,20 +3696,33 @@ async function savePlaceContentFromDom(action) {
     .map((index) => pickImageValue(formData, `slide-${index}`))
     .filter(Boolean)
     .slice(0, 4);
-  await saveBackendConfig({
-    action: 'updatePageContent',
-    routeKey,
-    pageContent: {
-      title: String(formData.get('title') || '').trim(),
-      summary: String(formData.get('summary') || '').trim(),
-      facts: String(formData.get('facts') || '').trim(),
-      cover: pickImageValue(formData, 'cover'),
-      slides,
-    },
-  });
-  state.adminMessage = 'Sayfa içeriği kaydedildi.';
-  await loadBackendConfig();
-  render();
+  const originalLabel = action.textContent;
+  action.disabled = true;
+  action.textContent = 'Kaydediliyor...';
+  try {
+    await saveBackendConfig({
+      action: 'updatePageContent',
+      routeKey,
+      pageContent: {
+        title: String(formData.get('title') || '').trim(),
+        summary: String(formData.get('summary') || '').trim(),
+        facts: String(formData.get('facts') || '').trim(),
+        cover: pickImageValue(formData, 'cover'),
+        slides,
+      },
+    });
+    state.adminMessage = 'Sayfa içeriği kaydedildi.';
+    await loadBackendConfig();
+    render();
+  } catch (error) {
+    console.error(error);
+    state.adminMessage = `Sayfa içeriği kaydedilemedi: ${error?.message || 'bilinmeyen hata'}`;
+    saveState();
+    render();
+  } finally {
+    action.disabled = false;
+    action.textContent = originalLabel;
+  }
 }
 
 function toggleAdminPlace(routeKey, label = '') {

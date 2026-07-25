@@ -938,6 +938,31 @@ html[data-theme="light"] .site-nav-bar {
   top: auto;
 }
 
+.admin-global-message {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 16px 0 0;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--primary) 40%, var(--line));
+  background: color-mix(in srgb, var(--primary) 12%, var(--surface));
+  color: var(--text);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.admin-global-message button {
+  border: none;
+  background: color-mix(in srgb, var(--primary) 18%, transparent);
+  border-radius: 999px;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
 .admin-toolbar {
   margin: 16px 0;
   padding: 16px 18px;
