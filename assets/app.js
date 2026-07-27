@@ -1,4 +1,4 @@
-import { adminGroups, businessProfile, cmsDefaults, defaultQuestions, menuItems, pageDefaults, regionCopy, slugify, themes, tourCollections, tourTypes, widgetCatalog } from './content.js';
+import { adminGroups, businessProfile, cmsDefaults, defaultQuestions, menuItems, pageDefaults, provinceCopy, regionCopy, slugify, themes, tourCollections, tourTypes, widgetCatalog } from './content.js';
 import { translations } from './i18n.js';
 
 const STORE_KEY = 'mytourguide-state-v1';
@@ -418,11 +418,12 @@ function buildPlaceEditorProps(kind, provinceSlug, districtSlug = '') {
   const district = kind === 'district' ? districtList.find((item) => item.slug === districtSlug) : null;
   if (kind === 'district' && !district) return null;
   const copy = regionCopy[province.region] || regionCopy.Marmara;
+  const curated = !district ? provinceCopy[province.slug] : null;
   const routeKey = getPlaceRouteKey(kind, provinceSlug, districtSlug);
   const content = getPlaceContent(routeKey);
   const title = content.title || (district ? district.name : province.name);
-  const summary = content.summary || copy.intro;
-  const facts = content.facts || buildPlaceFacts({ province, district, districtList });
+  const summary = content.summary || curated?.summary || copy.intro;
+  const facts = content.facts || curated?.facts || buildPlaceFacts({ province, district, districtList });
   return { routeKey, title, summary, facts, province, district, districtList };
 }
 
@@ -618,9 +619,9 @@ function renderPlaceGallery(slides, { loading = false, routeKey = '', title = ''
             <div class="eyebrow">Banner</div>
             <h2 class="section-title">${escapeHtml(title || 'Görseller yükleniyor')}</h2>
           </div>
-          ${loading ? '<span class="pill">Wikimedia aranıyor</span>' : ''}
+          ${loading ? '<span class="pill">Görseller aranıyor</span>' : ''}
         </div>
-        <div class="place-gallery-empty">${loading ? 'Tarihî ve turistik görseller getiriliyor.' : 'Bu sayfa için görsel bulunamadı.'}</div>
+        <div class="place-gallery-empty">${loading ? 'İlgili görseller getiriliyor.' : 'Bu sayfa için görsel bulunamadı.'}</div>
       </section>
     `;
   }
@@ -643,9 +644,7 @@ function renderPlaceGallery(slides, { loading = false, routeKey = '', title = ''
               <div class="place-gallery-index">0${index + 1}</div>
             </div>
             <div class="place-gallery-body">
-              <div class="eyebrow">${escapeHtml(slide.source || 'wikimedia')}</div>
               <h3>${escapeHtml(slide.caption || slide.title || title || '')}</h3>
-              ${slide.pageUrl ? `<a class="btn" href="${escapeAttr(slide.pageUrl)}" target="_blank" rel="noreferrer">Kaynak sayfası</a>` : ''}
             </div>
           </article>
         `).join('')}
@@ -1639,9 +1638,10 @@ function renderProvincePage(provinceSlug) {
   const filteredTours = tours.filter((tour) => matchProvinceFilters(tour, province, filters));
   const routeKey = getPlaceRouteKey('province', provinceSlug);
   const content = getPlaceContent(routeKey);
+  const curated = provinceCopy[province.slug];
   const title = content.title || province.name;
-  const summary = content.summary || copy.intro;
-  const facts = content.facts || buildPlaceFacts({ province, district: null, districtList });
+  const summary = content.summary || curated?.summary || copy.intro;
+  const facts = content.facts || curated?.facts || buildPlaceFacts({ province, district: null, districtList });
   const slides = resolvePlaceSlides(content.slides, getPlaceGallery(routeKey));
   if (slides.length < 4 && !data.placeGalleries.has(routeKey)) {
     ensurePlaceGallery(routeKey, province.name, province.name);
@@ -2456,9 +2456,14 @@ function renderTourCards(tours) {
       </article>
     `;
   }
-  return list.map((tour) => `
+  return list.map((tour) => {
+    const cover = tour.image ? resolveMediaSource(tour.image) : '';
+    const visualStyle = cover
+      ? ` style="background-image: linear-gradient(145deg, rgba(6,10,20,0.15), rgba(6,10,20,0.55)), url('${escapeAttr(cover)}'); background-size: cover; background-position: center;"`
+      : '';
+    return `
     <article class="tour-card">
-      <div class="tour-visual" data-badge="${tour.badge}">
+      <div class="tour-visual" data-badge="${tour.badge}"${visualStyle}>
         <div>
           <div class="eyebrow">${tour.city}</div>
           <h3>${tour.title[locale] || tour.title.tr}</h3>
@@ -2480,7 +2485,8 @@ function renderTourCards(tours) {
         </div>
       </div>
     </article>
-  `).join('');
+  `;
+  }).join('');
 }
 
 function renderWidgetStrip() {

@@ -222,6 +222,17 @@ export const defaultQuestions = [
   { id: 'transfer', label: 'Havalimanı transferi', options: ['İstiyorum', 'İstemiyorum'] },
 ];
 
+// Real, research-verified per-province content used as a fallback for province pages
+// when the admin hasn't set custom content via the panel. Keyed by province slug.
+// This is populated incrementally, province by province — see /areas/mytourguide-web.md
+// for progress. Districts will get an equivalent districtCopy structure later.
+export const provinceCopy = {
+  mugla: {
+    summary: 'Muğla, Ege ve Akdeniz\'in kesiştiği Türkiye\'nin en uzun sahil şeridine (1.100 km\'yi aşan) sahip ilidir. Bodrum, Marmaris, Fethiye, Datça ve Köyceğiz gibi dünya çapında tanınan turistik merkezleriyle hem yerli hem yabancı ziyaretçilerin en çok tercih ettiği bölgelerden biridir.',
+    facts: 'Yüzölçümü: 12.655 km². Antik Karya bölgesinin merkezi olan Muğla, 103 ören yerine ev sahipliği yapar; Halikarnas Mozolesi gibi dünya harikaları arasında sayılan kalıntılar buradadır. Akdeniz iklimi hakimdir: yazlar sıcak-kurak, kışlar ılık-yağışlı geçer. Ekonomi turizm, zeytincilik, arıcılık (çam balı) ve mermercilik üzerine kuruludur; Fethiye ve Ortaca çevresinde narenciye tarımı yaygındır.',
+  },
+};
+
 export const regionCopy = {
   Akdeniz: {
     tag: 'Deniz, güneş ve canlı sahil hattı',
