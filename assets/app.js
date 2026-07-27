@@ -1133,7 +1133,16 @@ function bindGlobalEvents() {
     if (el.matches('[data-router-filter]')) {
       state.routeFilters[el.dataset.routeKey || 'type'] = el.value;
       saveState();
-      render();
+      if (el.tagName === 'INPUT') {
+        const container = document.querySelector('[data-catalogue-results]');
+        if (container) {
+          container.innerHTML = renderCatalogueResultsFragment();
+        } else {
+          render();
+        }
+      } else {
+        render();
+      }
     }
     if (el.matches('[data-cms-field]')) {
       setPath(state.cms, el.dataset.cmsField, el.value);
@@ -1798,7 +1807,15 @@ function renderDistrictPage(provinceSlug, districtSlug) {
   `;
 }
 
+let catalogueToursCache = [];
+
+function renderCatalogueResultsFragment() {
+  const filteredTours = catalogueToursCache.filter((tour) => matchCatalogueFilters(tour, state.routeFilters));
+  return renderTourCards(filteredTours);
+}
+
 function renderCataloguePage({ title, eyebrow, description, tours, scope }) {
+  catalogueToursCache = tours;
   const locale = getLocale();
   const filters = state.routeFilters;
   const filteredTours = tours.filter((tour) => matchCatalogueFilters(tour, filters));
@@ -1849,7 +1866,7 @@ function renderCataloguePage({ title, eyebrow, description, tours, scope }) {
               </div>
               <button class="btn btn-primary" data-action="toggle-search" type="button">Ara</button>
             </div>
-            <div class="grid-cards">${renderTourCards(filteredTours)}</div>
+            <div class="grid-cards" data-catalogue-results>${renderTourCards(filteredTours)}</div>
           </article>
         </section>
       </div>
