@@ -227,6 +227,10 @@ export const defaultQuestions = [
 // This is populated incrementally, province by province — see /areas/mytourguide-web.md
 // for progress. Districts will get an equivalent districtCopy structure later.
 export const provinceCopy = {
+  antalya: {
+    summary: '"Attalos Yurdu" anlamına gelen Antalya, II. Attalos tarafından kurulan, Bergama Krallığı, Roma (Attaleia), Bizans ve Selçuklu dönemlerinden izler taşıyan, 630 km\'yi bulan sahil şeridiyle Türkiye\'nin en önemli Akdeniz turizm merkezidir.',
+    facts: 'Yüzölçümü bakımından Türkiye\'nin 6., nüfus bakımından 5. büyük ilidir; 2023 sonu nüfusu 2,7 milyona yakındır. Kuzeyinde Burdur, Isparta ve Konya, doğusunda Karaman ve Mersin, batısında Muğla illeri vardır. Tarihi Kaleiçi semti 1972\'de SİT alanı ilan edilmiş, 1984\'te Altın Elma Turizm Oskarı almıştır. Ekonomisi büyük ölçüde turizm, ticaret ve tarıma dayanır; 19 ilçesi vardır.',
+  },
   ankara: {
     summary: 'Ankara, 13 Ekim 1923\'te Türkiye Cumhuriyeti\'nin başkenti ilan edilen, Frigya, Lidya, Pers, Galat, Roma, Bizans ve Selçuklu dönemlerinden izler taşıyan köklü bir İç Anadolu şehridir.',
     facts: 'Yüzölçümü 25.632-26.897 km² civarında, denizden yüksekliği yaklaşık 890 metredir; 25 ilçesi ve 2025 sonu itibarıyla yaklaşık 5,9 milyon nüfusu vardır. Doğuda Kızılırmak, batıda Sakarya nehirlerinin çizdiği kavisler arasında yer alır; kuzeyindeki Köroğlu Dağları\'nın en yüksek noktası Yıldırım Dağı 2.044 metredir. Ankara Kalesi, Anıtkabir ve Anadolu Medeniyetleri Müzesi şehrin simge yapılarındandır.',
@@ -262,6 +266,82 @@ export const provinceCopy = {
 };
 
 export const districtCopy = {
+  'antalya/akseki': {
+    summary: 'Akseki, Antalya\'nın kuzeydoğusunda, Toros Dağları\'nda yer alan, tarihi ve kültürel değerleriyle bilinen dağlık bir ilçedir.',
+    facts: 'Termessos Antik Kenti\'ne yakınlığıyla bilinir; geçimini büyük ölçüde ormancılık ve hayvancılıktan sağlar.',
+  },
+  'antalya/aksu': {
+    summary: 'Aksu, Antalya Havalimanı\'nın bulunduğu, UNESCO geçici listesindeki Perge Antik Kenti ve Kurşunlu Şelalesi ile tanınan bir ilçedir.',
+    facts: 'Seracılık ve tarımla uğraşan köylere ev sahipliği yapar; Antalya\'da nüfus artış hızının en yüksek olduğu ilçedir (%5,46).',
+  },
+  'antalya/alanya': {
+    summary: 'Alanya, Helenistik dönemde yapımına başlanan, Selçuklu döneminde tamamlanan, 6,5 km surlu ve 140 kuleli Alanya Kalesi\'yle ve Kleopatra Plajı\'yla tanınan bir Akdeniz turizm merkezidir.',
+    facts: 'Antalya kent merkezine 135 km uzaklıktadır; kale 250 metre yükseklikte bir tepeye kuruludur.',
+  },
+  'antalya/demre': {
+    summary: 'Demre, Likya uygarlığının önemli merkezlerinden biri olup Aziz Nikolaos (Noel Baba) Kilisesi ve Myra Antik Kenti\'yle Hristiyan dünyası için önemli bir hac güzergahıdır.',
+    facts: 'Yakınlarındaki Kekova Adası\'nın batık kalıntıları da ilçenin önemli turistik noktalarındandır.',
+  },
+  'antalya/dosemealti': {
+    summary: 'Döşemealtı, Antalya kent merkezine 20 km uzaklıkta, 687 km² yüzölçümüne ve yaklaşık 80 bin nüfusa sahip, doğal güzellikleri ve kırsal dokusuyla bilinen bir ilçedir.',
+    facts: 'Karst mağaraları ve ormanlık alanlarıyla doğa turizmine elverişlidir.',
+  },
+  'antalya/elmali': {
+    summary: 'Elmalı, Antalya\'nın iç kesimlerinde, Yörük Türkmenlerinin kültürünü yansıtan Gökbelen Yaylası ile tanınan tarihi bir ilçedir.',
+    facts: '8 teşhir salonlu Elmalı Müzesi, bölgenin arkeolojik zenginliğini yansıtan önemli bir kültür noktasıdır.',
+  },
+  'antalya/finike': {
+    summary: 'Finike, Antalya kent merkezine 139 km uzaklıkta, portakal bahçeleri ve 10 km\'yi bulan Finike Plajı ile Türkiye\'nin en uzun sahil şeritlerinden birine sahip bir ilçedir.',
+    facts: 'Limyra ve Arykanda antik kentleri ile Cenevizli bir amiralden adını alan Andrea Doria Koyu ilçenin önemli tarihi ve doğal noktalarındandır.',
+  },
+  'antalya/gazipasa': {
+    summary: 'Gazipaşa, Antalya kent merkezine 177 km uzaklıkta, küçük yüzölçümüne rağmen doğal güzellikleriyle öne çıkan bir sahil ilçesidir.',
+    facts: 'Kendi adını taşıyan bir havalimanına sahiptir.',
+  },
+  'antalya/gundogmus': {
+    summary: 'Gündoğmuş, Antalya\'nın kuzeydoğusunda, yaylaları ve doğal güzellikleriyle bilinen dağlık bir ilçedir.',
+    facts: 'Antalya\'da nüfus artış hızının en düşük olduğu (-%5,44) ilçesidir.',
+  },
+  'antalya/ibradi': {
+    summary: 'İbradı, Antalya\'nın Toros Dağları\'ndaki en küçük nüfuslu ilçelerinden biri olup yeşil doğası ve serin yaylalarıyla bilinir.',
+    facts: 'Ceviz ve elma bahçeleriyle tarım ekonomisine sahiptir.',
+  },
+  'antalya/kas': {
+    summary: 'Kaş, Likya Birliği\'nin önemli şehirlerinden Patara ve Antiphellos antik kentleri, Kekova Adası ve Mavi Mağara ile tanınan, dalış ve doğa turizminin merkezi bir Akdeniz ilçesidir.',
+    facts: 'Bağlı beldesi Kalkan, beyaz duvarlı evleri ve gece hayatıyla tanınan ayrı bir sahil kasabasıdır; Kaputaş Plajı ilçenin öne çıkan plajlarındandır.',
+  },
+  'antalya/kemer': {
+    summary: 'Kemer, Likya Yolu yürüyüş rotasının geçtiği, doğa ile denizin buluştuğu, turistik tesisleri ve plajlarıyla tanınan bir Antalya ilçesidir.',
+    facts: 'Antalya\'nın batısında yer alır; uzun tatil sezonuyla yaz tatillerinin gözde adreslerindendir.',
+  },
+  'antalya/kepez': {
+    summary: 'Kepez, 2021 itibarıyla 591.895 kişilik nüfusuyla Antalya\'nın en kalabalık ilçesi olup kentsel dönüşüm projeleri ve spor tesisleriyle bilinir.',
+    facts: 'Antalya\'nın önemli altyapı yatırımlarının odağında yer alan merkez ilçelerinden biridir.',
+  },
+  'antalya/konyaalti': {
+    summary: 'Konyaaltı, Antalya\'nın batısında, dünyaca tanınan Konyaaltı Plajı ile bilinen bir sahil ilçesidir.',
+    facts: 'Antalya kent merkezinin denize paralel uzanan başlıca turizm bölgelerinden biridir.',
+  },
+  'antalya/korkuteli': {
+    summary: 'Korkuteli, Antalya\'nın iç kesimlerinde, tarım ve hayvancılıkla geçimini sağlayan, Termessos Antik Kenti\'ne yakınlığıyla bilinen bir ilçedir.',
+    facts: 'İç Anadolu\'ya geçiş karakteri taşıyan bir arazi yapısına sahiptir.',
+  },
+  'antalya/kumluca': {
+    summary: 'Kumluca, Kemer ile Finike arasında, narenciye bahçeleri ve seracılığıyla bilinen, Olimpos ve Phaselis antik kentlerine yakın bir Antalya ilçesidir.',
+    facts: 'Adrasan, Suluada ve Gelidonya Feneri gibi doğal güzellikleriyle de tanınır.',
+  },
+  'antalya/manavgat': {
+    summary: 'Manavgat, dünyaca ünlü Manavgat Şelaleleri, Köprülü Kanyon Milli Parkı ve Side antik kentine yakınlığıyla Antalya\'nın turizm açısından en önemli ilçelerinden biridir.',
+    facts: 'Oymapınar Gölü ve Roma dönemine ait Oluk Köprü de ilçenin gezilecek noktaları arasındadır.',
+  },
+  'antalya/muratpasa': {
+    summary: 'Muratpaşa, tarihi Kaleiçi semtini ve Lara Plajı\'nı barındıran, Antalya\'nın ticari ve kültürel merkezi konumundaki ilçesidir.',
+    facts: 'Nüfus yoğunluğunun en fazla olduğu (km² başına 5.429 kişi) Antalya ilçesidir; lüks otelleriyle de tanınır.',
+  },
+  'antalya/serik': {
+    summary: 'Serik, Roma döneminden kalma 12 bin kişilik amfi tiyatrosuyla ünlü Aspendos Antik Kenti ile golf sahaları ve lüks tatil köyleriyle bilinen Belek bölgesine ev sahipliği yapan bir ilçedir.',
+    facts: 'Aspendos, Akalar tarafından M.Ö. 10. yüzyılda kurulmuş, Belkıs Köyü sınırlarında yer alır.',
+  },
   'ankara/akyurt': {
     summary: 'Akyurt, Ankara kent merkezine 33 km uzaklıkta, Balıkhisar Köyü yakınlarındaki M.Ö. 3000\'lere uzanan höyüğüyle bilinen bir ilçedir.',
     facts: 'Höyükte Eski Tunç Çağı\'na ve sonrasına ait kalıntılar bulunmuştur; ilçe Ankara\'nın kuzeydoğusunda yer alır.',
