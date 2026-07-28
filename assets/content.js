@@ -227,6 +227,10 @@ export const defaultQuestions = [
 // This is populated incrementally, province by province — see /areas/mytourguide-web.md
 // for progress. Districts will get an equivalent districtCopy structure later.
 export const provinceCopy = {
+  ankara: {
+    summary: 'Ankara, 13 Ekim 1923\'te Türkiye Cumhuriyeti\'nin başkenti ilan edilen, Frigya, Lidya, Pers, Galat, Roma, Bizans ve Selçuklu dönemlerinden izler taşıyan köklü bir İç Anadolu şehridir.',
+    facts: 'Yüzölçümü 25.632-26.897 km² civarında, denizden yüksekliği yaklaşık 890 metredir; 25 ilçesi ve 2025 sonu itibarıyla yaklaşık 5,9 milyon nüfusu vardır. Doğuda Kızılırmak, batıda Sakarya nehirlerinin çizdiği kavisler arasında yer alır; kuzeyindeki Köroğlu Dağları\'nın en yüksek noktası Yıldırım Dağı 2.044 metredir. Ankara Kalesi, Anıtkabir ve Anadolu Medeniyetleri Müzesi şehrin simge yapılarındandır.',
+  },
   adana: {
     summary: 'Adana, Çukurova\'nın verimli ovasında, Seyhan Nehri kıyısında kurulu Akdeniz\'in en kalabalık şehirlerinden biridir. Hitit dönemine (Uruadaniya) uzanan tarihi, Roma-Bizans kalıntıları ve dünyaca ünlü Adana kebabıyla tanınır.',
     facts: 'Nüfus yaklaşık 2,26 milyon, 15 ilçesi vardır. Tarihi M.Ö. 3000\'lere uzanır; Hitit, Roma ve Bizans izleri taşır. Adana Kalesi (M.Ö. 1. yy, Romalılar), Taşköprü, Adana Ulu Camii (1509-1541) ve dünyanın en büyük antik kentlerinden Anavarza ören yeri başlıca tarihi noktalarıdır. Şehir aynı zamanda Türkiye\'nin tarım ve sanayi merkezlerinden biridir; İstanbul\'a 936 km, Ankara\'ya 488 km uzaklıktadır.',
@@ -258,6 +262,106 @@ export const provinceCopy = {
 };
 
 export const districtCopy = {
+  'ankara/akyurt': {
+    summary: 'Akyurt, Ankara kent merkezine 33 km uzaklıkta, Balıkhisar Köyü yakınlarındaki M.Ö. 3000\'lere uzanan höyüğüyle bilinen bir ilçedir.',
+    facts: 'Höyükte Eski Tunç Çağı\'na ve sonrasına ait kalıntılar bulunmuştur; ilçe Ankara\'nın kuzeydoğusunda yer alır.',
+  },
+  'ankara/altindag': {
+    summary: 'Altındağ, Ankara Kalesi, Augustus Tapınağı, Julianus Sütunu ve Roma Hamamı gibi başkentin en önemli tarihi yapılarını barındıran, kent merkezine 1 km uzaklıktaki ilçedir.',
+    facts: 'Yüzölçümü 174 km², denizden yüksekliği 850 metredir; Anadolu Medeniyetleri Müzesi, Etnografya Müzesi ve Kurtuluş Savaşı Müzesi de ilçe sınırlarındadır.',
+  },
+  'ankara/ayas': {
+    summary: 'Ayaş, Ankara kent merkezine yaklaşık 60 km uzaklıkta, Osmanlı dönemi ahşap-taş işçiliğiyle yapılmış tarihi evleri ve şifalı termal sularıyla bilinen bir ilçedir.',
+    facts: 'Kaplıcaları romatizmal hastalıklar ve kas ağrıları için tercih edilir; dar sokakları ve sakin atmosferiyle günübirlik gezi rotalarından biridir.',
+  },
+  'ankara/bala': {
+    summary: 'Balâ, Ankara\'nın Cumhuriyet döneminden önce kurulmuş en eski yerleşim yerlerinden biri olup kent merkezine 70 km uzaklıktadır.',
+    facts: '93 Harbi sonrası Kafkasya göçmenlerinin yerleştiği Kartal Dağı mevkiinde kurulmuştur; Beynam Ormanları ve Kesikköprü Barajı ilçe sınırları içindedir, ortalama yükseklik 1.313 metredir.',
+  },
+  'ankara/beypazari': {
+    summary: 'Beypazarı, korunmuş Osmanlı dönemi evleri, gümüş işçiliği ve havucuyla tanınan, 2020\'de UNESCO\'nun kalıcı listesine alınan tarihi bir Ankara ilçesidir.',
+    facts: 'Suluhan Kervansarayı, İnözü Vadisi, Yaşayan Müze ve Hıdırlık Tepesi başlıca gezi noktalarıdır; kent merkezine yaklaşık 100 km uzaklıktadır.',
+  },
+  'ankara/camlidere': {
+    summary: 'Çamlıdere, Ankara\'nın kuzeybatısında, kent merkezine 108 km uzaklıkta, Selçuklu dönemine ait Peçenek Camii ile Bizans dönemi kalıntılarını barındıran bir ilçedir.',
+    facts: 'Ormanlık arazisiyle av turizmi ve doğa sporları açısından bilinir.',
+  },
+  'ankara/cankaya': {
+    summary: 'Çankaya, 1936\'da Ankara ilçesinden ayrılarak kurulmuş, günümüzde başkentin idari, kültürel ve prestijli yerleşim merkezi konumundaki ilçedir.',
+    facts: 'Çankaya Köşkü\'nün de bulunduğu ilçe, Ankara\'nın en yüksek gelişmişlik düzeyine sahip bölgelerinden biridir.',
+  },
+  'ankara/cubuk': {
+    summary: 'Çubuk, Ankara kent merkezine 39 km uzaklıkta, adını ilçeden geçen Çubuk Çayı\'ndan alan bir ilçedir.',
+    facts: 'Çubuk Barajı ve ilçenin tarımsal üretimi (özellikle Çubuk turşusu ile bilinir) yerel ekonominin önemli parçalarıdır.',
+  },
+  'ankara/elmadag': {
+    summary: 'Elmadağ, Ankara\'nın doğusunda, Bala ve Kırşehir\'e komşu, adını çevresindeki dağlık araziden alan bir ilçedir.',
+    facts: 'Ekonomisi tarım ve hayvancılığa dayanır; başkente yakınlığı sayesinde sanayi yatırımları da almaktadır.',
+  },
+  'ankara/etimesgut': {
+    summary: 'Etimesgut, Ankara şehir merkezine 20 km uzaklıkta, adını Ahi Mesud\'dan alan, Atatürk\'ün İstanbul seyahatlerinde kullandığı tarihi Etimesgut Tren İstasyonu\'na ev sahipliği yapan bir ilçedir.',
+    facts: 'Bağlıca ve Elvankent gibi modern konut projeleriyle son yıllarda hızla büyüyen, genç nüfusun yoğunlaştığı bir yatırım bölgesi haline gelmiştir.',
+  },
+  'ankara/evren': {
+    summary: 'Evren, Ankara kent merkezine 178 km uzaklıkta, çevresindeki höyük ve kilise kalıntılarıyla İslamiyet öncesine uzanan bir yerleşim geçmişine sahip küçük bir ilçedir.',
+    facts: 'Sığırcık Kalesi (Geç Bizans-Osmanlı dönemi) ilçe sınırları içindedir.',
+  },
+  'ankara/golbasi': {
+    summary: 'Gölbaşı, Ankara\'nın üst gelir grubuna hitap eden sakin ve prestijli yaşam alanlarıyla bilinen, doğa ve villa yaşamının merkezi konumundaki ilçesidir.',
+    facts: 'Mogan ve Eymir gölleri çevresindeki mesire alanları ilçenin başlıca doğal turizm noktalarıdır.',
+  },
+  'ankara/gudul': {
+    summary: 'Güdül, Kirmir Çayı boyunca kayalara oyulmuş, M.Ö. 2000\'lere (Etiler dönemi) tarihlenen mağaralarıyla bilinen bir Ankara ilçesidir.',
+    facts: 'M.Ö. 8. yüzyılda Frigler bu yörede hakimiyet sürmüştür; ilçe merkez hariç 3 belde ve 23 köyden oluşur.',
+  },
+  'ankara/haymana': {
+    summary: 'Haymana, Ankara kent merkezine 73 km uzaklıkta, tarihi Hititlere uzanan, Romalılar döneminde de kullanılan kaplıcalarıyla dünyaca tanınan bir ilçedir.',
+    facts: 'Kaplıcanın 1-1,5 km doğusunda halen harabeleri bulunan antik bir su tedavi kenti yer alır.',
+  },
+  'ankara/kalecik': {
+    summary: 'Kalecik, Ankara kent merkezine 71 km uzaklıkta, adını taşıyan meşhur "Kalecik Karası" üzüm çeşidiyle ve ürettiği şarapla tanınan bir ilçedir.',
+    facts: 'Kalecik Kalesi ve Davud Dede (Dokuzlar) Türbesi ilçenin başlıca tarihi noktalarıdır; bağcılık son yıllarda önemli bir gelişim göstermiştir.',
+  },
+  'ankara/kazan': {
+    summary: 'Kahramankazan (kısaca Kazan), Ankara\'yı Çankırı, Kastamonu ve Sinop\'a bağlayan devlet karayolu üzerinde, kent merkezine 32 km uzaklıkta bir ilçedir.',
+    facts: 'Sanayi ve lojistik alanında son yıllarda gelişim gösteren ilçelerden biridir.',
+  },
+  'ankara/kecioren': {
+    summary: 'Keçiören, Ankara\'nın en yoğun nüfuslu ilçelerinden biri olup km² başına düşen nüfus yoğunluğunda (5.860 kişi) ilin başında gelir.',
+    facts: 'Yeni konut projeleriyle hızla gelişen ve değer kazanan bölgelerden biridir; başkentin merkez ilçelerinden biri olarak nüfusun büyük bölümünü barındırır.',
+  },
+  'ankara/kizilcahamam': {
+    summary: 'Kızılcahamam, Ankara kent merkezine 83 km uzaklıkta, zengin maden suyu kaynakları ve traverten oluşumlarıyla bilinen bir termal turizm ilçesidir.',
+    facts: 'Ormanlık arazisiyle av turizmi açısından da öne çıkar; Ankara\'nın en çok ziyaret edilen doğa ve kaplıca bölgelerinden biridir.',
+  },
+  'ankara/mamak': {
+    summary: 'Mamak, Ankara\'nın uygun fiyatlı konut seçenekleri ve yatırım fırsatlarıyla bilinen, kentin merkez ilçelerinden biridir.',
+    facts: 'Nüfus yoğunluğu yüksek, hızla gelişen semtleri barındıran bir yerleşim bölgesidir.',
+  },
+  'ankara/nallihan': {
+    summary: 'Nallıhan, Ankara kent merkezine 161 km uzaklıkta, 1599\'da Vezir Nasuhpaşa\'nın yaptırdığı handan adını alan tarihi bir ilçedir.',
+    facts: 'Han, cami ve hamamdan oluşan külliyenin yanı sıra 17. yüzyılda inşa edilmiş Uluhan Camii de ilçenin önemli tarihi eserlerindendir; ormanlık alanlarında av turizmi yapılır.',
+  },
+  'ankara/polatli': {
+    summary: 'Polatlı, Ankara kent merkezine 78 km uzaklıkta, antik Frig başkenti Gordion\'un da içinde bulunduğu Yassıhöyük ve çevresindeki 86 tümülüsle bilinen bir tarih ve arkeoloji merkezidir.',
+    facts: 'İlçe merkezinde de tümülüs ve şehir kalıntıları yer alır; bölge gerçek bir tarih başlangıcı sayılır.',
+  },
+  'ankara/pursaklar': {
+    summary: 'Pursaklar, adının geçtiği en eski belge 1530 tarihli Osmanlı tapu tahrir defteri olan, 2008 yılında ilçe statüsü kazanmış, Ankara kent merkezine 10 km uzaklıktaki bir ilçedir.',
+    facts: '20. yüzyıl başında 30-40 haneli küçük bir köy iken, 1970\'lerden itibaren hızlı nüfus artışıyla önemli bir yerleşim merkezine dönüşmüştür.',
+  },
+  'ankara/sincan': {
+    summary: 'Sincan, iş ve eğitim imkanlarıyla Ankara\'nın önemli merkez ilçelerinden biri olup kentin batı koridorunda hızlı nüfus artışı yaşanan bölgelerdendir.',
+    facts: 'Sanayi ve organize sanayi bölgeleriyle başkentin üretim merkezlerinden biridir.',
+  },
+  'ankara/sereflikochisar': {
+    summary: 'Şereflikoçhisar, Ankara kent merkezine 148 km uzaklıkta, Türkiye\'nin ikinci büyük gölü olan Tuz Gölü kıyısında yer alan bir ilçedir.',
+    facts: 'Geleneksel eğlenceleri ve tuz üretimiyle bilinen, ilin en güneydoğu ucundaki ilçesidir.',
+  },
+  'ankara/yenimahalle': {
+    summary: 'Yenimahalle, planlı ve düzenli şehir yaşamı arayanlar için Ankara\'nın en tercih edilen ilçelerinden biri olarak bilinir.',
+    facts: 'Gelişmişlik sıralamasında Ankara\'nın merkez ilçeleri arasında ön sıralarda yer alır; batı koridorunda nüfus artışının yoğunlaştığı bölgelerden biridir.',
+  },
   'adana/aladag': {
     summary: 'Aladağ, Adana kent merkezine yaklaşık 105 km uzaklıkta, Toros Dağları eteklerinde yer alan bir ilçedir.',
     facts: 'Antik döneme ait bir ören yeri ile harap durumda bir Ortaçağ kalesi, Akören beldesindeki Kırık Kilise harabeleri ve Meydan yaylasındaki Bığbığı Mağarası ilçenin dikkat çeken noktalarıdır. Nüfusu yaklaşık 16 bindir.',
