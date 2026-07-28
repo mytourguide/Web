@@ -227,9 +227,264 @@ export const defaultQuestions = [
 // This is populated incrementally, province by province — see /areas/mytourguide-web.md
 // for progress. Districts will get an equivalent districtCopy structure later.
 export const provinceCopy = {
+  adana: {
+    summary: 'Adana, Çukurova\'nın verimli ovasında, Seyhan Nehri kıyısında kurulu Akdeniz\'in en kalabalık şehirlerinden biridir. Hitit dönemine (Uruadaniya) uzanan tarihi, Roma-Bizans kalıntıları ve dünyaca ünlü Adana kebabıyla tanınır.',
+    facts: 'Nüfus yaklaşık 2,26 milyon, 15 ilçesi vardır. Tarihi M.Ö. 3000\'lere uzanır; Hitit, Roma ve Bizans izleri taşır. Adana Kalesi (M.Ö. 1. yy, Romalılar), Taşköprü, Adana Ulu Camii (1509-1541) ve dünyanın en büyük antik kentlerinden Anavarza ören yeri başlıca tarihi noktalarıdır. Şehir aynı zamanda Türkiye\'nin tarım ve sanayi merkezlerinden biridir; İstanbul\'a 936 km, Ankara\'ya 488 km uzaklıktadır.',
+  },
+  adiyaman: {
+    summary: 'Adıyaman, UNESCO Dünya Mirası Listesi\'ndeki Nemrut Dağı ile dünya çapında tanınan, Güneydoğu Anadolu\'nun tarih ve doğa turizmi açısından en zengin illerinden biridir. Kommagene Krallığı\'na başkentlik yapmış bir bölgedir.',
+    facts: 'Yüzölçümü 7.614 km², deniz seviyesinden yüksekliği 669 metredir. Nemrut Dağı\'ndaki 2.150 metre yükseklikteki dev heykeller, Kral I. Antiochos tarafından M.Ö. 1. yüzyılda inşa ettirilmiştir (UNESCO listesi 1987). Fırat Nehri ve Atatürk Barajı ilin en önemli su kaynaklarıdır; Kahta ilçesi Nemrut\'a en yakın merkezdir. İklim yazın sıcak-kurak, kışın serin geçer; yöresel mutfakta çiğ köfte, içli köfte ve besni üzümü öne çıkar.',
+  },
+  afyonkarahisar: {
+    summary: '"Türkiye\'nin termal başkenti" olarak bilinen Afyonkarahisar, İç Batı Anadolu\'da yer alır; zengin jeotermal kaynakları ve Hitit dönemine uzanan Afyonkarahisar Kalesi ile tanınan bir kültür ve sağlık turizmi merkezidir.',
+    facts: 'Eskişehir, Kütahya, Uşak, Denizli, Burdur, Isparta ve Konya ile komşudur. Afyonkarahisar Kalesi M.Ö. 1350 yıllarında Hitit İmparatoru II. Murşil tarafından 226 metre yükseklikteki bir kaya kütlesi üzerine yaptırılmıştır (kaleye 625 basamakla çıkılır). İlde Gazlıgöl, Ömer-Gecek, Heybeli ve Hüdai başta olmak üzere 5 resmi "Turizm Merkezi" ilan edilmiş termal tesis bulunur; Avrupa\'da termal su kaynağı bakımından ilk sırada yer alan Türkiye\'nin en zengin bölgelerindendir.',
+  },
+  agri: {
+    summary: 'Ağrı, Türkiye\'nin en yüksek zirvesi olan Ağrı Dağı (Ararat) ve Doğubeyazıt\'taki İshak Paşa Sarayı ile tanınan, Doğu Anadolu\'nun en doğusundaki illerinden biridir.',
+    facts: 'İran, Iğdır, Kars, Muş, Erzurum, Van ve Bitlis ile komşudur. İshak Paşa Sarayı, 1685-1784 yılları arasında (99 yıl) inşa edilmiş; Osmanlı, Selçuklu, Fars ve Ermeni mimari unsurlarını bir arada barındıran 116 odalı bir külliyedir, UNESCO Dünya Kültür Mirası geçici listesindedir. Ağrı Dağı, halk arasında Nuh\'un Gemisi efsanesiyle anılır. İle Ahmed-i Hani Havalimanı üzerinden İstanbul, Ankara ve İzmir\'den doğrudan ulaşım sağlanabilir.',
+  },
+  aksaray: {
+    summary: 'Aksaray, İç Anadolu\'da, Kapadokya bölgesinin batı ucunda yer alan; dünyanın en büyük kanyonlarından sayılan Ihlara Vadisi ve volkanik Hasan Dağı ile tanınan bir tarih ve doğa turizmi merkezidir.',
+    facts: 'Ihlara Vadisi, Hasan Dağı\'nın (3.268 m) volkanik lavlarının Melendiz Çayı tarafından aşındırılmasıyla oluşmuş, yaklaşık 14-18 km uzunluğunda, 100-150 m derinliğinde bir kanyondur; Güzelyurt ilçesi sınırlarında yer alır ve 4. yüzyıldan kalma freskli kayaya oyulmuş kiliseleriyle (Ağaçaltı, Yılanlı, Kokar Kilise gibi) önemli bir erken Hristiyanlık merkezidir. Aksaray, 1933-1989 arasında Niğde\'ye bağlı bir ilçe iken 1989\'da yeniden il olmuştur.',
+  },
+  amasya: {
+    summary: '"Şehzadeler Şehri" olarak bilinen Amasya, Yeşilırmak kıyısındaki tarihi Yalıboyu Evleri ve Harşena Dağı\'ndaki Pontus Kral Kaya Mezarları ile tanınan, Karadeniz\'in iç kesimlerindeki köklü bir kültür şehridir.',
+    facts: 'Yüzölçümü 5.690 km²; doğuda Tokat, güneyde Yozgat, batıda Çorum, kuzeyde Samsun ile komşudur. M.Ö. 4. yüzyılda Pontus Krallığı\'na başkentlik yapmış; Harşena Dağı eteklerindeki kayalara oyulmuş 21 Kral Kaya Mezarı bu döneme aittir. Osmanlı döneminde 183 yıl boyunca şehzadelerin yetiştiği bir sancak merkezi olmuştur; coğrafyacı Strabon\'un memleketidir. Yöresel lezzetleri arasında Amasya elması, bamyası ve çöreği öne çıkar.',
+  },
   mugla: {
     summary: 'Muğla, Ege ve Akdeniz\'in kesiştiği Türkiye\'nin en uzun sahil şeridine (1.100 km\'yi aşan) sahip ilidir. Bodrum, Marmaris, Fethiye, Datça ve Köyceğiz gibi dünya çapında tanınan turistik merkezleriyle hem yerli hem yabancı ziyaretçilerin en çok tercih ettiği bölgelerden biridir.',
     facts: 'Yüzölçümü: 12.655 km². Antik Karya bölgesinin merkezi olan Muğla, 103 ören yerine ev sahipliği yapar; Halikarnas Mozolesi gibi dünya harikaları arasında sayılan kalıntılar buradadır. Akdeniz iklimi hakimdir: yazlar sıcak-kurak, kışlar ılık-yağışlı geçer. Ekonomi turizm, zeytincilik, arıcılık (çam balı) ve mermercilik üzerine kuruludur; Fethiye ve Ortaca çevresinde narenciye tarımı yaygındır.',
+  },
+};
+
+export const districtCopy = {
+  'adana/aladag': {
+    summary: 'Aladağ, Adana kent merkezine yaklaşık 105 km uzaklıkta, Toros Dağları eteklerinde yer alan bir ilçedir.',
+    facts: 'Antik döneme ait bir ören yeri ile harap durumda bir Ortaçağ kalesi, Akören beldesindeki Kırık Kilise harabeleri ve Meydan yaylasındaki Bığbığı Mağarası ilçenin dikkat çeken noktalarıdır. Nüfusu yaklaşık 16 bindir.',
+  },
+  'adana/ceyhan': {
+    summary: 'Ceyhan, Çukurova\'nın doğusunda, kendi adını taşıyan Ceyhan Nehri kıyısında kurulu, Adana\'nın en büyük yüzölçümüne (1.427 km²) sahip ilçesidir.',
+    facts: 'Adana kent merkezine yaklaşık 47-50 km uzaklıktadır; Yılan Kale, Ulu Cami, Mecidiye Camii ve Durhasan Dede Türbesi ilçenin önemli tarihi yapılarındandır. Ekonomik açıdan Adana\'nın en gelişmiş ilçelerinden biridir, nüfusu 156 bin civarındadır.',
+  },
+  'adana/cukurova': {
+    summary: 'Çukurova, Seyhan ilçesinden ayrılarak kurulmuş, adını bölgenin verimli ovasından alan, Adana\'nın en kalabalık merkez ilçelerinden biridir.',
+    facts: 'Yüzölçümü 240 km², nüfusu 380 binin üzerindedir; Adana\'da nüfus artış hızının en yüksek olduğu ilçelerden biridir.',
+  },
+  'adana/feke': {
+    summary: 'Feke, Adana kent merkezine 122 km uzaklıkta, deniz seviyesinden 620 metre yükseklikte, Toroslar\'da yer alan dağlık bir ilçedir.',
+    facts: 'Yüzölçümü 1.227 km², nüfusu 16 bin civarındadır; Adana\'nın nüfus kaybı en yüksek ilçelerinden biridir.',
+  },
+  'adana/imamoglu': {
+    summary: 'İmamoğlu, kuzeyinde Kozan, güneyinde Yüreğir ve Ceyhan, batısında Aladağ ve Karaisalı ilçeleriyle çevrili bir Çukurova ova ilçesidir.',
+    facts: 'Ekonomik olarak Kozan\'a bağlı bir yapısı vardır; nüfusu 27 bin civarında olup son yıllarda artış göstermektedir.',
+  },
+  'adana/karaisali': {
+    summary: 'Karaisalı, Toros Dağları\'nın başladığı noktada, kuzeyi dağlık güneyi düzlük bir arazi yapısına sahip Adana ilçesidir.',
+    facts: 'İlçenin en yüksek noktası 2.400 metre ile Akdağ\'dır; nüfusu yaklaşık 22 bindir.',
+  },
+  'adana/karatas': {
+    summary: 'Karataş, Doğu Akdeniz\'de Seyhan ve Ceyhan nehirlerinin doğal sınırları içinde, Adana kent merkezine 48 km uzaklıkta kurulu bir sahil ilçesidir.',
+    facts: 'Adana\'nın deniz kıyısındaki başlıca ilçelerinden biridir; nüfusu 24 bin civarındadır.',
+  },
+  'adana/kozan': {
+    summary: 'Kozan, Adana\'ya yaklaşık 80 km uzaklıkta, 130 bini aşkın nüfusuyla Adana\'nın en büyük ilçelerinden biridir; uzun süre Kilikya Ermeni Krallığı\'na başkentlik yapmıştır.',
+    facts: 'Kilikya Manastırı, Karasis Kalesi, Anavarza Antik Kenti, Cennet Vadisi ve Hoşkadem Camii ilçe sınırları içindeki başlıca tarihi ve doğal noktalardır. Kozan adı eski Türkçede "yaban tavşanı" anlamına gelir.',
+  },
+  'adana/pozanti': {
+    summary: 'Pozantı, Toros Dağları\'nda, Adana\'yı İç Anadolu\'ya bağlayan tarihi güzergah üzerinde yer alan bir dağ ilçesidir.',
+    facts: 'Nüfusu yaklaşık 20 bindir; serin iklimi nedeniyle yazın sık ziyaret edilen bir yayla ilçesidir.',
+  },
+  'adana/saimbeyli': {
+    summary: 'Saimbeyli (eski adıyla Haçin), denizden 1.050 metre yükseklikte, Menteş, Geçilik, Göktepe ve Ziyarettepe dağlarıyla çevrili bir Adana ilçesidir.',
+    facts: 'Tarihi Hititler dönemine uzanır; adını Kurtuluş Savaşı\'nda bölgeyi kurtaran Kaymakam Saim Bey\'den alır. İklimi Akdeniz ve İç Anadolu karasal ikliminin etkisindedir, kışları sert ve soğuk geçer.',
+  },
+  'adana/saricam': {
+    summary: 'Sarıçam, Çukurova\'nın doğusunda yer alan, Adana\'da nüfus artış hızı en yüksek ilçedir.',
+    facts: 'Nüfusu 260 binin üzerindedir; kuzey kesimleri engebeli ve ormanlıktır.',
+  },
+  'adana/seyhan': {
+    summary: 'Seyhan, Seyhan Nehri kıyısında kurulu, Adana\'nın tarihî, ticari ve idari merkezi olan en kalabalık ilçesidir.',
+    facts: 'Nüfusu 780 binin üzerindedir; eski Adana dokusu, kamu kurumları, ticaret alanları ve kültür yapılarıyla kentin kalbini oluşturur.',
+  },
+  'adana/tufanbeyli': {
+    summary: 'Tufanbeyli, Adana\'nın Kayseri ve Kahramanmaraş sınırına yakın, Binboğa ve Tahtalı dağları arasında kalan yüksek bir plato ilçesidir.',
+    facts: 'Rakımı 1.474 metre civarındadır, bazı noktaları 3.000 metrenin üzerine çıkar; Adana\'ya 196 km uzaklıktadır.',
+  },
+  'adana/yumurtalik': {
+    summary: 'Yumurtalık, Adana kent merkezine 80 km uzaklıkta, tarihi M.Ö. 2. binlere uzanan bir Akdeniz sahil ilçesidir.',
+    facts: 'Doğal güzellikleri, tarihi yapıları ve temiz plajlarıyla öne çıkar; nüfusu 18 bin civarındadır.',
+  },
+  'adana/yuregir': {
+    summary: 'Yüreğir, Seyhan Nehri\'nin doğusunda yer alan, 1986\'da ilçe statüsü kazanmış Adana merkez ilçelerinden biridir.',
+    facts: 'Nüfusu 396 binin üzerindedir; ilçeye bağlı Yakapınar Mahallesi\'ndeki Misis Antik Kenti\'nde mozaikler, su kemerleri, hamam, stadyum ve kervansaray kalıntıları yer alır.',
+  },
+  'adiyaman/merkez': {
+    summary: 'Adıyaman Merkez, kuzeyinde Çelikhan, doğusunda Kahta, güneydoğusunda Samsat ve Atatürk Baraj Gölü ile çevrili, ilin idari ve ekonomik merkezidir.',
+    facts: 'Yüzölçümü 1.702-1.814 km² civarındadır; nüfusu 300 bine yakındır.',
+  },
+  'adiyaman/besni': {
+    summary: 'Besni, Adıyaman\'ın büyük ilçelerinden biri olup adını Süryanice "Hesna yurdu" anlamındaki bir kökten alır.',
+    facts: 'Yüzölçümü 1.235 km²\'dir; ilçe merkez ile birlikte Adıyaman\'ın en kalabalık ikinci yerleşimlerinden biridir.',
+  },
+  'adiyaman/celikhan': {
+    summary: 'Çelikhan, Adıyaman\'ın kuzeyinde, Malatya sınırına yakın, dağlık arazi yapısına sahip bir ilçedir.',
+    facts: 'Yüzölçümü 444 km²\'dir; ilin dağlık kesiminde yer alan ilçelerinden biridir.',
+  },
+  'adiyaman/gerger': {
+    summary: 'Gerger, Adıyaman\'ın doğusunda, Diyarbakır sınırına yakın, dağlık ve engebeli bir arazi yapısına sahip ilçedir.',
+    facts: 'Yüzölçümü 668 km²\'dir; ilin en dağlık ilçelerinden biri olarak bilinir.',
+  },
+  'adiyaman/golbasi': {
+    summary: 'Gölbaşı, Adıyaman\'ın batısında, Kahramanmaraş sınırına yakın, 800 km² yüzölçümüne sahip bir ilçedir.',
+    facts: 'İlin dağlık kesiminde yer alır; 1958 yılında ilçe olmuştur.',
+  },
+  'adiyaman/kahta': {
+    summary: 'Kahta, UNESCO Dünya Mirası listesindeki Nemrut Dağı\'na en yakın ilçe merkezi olup, Cendere Köprüsü ve Karakuş Tümülüsü gibi Kommagene dönemi eserlerine ev sahipliği yapar.',
+    facts: 'Atatürk Barajı ve Kahta Çayı çevresiyle doğa turizmi açısından da zengindir; Nemrut Dağı ziyaretleri genellikle Kahta üzerinden yapılır.',
+  },
+  'adiyaman/samsat': {
+    summary: 'Samsat, Kommagene Krallığı\'nın beş önemli kentinden biri olan, adını kral Samos\'tan aldığı düşünülen çok eski bir yerleşimdir.',
+    facts: 'Yüzölçümü 319 km² ile Adıyaman\'ın en küçük ilçelerinden biridir; Fırat Nehri kıyısında yer alır.',
+  },
+  'adiyaman/sincik': {
+    summary: 'Sincik, Adıyaman merkezinin 70 km kuzeydoğusunda, deniz seviyesinden 1.325 metre yükseklikte, dağlık ve engebeli bir ilçedir.',
+    facts: 'Yüzölçümü 495 km²\'dir; bozkır iklimi hakimdir, kışları soğuk ve karlı, yazları sıcak ve kurak geçer.',
+  },
+  'adiyaman/tut': {
+    summary: 'Tut, Adıyaman\'ın batısında, Besni ilçesine komşu, ilin daha az nüfuslu ilçelerinden biridir.',
+    facts: 'İlin güneydoğu Anadolu ile Akdeniz bölgesi arasındaki geçiş karakterini yansıtan bir arazi yapısına sahiptir.',
+  },
+  'afyonkarahisar/merkez': {
+    summary: 'Afyonkarahisar Merkez, M.Ö. 1350 yıllarında Hitit İmparatoru II. Murşil tarafından yaptırılan 226 metre yükseklikteki Afyonkarahisar Kalesi\'yle tanınan il merkezidir.',
+    facts: 'Kaleye 625 basamakla çıkılır; şehir aynı zamanda kaymak şekeri ve haşhaş üretimiyle de bilinir.',
+  },
+  'afyonkarahisar/basmakci': {
+    summary: 'Başmakçı, Afyonkarahisar\'ın güneybatısında, tarım ve hayvancılığa dayalı ekonomisiyle bilinen küçük bir ilçedir.',
+    facts: 'İlin Dazkırı ve Dinar ilçelerine komşudur.',
+  },
+  'afyonkarahisar/bayat': {
+    summary: 'Bayat, Bolvadin ve Emirdağ ilçeleri arasında, Paşa ve Bey Dağları eteklerinde yer alan tarım ağırlıklı bir ilçedir.',
+    facts: 'Bölgedeki göletlerden biri olan Bayat Göleti ilçe sınırları içindedir.',
+  },
+  'afyonkarahisar/bolvadin': {
+    summary: 'Bolvadin, büyükbaş hayvancılık ve süt üretimiyle bilinen, tarihi dokusuyla da dikkat çeken bir Afyonkarahisar ilçesidir.',
+    facts: 'Bölgesel ticarette önemli bir rol oynar; Emirdağ ile arasında 2.307 metrelik Emirdağları yükselir.',
+  },
+  'afyonkarahisar/cay': {
+    summary: 'Çay, adını çevresindeki doğal su kaynaklarından alan, verimli tarım arazileri sayesinde hububat üretiminin yoğun olduğu bir ilçedir.',
+    facts: 'İlçede küçük ölçekli sanayi faaliyetleri de bulunur; 28 metre yükseklikten dökülen bir çağlayanı vardır.',
+  },
+  'afyonkarahisar/cobanlar': {
+    summary: 'Çobanlar, Afyonkarahisar\'ın tarım ve hayvancılığa dayalı küçük ilçelerinden biridir.',
+    facts: 'İl merkezine yakın konumdadır.',
+  },
+  'afyonkarahisar/dazkiri': {
+    summary: 'Dazkırı, Afyonkarahisar\'ın güneybatısında, Denizli sınırına yakın bir tarım ilçesidir.',
+    facts: 'Ahır Dağları ve çevresindeki yüksek arazi yapısıyla bilinir.',
+  },
+  'afyonkarahisar/dinar': {
+    summary: 'Dinar, Menderes Nehri\'nin kaynağına yakın, 2.449 metrelik Akdağ\'ın eteklerinde yer alan bir Afyonkarahisar ilçesidir.',
+    facts: 'Dinar Ovası ilçenin tarımsal üretiminin temelini oluşturur; ilçeye 1 km uzaklıkta Menderes\'in kaynağında bir mesire parkı bulunur.',
+  },
+  'afyonkarahisar/emirdag': {
+    summary: 'Emirdağ, adını verdiği 2.307 metrelik Emirdağları\'nın eteğinde, Bolvadin\'e komşu bir ilçedir.',
+    facts: 'Tarım ve hayvancılığa dayalı bir ekonomisi vardır.',
+  },
+  'afyonkarahisar/evciler': {
+    summary: 'Evciler, Afyonkarahisar\'ın küçük ilçelerinden biri olup ekonomisi tarım ve hayvancılığa dayanır.',
+    facts: 'İl merkezine yakın konumdadır.',
+  },
+  'afyonkarahisar/hocalar': {
+    summary: 'Hocalar, Burgazdağı (1.754 m) eteklerinde, Uşak sınırına yakın bir Afyonkarahisar ilçesidir.',
+    facts: 'Ekonomisi tarım ve hayvancılığa dayanır.',
+  },
+  'afyonkarahisar/ihsaniye': {
+    summary: 'İhsaniye, 1959\'da ilçe olmuş, dünyaca ünlü Kızılay ve Yıldız Maden Suyu tesislerine ev sahipliği yapan bir ilçedir.',
+    facts: 'Yüzölçümü 900 km², nüfusu 27 bin civarındadır; ekonomisi hayvancılık, besicilik ve tarıma dayanır.',
+  },
+  'afyonkarahisar/iscehisar': {
+    summary: 'İscehisar, Türkiye\'nin önemli mermer üretim merkezlerinden biri olan, mermer ocaklarıyla tanınan bir Afyonkarahisar ilçesidir.',
+    facts: 'Antik dönemden beri mermer işlemeciliğiyle bilinen bölgededir.',
+  },
+  'afyonkarahisar/kiziloren': {
+    summary: 'Kızılören, Afyonkarahisar\'ın küçük ilçelerinden biri olup tarım ve hayvancılığa dayalı bir ekonomisi vardır.',
+    facts: 'İlin güney kesiminde yer alır.',
+  },
+  'afyonkarahisar/sandikli': {
+    summary: 'Sandıklı, Ahır Dağları ile Akdağ arasında yer alan, termal kaynaklarıyla da bilinen bir Afyonkarahisar ilçesidir.',
+    facts: 'Sandıklı Ovası ilçenin tarımsal üretiminin temelini oluşturur.',
+  },
+  'afyonkarahisar/sinanpasa': {
+    summary: 'Sinanpaşa, geniş tarım arazileriyle Afyonkarahisar ekonomisinin önemli ayaklarından birini oluşturan bir ilçedir.',
+    facts: 'Ahır Dağları ile Sandıklı arasında yer alır; ilçe sınırlarında çok sayıda sulama göleti bulunur.',
+  },
+  'afyonkarahisar/sultandagi': {
+    summary: 'Sultandağı, kiraz, vişne ve elma üretimiyle bilinen bir Afyonkarahisar ilçesidir.',
+    facts: 'Nüfusu 14 bin, yüzölçümü 898 km² civarındadır.',
+  },
+  'afyonkarahisar/suhut': {
+    summary: 'Şuhut, Afyonkarahisar\'ın en yüksek yerleşim merkezlerinden biri olup ekonomisinin temelini tarım ve hayvancılık oluşturur.',
+    facts: 'Yüzölçümü 1.175 km², nüfusu 36 bin civarındadır; buğday, arpa, nohut, patates, şeker pancarı ve ayçiçeği yetiştirilir.',
+  },
+  'agri/merkez': {
+    summary: 'Ağrı Merkez, Türkiye\'nin en yüksek zirvesi Ağrı Dağı\'nın idari merkezi olduğu il merkez ilçesidir.',
+    facts: 'Şehir merkezinde nüfus yoğunluğu km² başına 89 kişi civarındadır.',
+  },
+  'agri/diyadin': {
+    summary: 'Diyadin, tarihi adı Daudyana olan, Murat Nehri kıyısında kurulu, şifalı kaplıcalarıyla (Yılanlı, Davud, Köprü) tanınan bir Ağrı ilçesidir.',
+    facts: 'Yüzölçümü 1.274 km², rakımı 1.925 metredir; Urartu\'dan Osmanlı\'ya birçok medeniyete ev sahipliği yapmıştır. Diyadin, Türkiye\'de resmi "termal turizm merkezi" ilan edilmiştir.',
+  },
+  'agri/dogubayazit': {
+    summary: 'Doğubayazıt, İshak Paşa Sarayı ve Ağrı Dağı\'nın bulunduğu, İran sınırındaki Gürbulak sınır kapısına 35 km uzaklıktaki tarihi Ağrı ilçesidir.',
+    facts: 'Yüzölçümü 2.424 km², nüfusu 116 binin üzerindedir; ekonomisi hayvancılık, sınır ticareti ve tarıma dayanır. Balık Gölü ve bir meteor çukuru da ilçenin doğal ilgi noktalarındandır.',
+  },
+  'agri/eleskirt': {
+    summary: 'Eleşkirt, Murat Vadisi\'nin Erzurum\'a geçit veren ucunda yer alan, 1998\'den beri kayak turizmine yönelik tesisleri bulunan bir ilçedir.',
+    facts: 'Bölge Ahıska Türkleri, Azerbaycan Türkleri ve Kürtlerin etkisiyle zengin bir kültürel mirasa sahiptir.',
+  },
+  'agri/hamur': {
+    summary: 'Hamur, Ağrı il merkezinin 15 km güneyinde, Selçuklulardan kalma Havaran Kalesi ve Mahmut Paşa Kümbeti\'ne ev sahipliği yapan bir ilçedir.',
+    facts: 'İlin daha küçük nüfuslu ilçelerinden biridir.',
+  },
+  'agri/patnos': {
+    summary: 'Patnos, Ağrı\'nın nüfus yoğunluğu bakımından öne çıkan ilçelerinden biridir (km² başına 76 kişi).',
+    facts: 'Tarım ve hayvancılık ilçe ekonomisinin temelini oluşturur.',
+  },
+  'agri/taslicay': {
+    summary: 'Taşlıçay, Ağrı ilinin orta kesiminde, kuzey ve güneyinde 2.000 metreyi bulan dağlarla çevrili, volkanik arazi yapısına sahip bir ilçedir.',
+    facts: 'Yüzölçümü 798 km²\'dir; ekonomisi tarım ve hayvancılığa dayanır, en yüksek noktası Aladağ üzerindeki Koçbaşı tepesidir.',
+  },
+  'agri/tuta': {
+    summary: 'Tutak, deniz seviyesinden 1.535 metre yükseklikte, yüksek yayla karakterinde ve engebeli bir arazi yapısına sahip Ağrı ilçesidir.',
+    facts: 'Yüzölçümü 1.562 km²\'dir.',
+  },
+  'aksaray/merkez': {
+    summary: 'Aksaray Merkez, 3.935 km²\'lik alanıyla Aksaray\'ın en büyük ilçesi ve ilin başlıca yerleşim merkezidir.',
+    facts: 'Nüfusu 300 binin üzerindedir; Selçuklu ve Osmanlı dönemine ait önemli eserlere ev sahipliği yapar.',
+  },
+  'aksaray/agacoren': {
+    summary: 'Ağaçören, M.Ö. 3-6. yüzyıllarda Hititler zamanında yerleşim alanı olarak kullanılmış, daha sonra Bizans döneminde Kapadokya sınırları içinde kalmış bir ilçedir.',
+    facts: 'Hirfanlı Baraj Gölü çevresindeki piknik alanları ve doğa yürüyüşü parkurlarıyla tanınır; Taşkale ve Kilise mevkilerinde dönemin kalıntıları bulunur.',
+  },
+  'aksaray/eskil': {
+    summary: 'Eskil, Türkiye\'nin ikinci büyük gölü Tuz Gölü\'nün güneyinde, düz bir ova üzerinde kurulu bir Aksaray ilçesidir.',
+    facts: 'Yüzölçümü 1.601 km², nüfusu 22 bin civarındadır; halkı çoğunlukla buğday, arpa ve şeker pancarı yetiştiriciliğiyle uğraşır. Selçuklu dönemine ait bir Ulu Camii ilçededir.',
+  },
+  'aksaray/gulagac': {
+    summary: 'Gülağaç, 1957\'de "Ağaçlı" adıyla kurulmuş, 1990\'da bugünkü ismini almış, ünlü Ihlara Vadisi\'ne 12 km uzaklıktaki bir ilçedir.',
+    facts: 'Yüzölçümü 341 km², rakımı 1.170 metredir; Derinkuyu yeraltı şehrine 50 km uzaklıktadır.',
+  },
+  'aksaray/guzelyurt': {
+    summary: 'Güzelyurt, Kapadokya bölümü içinde yer alan, sınırları içindeki Ihlara Vadisi sayesinde büyük ilgi gören bir Aksaray ilçesidir.',
+    facts: '4. yüzyıldan kalma freskli kayaya oyulmuş kiliseleriyle önemli bir erken Hristiyanlık merkezidir.',
+  },
+  'aksaray/ortakoy': {
+    summary: 'Ortaköy, Aksaray\'ın nüfus bakımından en kalabalık ilçesi olup çevresindeki yaylalar ve mesire alanlarıyla bilinir.',
+    facts: 'İlçede yapılan kazılarda çeşitli arkeolojik buluntular elde edilmiştir; 30 köy muhtarlığı ve 12 mahallesi vardır.',
+  },
+  'aksaray/sariyahsi': {
+    summary: 'Sarıyahşi, Aksaray\'ın nüfus bakımından en küçük ilçesidir.',
+    facts: 'Ekonomisi tarım ve hayvancılığa dayanır.',
   },
 };
 
@@ -280,7 +535,7 @@ export const pageDefaults = {
 
 export function slugify(value) {
   return String(value || '')
-    .toLowerCase()
+    .toLocaleLowerCase('tr')
     .replace(/ğ/g, 'g')
     .replace(/ü/g, 'u')
     .replace(/ş/g, 's')

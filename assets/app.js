@@ -1,4 +1,4 @@
-import { adminGroups, businessProfile, cmsDefaults, defaultQuestions, menuItems, pageDefaults, provinceCopy, regionCopy, slugify, themes, tourCollections, tourTypes, widgetCatalog } from './content.js';
+import { adminGroups, businessProfile, cmsDefaults, defaultQuestions, districtCopy, menuItems, pageDefaults, provinceCopy, regionCopy, slugify, themes, tourCollections, tourTypes, widgetCatalog } from './content.js';
 import { translations } from './i18n.js';
 
 const STORE_KEY = 'mytourguide-state-v1';
@@ -418,7 +418,7 @@ function buildPlaceEditorProps(kind, provinceSlug, districtSlug = '') {
   const district = kind === 'district' ? districtList.find((item) => item.slug === districtSlug) : null;
   if (kind === 'district' && !district) return null;
   const copy = regionCopy[province.region] || regionCopy.Marmara;
-  const curated = !district ? provinceCopy[province.slug] : null;
+  const curated = district ? districtCopy[`${province.slug}/${district.slug}`] : provinceCopy[province.slug];
   const routeKey = getPlaceRouteKey(kind, provinceSlug, districtSlug);
   const content = getPlaceContent(routeKey);
   const title = content.title || (district ? district.name : province.name);
@@ -1736,11 +1736,12 @@ function renderDistrictPage(provinceSlug, districtSlug) {
   const filters = state.routeFilters;
   const filteredTours = tours.filter((tour) => !filters.type || tour.type === filters.type);
   const copy = regionCopy[province.region] || regionCopy.Marmara;
+  const curated = districtCopy[`${province.slug}/${district.slug}`];
   const routeKey = getPlaceRouteKey('district', provinceSlug, districtSlug);
   const content = getPlaceContent(routeKey);
   const title = content.title || district.name;
-  const summary = content.summary || `${province.name} ilinin ${district.name} ilçesi için açılmış hazır görünüm. Tailor-made, filtre ve sepet akışları aktif.`;
-  const facts = content.facts || buildPlaceFacts({ province, district, districtList: data.districtsByProvince.get(provinceSlug) || [] });
+  const summary = content.summary || curated?.summary || copy.intro;
+  const facts = content.facts || curated?.facts || buildPlaceFacts({ province, district, districtList: data.districtsByProvince.get(provinceSlug) || [] });
   const slides = resolvePlaceSlides(content.slides, getPlaceGallery(routeKey));
   if (slides.length < 4 && !data.placeGalleries.has(routeKey)) {
     ensurePlaceGallery(routeKey, district.name, province.name, district.name);
