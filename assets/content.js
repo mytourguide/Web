@@ -227,6 +227,10 @@ export const defaultQuestions = [
 // This is populated incrementally, province by province — see /areas/mytourguide-web.md
 // for progress. Districts will get an equivalent districtCopy structure later.
 export const provinceCopy = {
+  aydin: {
+    summary: 'Aydın, antik dönemde Tralles adıyla bilinen, Büyük Menderes Vadisi\'nin bereketli topraklarında kurulu, Afrodisias, Milet, Didyma ve Priene gibi UNESCO çapında antik kentlere ev sahipliği yapan bir Ege ilidir.',
+    facts: 'Yüzölçümü 8.117 km², 2023 nüfusu 1.161.702\'dir. Batıda Ege Denizi, kuzeyde İzmir ve Manisa, doğuda Denizli, güneyde Muğla ile komşudur. Dünyada tescilli coğrafi işaretli "Aydın İnciri" (sarılop çeşidi, 2007) ile meyve veren incir ağacı sayısı ve üretiminde Türkiye birincisidir; ayrıca kestane, pamuk ve zeytin üretiminde önde gelen illerdendir. 17 ilçesi vardır; ekonomisi tarım ve turizme dayanır.',
+  },
   artvin: {
     summary: 'Artvin, topraklarının %95\'i ormanlarla kaplı, Çoruh Nehri\'nin oluşturduğu derin vadi ve kanyonlarla, Kaçkar Dağları\'nın (3.932 m) eteklerindeki yaylalarla tanınan Doğu Karadeniz\'in Gürcistan sınırındaki ilidir.',
     facts: 'Kuzeyde Karadeniz ve Gürcistan, doğuda Ardahan, güneyde Erzurum, batıda Rize ile çevrilidir. Tarihi M.Ö. 5000\'lere uzanır; Hurri, Urartu, Kimmer, İskit gibi topluluklara ev sahipliği yapmıştır. 2024 TÜİK verilerine göre nüfusu 169.501\'dir. Çoruh Nehri, Türkiye\'nin en hızlı akan nehirlerinden biridir; üzerinde Borçka, Deriner, Muratlı ve Artvin barajları bulunur. Ekonomi çay, fındık, arıcılık, ormancılık ve son yıllarda gelişen doğa/ekoturizme dayanır; 8 ilçesi vardır.',
@@ -274,6 +278,74 @@ export const provinceCopy = {
 };
 
 export const districtCopy = {
+  'aydin/efeler': {
+    summary: 'Efeler, Aydın\'ın merkez ilçesi olup adını Kurtuluş Savaşı\'nda bölgede direniş gösteren Efelerden alır; antik Tralleis kentinin de üzerinde kurulduğu ilçedir.',
+    facts: 'Aydın Arkeoloji Müzesi, Yörük Ali Efe Müzesi, Aydın Atatürk Evi ve Müzesi ile Aydın Ulu Camii ilçenin başlıca kültürel noktalarıdır; zeytin, pamuk, incir ve tütün tarımı yapılır.',
+  },
+  'aydin/bozdogan': {
+    summary: 'Bozdoğan, elma ve diğer meyve üretimiyle tanınan, Aydın\'ın iç kesimlerinde yer alan bir ilçedir.',
+    facts: 'Tarım ağırlıklı ekonomisiyle bölgenin meyvecilik merkezlerinden biridir.',
+  },
+  'aydin/buharkent': {
+    summary: 'Buharkent, 1958\'de Nazilli\'den ayrılarak kurulmuş, Aydın il merkezine 29 km uzaklıkta bir ilçedir.',
+    facts: 'Büyük Menderes Nehri havzasında yer alır; ekonomisi tarıma dayanır.',
+  },
+  'aydin/cine': {
+    summary: 'Çine, doğal ormanları, yayla turizmi ve antik Alabanda ile Gerga ören yerleriyle bilinen bir Aydın ilçesidir.',
+    facts: 'Çine Kuva-i Milliye Müzesi ve Çine Arıcılık Müzesi ilçenin kültürel noktalarındandır; yöresel Çine köftesi ile de tanınır.',
+  },
+  'aydin/didim': {
+    summary: 'Didim, antik dünyanın en önemli kehanet merkezlerinden biri olan Apollon Tapınağı ve Altınkum plajlarıyla tanınan bir Ege sahil ilçesidir.',
+    facts: 'Antik Milet kentine yakınlığıyla tarih ve deniz turizmini bir arada sunar.',
+  },
+  'aydin/germencik': {
+    summary: 'Germencik, Anadolu\'nun en büyük dördüncü tapınağı kabul edilen Leukophryne Tapınağı\'nın bulunduğu Magnesia Antik Kenti\'ne ev sahipliği yapan bir ilçedir.',
+    facts: 'Zengin jeotermal kaynaklarıyla da bilinir; zeytin ve incir tarımı ilçe ekonomisinin temelini oluşturur.',
+  },
+  'aydin/incirliova': {
+    summary: 'İncirliova, adını kapladığı incir ağaçlarından alan, Aydın il merkezine 10 km uzaklıkta bir ilçedir.',
+    facts: 'İncir festivalleri ve tarihi Dereağzı Köprüsü ile tanınır.',
+  },
+  'aydin/karacasu': {
+    summary: 'Karacasu, UNESCO Dünya Mirası Listesi\'ndeki Afrodisias Antik Kenti\'ne ev sahipliği yapan, Aydın il merkezine 85 km uzaklıkta bir ilçedir.',
+    facts: 'Afrodit Tapınağı, stadyumu ve heykel okuluyla tanınan Afrodisias, Afrodisias Müzesi\'ne bağlı Karacasu Etnografya Müzesi ile birlikte ilçenin başlıca kültür noktalarını oluşturur.',
+  },
+  'aydin/karpuzlu': {
+    summary: 'Karpuzlu, antik Alinda kentine ev sahipliği yapan, Aydın\'ın küçük ilçelerinden biridir.',
+    facts: 'Ekonomisi tarım ve hayvancılığa dayanır.',
+  },
+  'aydin/kocarli': {
+    summary: 'Koçarlı, Aydın\'ın tarım ağırlıklı ilçelerinden biri olup zeytin ve incir üretimiyle bölge ekonomisine katkı sağlar.',
+    facts: 'İlin geniş ormanlık alanlarından bir kısmı Koçarlı sınırları içindedir.',
+  },
+  'aydin/kosk': {
+    summary: 'Köşk, "kestane diyarı" olarak bilinen, Frigya\'dan Osmanlı\'ya kadar birçok medeniyete ev sahipliği yapmış, Aydın il merkezine 20 km uzaklıkta bir ilçedir.',
+    facts: 'Kestanenin yanı sıra pamuk, zeytin ve incir üretimi de yapılır.',
+  },
+  'aydin/kusadasi': {
+    summary: 'Kuşadası, Kadınlar Denizi Plajı, Güvercinada Kalesi ve Zeus Mağarası ile Ege\'nin en tanınmış turizm merkezlerinden biridir.',
+    facts: 'Dilek Yarımadası-Büyük Menderes Deltası Milli Parkı\'na ev sahipliği yapar; lüks tatil köyleri, alışveriş merkezleri ve mavi yolculuk hareket noktası olarak bilinir.',
+  },
+  'aydin/kuyucak': {
+    summary: 'Kuyucak, Büyük Menderes Vadisi\'nde, tarım ağırlıklı ekonomiye sahip bir Aydın ilçesidir.',
+    facts: 'Pamuk ve zeytin üretimi ilçe ekonomisinin temelini oluşturur.',
+  },
+  'aydin/nazilli': {
+    summary: 'Nazilli, antik Harpasa ve Mastaura ören yerlerine ev sahipliği yapan, pamuk, zeytin, buğday, mısır ve üzüm üretimiyle Aydın\'ın en büyük tarım ve sanayi merkezlerinden biridir.',
+    facts: 'Gıda, tekstil, metal ve mobilya sektörlerinde çok sayıda sanayi tesisi bulunur; Nazilli Kent Müzesi ve Arpaz Beyler Konağı ilçenin kültürel noktalarındandır.',
+  },
+  'aydin/soke': {
+    summary: 'Söke, ilk yerleşimi Hititlere dayanan, antik Priene ve Milet kentlerine ev sahipliği yapan, 256 kuş türünün yaşadığı Dilek Yarımadası-Büyük Menderes Deltası Milli Parkı\'na sınırı olan bir ilçedir.',
+    facts: 'Söke Ovası ilin en önemli tarımsal üretim alanlarından biridir; Aziz Nikolas Kilisesi de ilçe sınırları içindedir.',
+  },
+  'aydin/sultanhisar': {
+    summary: 'Sultanhisar, Anadolu\'nun saklı tarihi olarak anılan antik Nysa Antik Kenti\'ne ev sahipliği yapan, Aydın il merkezine 30 km uzaklıkta bir ilçedir.',
+    facts: 'Antik kentleriyle tarih turizmi açısından öne çıkan ilçelerden biridir.',
+  },
+  'aydin/yenipazar': {
+    summary: 'Yenipazar, Aydın\'ın Büyük Menderes Vadisi\'ndeki tarım ağırlıklı küçük ilçelerinden biridir.',
+    facts: 'Ekonomisi tarım ve hayvancılığa dayanır.',
+  },
   'artvin/merkez': {
     summary: 'Artvin Merkez, Çoruh Nehri vadisinde, il merkezindeki Atatepe ve yakınındaki Hatila Vadisi Milli Parkı ile tanınan bir ilçedir.',
     facts: 'Dolishane Kilisesi, Satlel Kalesi ve Çifte Köprü ilçe çevresindeki tarihi noktalardandır; MTA tespitlerine göre ilçe topraklarında altın rezervleri bulunmaktadır.',
