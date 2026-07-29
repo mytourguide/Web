@@ -227,6 +227,10 @@ export const defaultQuestions = [
 // This is populated incrementally, province by province — see /areas/mytourguide-web.md
 // for progress. Districts will get an equivalent districtCopy structure later.
 export const provinceCopy = {
+  ardahan: {
+    summary: 'Ardahan, Karadeniz ile Doğu Anadolu bölgelerinin kesişim noktasında, Kura Nehri kıyısında kurulu, Doğu Anadolu\'nun Van Gölü\'nden sonraki en büyük gölü Çıldır Gölü ile tanınan bir sınır ilidir.',
+    facts: 'Kuzey ve doğuda Gürcistan, güneyde Kars, batıda Artvin ve Erzurum ile komşudur. Ardahan Kalesi, Kanuni Sultan Süleyman\'ın emriyle Kura Nehri kıyısında inşa ettirilmiştir. Ortalama yüksekliği 1.800 metre olan il, sert kışları (-30°C\'ye varan soğuklar) ve kısa serin yazlarıyla karasal iklime sahiptir; ekonomisi büyük ölçüde hayvancılığa dayanır. 5 ilçesi (Çıldır, Damal, Göle, Hanak, Posof) ile merkez ilçeden oluşur; 1992\'de il statüsü kazanmıştır.',
+  },
   antalya: {
     summary: '"Attalos Yurdu" anlamına gelen Antalya, II. Attalos tarafından kurulan, Bergama Krallığı, Roma (Attaleia), Bizans ve Selçuklu dönemlerinden izler taşıyan, 630 km\'yi bulan sahil şeridiyle Türkiye\'nin en önemli Akdeniz turizm merkezidir.',
     facts: 'Yüzölçümü bakımından Türkiye\'nin 6., nüfus bakımından 5. büyük ilidir; 2023 sonu nüfusu 2,7 milyona yakındır. Kuzeyinde Burdur, Isparta ve Konya, doğusunda Karaman ve Mersin, batısında Muğla illeri vardır. Tarihi Kaleiçi semti 1972\'de SİT alanı ilan edilmiş, 1984\'te Altın Elma Turizm Oskarı almıştır. Ekonomisi büyük ölçüde turizm, ticaret ve tarıma dayanır; 19 ilçesi vardır.',
@@ -266,6 +270,30 @@ export const provinceCopy = {
 };
 
 export const districtCopy = {
+  'ardahan/merkez': {
+    summary: 'Ardahan Merkez, Kanuni Sultan Süleyman\'ın emriyle Kura Nehri kıyısında inşa ettirilen tarihi Ardahan Kalesi\'ne ev sahipliği yapan il merkezidir.',
+    facts: 'Ortalama 1.800 metre yüksekliğiyle Ardahan, adeta Türkiye\'nin yaylası konumundadır; temel geçim kaynağı hayvancılıktır.',
+  },
+  'ardahan/cildir': {
+    summary: 'Çıldır, Doğu Anadolu\'nun Van Gölü\'nden sonraki en büyük ikinci gölü olan Çıldır Gölü\'ne ev sahipliği yapan, en eski Türk yerleşim merkezlerinden biridir.',
+    facts: '1950-1960 metre rakımdaki göl kışın tamamen donar; atlı kızak ve buz üstünde balık avı bölgenin başlıca kış turizmi etkinlikleridir. Gölün ortasındaki Akçakale Adası\'nda Neolitik döneme uzanan kalıntılar ile Urartu dönemine ait olduğu düşünülen Şeytan Kalesi ilçenin önemli tarihi noktalarıdır.',
+  },
+  'ardahan/damal': {
+    summary: 'Damal, Ardahan-Posof karayolu üzerinde, Karadağ yamaçlarına her yıl 15 Haziran-15 Temmuz arasında yansıyan doğal Atatürk Silüeti fenomeniyle tanınan bir ilçedir.',
+    facts: 'Yılın 7 ayı karla kaplı Ilgar Dağı (2.918 m) ve Keldağ (3.033 m) arasında, engebeli bir arazi yapısına sahiptir; ekonomisi hayvancılığa dayanır.',
+  },
+  'ardahan/gole': {
+    summary: 'Göle, Ardahan\'ın nüfus ve yüzölçümü bakımından en büyük ilçesi olup, arazisinin %81\'inin orman örtüsüyle kaplı olması nedeniyle "Yeşil Göle" olarak da anılır.',
+    facts: 'Ortalama 2.030-2.038 metre rakımlı düz bir ovada kurulu olan ilçe, 27 Mayıs 1992\'de yeni kurulan Ardahan iline bağlanmıştır; ekonomisi büyükbaş hayvancılık ve arpa-buğday-patates tarımına dayanır.',
+  },
+  'ardahan/hanak': {
+    summary: 'Hanak, kuruluşu M.Ö. 680 yılına, kuzeyden gelen Saka Türk oymaklarının Ilgar Geçidi\'ni aşarak bu düzlüğe yerleşmesine dayanan tarihi bir ilçedir.',
+    facts: 'Osmanlı döneminde "Meşe Ardahan" adıyla anılırdı; ekonomisi tarım ve hayvancılığa dayanır, nüfusu yaklaşık 10 bindir.',
+  },
+  'ardahan/posof': {
+    summary: 'Posof, çevresi dağlarla çevrili, ortalama 900 metre yükseklikte, mikroklimatik iklim koşullarına sahip bir Ardahan ilçesidir.',
+    facts: 'İlin diğer bölgelerinin aksine kışları yumuşak ve yağışlı, yazları sıcak geçer; Karadeniz ile Doğu Anadolu bölgelerinin geçiş kuşağında yer alır.',
+  },
   'antalya/akseki': {
     summary: 'Akseki, Antalya\'nın kuzeydoğusunda, Toros Dağları\'nda yer alan, tarihi ve kültürel değerleriyle bilinen dağlık bir ilçedir.',
     facts: 'Termessos Antik Kenti\'ne yakınlığıyla bilinir; geçimini büyük ölçüde ormancılık ve hayvancılıktan sağlar.',
