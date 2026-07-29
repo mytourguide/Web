@@ -227,6 +227,10 @@ export const defaultQuestions = [
 // This is populated incrementally, province by province — see /areas/mytourguide-web.md
 // for progress. Districts will get an equivalent districtCopy structure later.
 export const provinceCopy = {
+  artvin: {
+    summary: 'Artvin, topraklarının %95\'i ormanlarla kaplı, Çoruh Nehri\'nin oluşturduğu derin vadi ve kanyonlarla, Kaçkar Dağları\'nın (3.932 m) eteklerindeki yaylalarla tanınan Doğu Karadeniz\'in Gürcistan sınırındaki ilidir.',
+    facts: 'Kuzeyde Karadeniz ve Gürcistan, doğuda Ardahan, güneyde Erzurum, batıda Rize ile çevrilidir. Tarihi M.Ö. 5000\'lere uzanır; Hurri, Urartu, Kimmer, İskit gibi topluluklara ev sahipliği yapmıştır. 2024 TÜİK verilerine göre nüfusu 169.501\'dir. Çoruh Nehri, Türkiye\'nin en hızlı akan nehirlerinden biridir; üzerinde Borçka, Deriner, Muratlı ve Artvin barajları bulunur. Ekonomi çay, fındık, arıcılık, ormancılık ve son yıllarda gelişen doğa/ekoturizme dayanır; 8 ilçesi vardır.',
+  },
   ardahan: {
     summary: 'Ardahan, Karadeniz ile Doğu Anadolu bölgelerinin kesişim noktasında, Kura Nehri kıyısında kurulu, Doğu Anadolu\'nun Van Gölü\'nden sonraki en büyük gölü Çıldır Gölü ile tanınan bir sınır ilidir.',
     facts: 'Kuzey ve doğuda Gürcistan, güneyde Kars, batıda Artvin ve Erzurum ile komşudur. Ardahan Kalesi, Kanuni Sultan Süleyman\'ın emriyle Kura Nehri kıyısında inşa ettirilmiştir. Ortalama yüksekliği 1.800 metre olan il, sert kışları (-30°C\'ye varan soğuklar) ve kısa serin yazlarıyla karasal iklime sahiptir; ekonomisi büyük ölçüde hayvancılığa dayanır. 5 ilçesi (Çıldır, Damal, Göle, Hanak, Posof) ile merkez ilçeden oluşur; 1992\'de il statüsü kazanmıştır.',
@@ -270,6 +274,38 @@ export const provinceCopy = {
 };
 
 export const districtCopy = {
+  'artvin/merkez': {
+    summary: 'Artvin Merkez, Çoruh Nehri vadisinde, il merkezindeki Atatepe ve yakınındaki Hatila Vadisi Milli Parkı ile tanınan bir ilçedir.',
+    facts: 'Dolishane Kilisesi, Satlel Kalesi ve Çifte Köprü ilçe çevresindeki tarihi noktalardandır; MTA tespitlerine göre ilçe topraklarında altın rezervleri bulunmaktadır.',
+  },
+  'artvin/ardanuc': {
+    summary: 'Ardanuç, dünyanın sayılı kanyonlarından sayılan, yer yer 200 metreyi aşan sarp kaya duvarlarıyla ünlü Cehennem Deresi Kanyonu\'na ev sahipliği yapan bir Artvin ilçesidir.',
+    facts: 'Tarihi Ferhatlı Kalesi ilçe sınırlarındadır; Artvin-Şavşat yolu üzerinden Çoruh Nehri ve baraj gölü manzarası Norveç fiyortlarına benzetilir. Bölgede manganez rezervleri bulunur.',
+  },
+  'artvin/arhavi': {
+    summary: 'Arhavi, Karadeniz kıyısında, Mençuna Şelalesi\'ne giden yol üzerindeki tarihi Ortacalar Çifte Köprüsü ile tanınan bir Artvin ilçesidir.',
+    facts: 'Nemli iklimi, çay bahçeleri ve sahil yaşamıyla bilinir; kıyı şeridindeki alüvyal düzlükler ilçenin ova alanlarını oluşturur.',
+  },
+  'artvin/borcka': {
+    summary: 'Borçka, ulusal çapta tanınan Karagöl\'ü ve ormanlık alanlarıyla Artvin\'in doğa turizmi bakımından en güçlü ilçelerinden biridir.',
+    facts: 'Çoruh Nehri üzerindeki Borçka Barajı, enerji üretimi ve bölgesel ekonomik hareketliliğe katkı sağlar.',
+  },
+  'artvin/hopa': {
+    summary: 'Hopa, Hopa Limanı ile Türkiye\'nin başlıca liman kentlerinden biri olan, Gürcistan sınırındaki Sarp Sınır Kapısı\'na yaklaşık 20 km uzaklıkta bir Artvin ilçesidir.',
+    facts: 'Liman ticareti ve sınır kapısı etkisiyle Artvin\'in ekonomik olarak en hareketli ilçelerinden biridir; nemli Karadeniz iklimi ve çay tarımıyla bilinir.',
+  },
+  'artvin/murgul': {
+    summary: 'Murgul, adını 1955 öncesinde yalnızca bir akarsu, vadi ve bucağa veren, Damar köyünün birleştirilmesiyle kurulmuş, madencilik faaliyetleriyle tanınan bir Artvin ilçesidir.',
+    facts: 'Bakır, pirit ve manganez rezervleri bakımından zengindir; Artvin\'in sanayi açısından öne çıkan ilçelerinden biridir.',
+  },
+  'artvin/savsat': {
+    summary: 'Şavşat, 2015\'te Cittaslow (Sakin Şehir) kapsamına alınan, Satleli Kalesi ve UNESCO tarafından biyosfer rezervi ilan edilen ormanlarıyla tanınan bir Artvin ilçesidir.',
+    facts: 'Yüzölçümü 1.316 km²\'dir; taş evleri, yaylaları ve korunmuş doğal alanlarıyla özgün bir kimliğe sahiptir, Yavuzköy Yaylası ilçenin öne çıkan yaylalarındandır.',
+  },
+  'artvin/yusufeli': {
+    summary: 'Yusufeli, tarihi M.Ö. 3000 yılına (Bronz Çağı) uzanan, ilk adı Perterek olan, Çoruh Nehri ile Barhal Çayı\'nın birleştiği bir vadide kurulu, rafting ve baraj manzaralarıyla tanınan bir ilçedir.',
+    facts: 'Hurri, Urartu, Pers, Roma, Bizans, Selçuklu ve Osmanlı dönemlerinden izler taşır; yüzölçümü 2.261 km²\'dir. Çoruh Havzası\'ndaki baraj projeleri ilçe ekonomisinde önemli bir hareketlilik yaratmıştır.',
+  },
   'ardahan/merkez': {
     summary: 'Ardahan Merkez, Kanuni Sultan Süleyman\'ın emriyle Kura Nehri kıyısında inşa ettirilen tarihi Ardahan Kalesi\'ne ev sahipliği yapan il merkezidir.',
     facts: 'Ortalama 1.800 metre yüksekliğiyle Ardahan, adeta Türkiye\'nin yaylası konumundadır; temel geçim kaynağı hayvancılıktır.',
