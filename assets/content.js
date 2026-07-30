@@ -227,6 +227,10 @@ export const defaultQuestions = [
 // This is populated incrementally, province by province — see /areas/mytourguide-web.md
 // for progress. Districts will get an equivalent districtCopy structure later.
 export const provinceCopy = {
+  bartin: {
+    summary: 'Bartın, adını antik dönemde "Muhteşem Akan Su" anlamına gelen Parthenios adlı çaydan alan, 59 km\'lik Karadeniz kıyı şeridine sahip, 1991\'de Zonguldak\'tan ayrılarak Türkiye\'nin 74. ili olmuş Batı Karadeniz iline.',
+    facts: 'Yüzölçümü 2.330 km²; doğuda Kastamonu, güneydoğuda Karabük, batıda Zonguldak illeriyle komşudur. M.Ö. 9. yüzyılda Fenikeliler ve Karyalılar, ardından sırasıyla Kimmerler, Lidyalılar ve Persler bölgeye hakim olmuştur; M.Ö. 334\'te Makedonya Kralı İskender bölgeyi ele geçirmiştir. İl sınırları içinde antik Paphlagonia kentlerinden Sesamos (Amasra) ve Kromna (Kurucaşile) yer alır. Merkez, Amasra, Kurucaşile ve Ulus olmak üzere 4 ilçesi vardır.',
+  },
   balikesir: {
     summary: 'Balıkesir, hem Ege hem Marmara denizlerine (toplam 290,5 km kıyı) kıyısı olan, tarihte Misya ve Karesi adlarıyla anılan, Kaz Dağları ile ünlü bir Güney Marmara ilidir.',
     facts: 'Yüzölçümü 14.299 km²; Roma, Bizans, Anadolu Selçuklu, Karesi Beyliği ve Osmanlı egemenliğinde kalmıştır. İlin eski adı Karesi olup 24 Ekim 1926\'da Balıkesir olarak değiştirilmiştir. Yıldırım Bayezid tarafından yaptırılan Yıldırım Camii (Eskicami) bilinen en eski tarihi yapısıdır. Ekonomisi tarım, hayvancılık, madencilik (bor, metalik cevherler) ve turizme dayanır; coğrafi işaretli Ayvalık zeytinyağı ile tanınır. 20 ilçesi vardır.',
@@ -282,6 +286,22 @@ export const provinceCopy = {
 };
 
 export const districtCopy = {
+  'bartin/merkez': {
+    summary: 'Bartın Merkez, adını taşıyan ve antik dönemde Parthenios ("Muhteşem Akan Su") olarak bilinen Bartın Çayı kıyısında kurulu il merkezidir.',
+    facts: 'Bir dönem tersaneler diyarı ve geniş bir bölgenin pazar yeri olan Bartın, Karaelmas (kömür) üretimiyle de tarihsel bir öneme sahiptir.',
+  },
+  'bartin/amasra': {
+    summary: 'Amasra, dik yamaçları Karadeniz\'le buluşturan yedi tepe, beş yarımada ve iki ada üzerine kurulu, 3.000 yıllık tarihi dokusuyla 1940\'lı yıllardan beri Türkiye\'nin ilk turizm beldelerinden biri olan bir Bartın ilçesidir.',
+    facts: 'Antik adı Sesamos olan kent, Kraliçe Amastris döneminde yeniden inşa edilmiş; Roma, Bizans ve Cenevizlilerin ardından 1460\'ta Fatih Sultan Mehmet tarafından savaşılmadan Osmanlı topraklarına katılmıştır.',
+  },
+  'bartin/kurucasile': {
+    summary: 'Kurucaşile, Osmanlı döneminden bugüne savaş gemilerinden balıkçı teknelerine kadar çeşitli tiplerde ahşap tekne yapımının sürdürüldüğü, Türkiye\'nin bu alandaki en önemli merkezlerinden biridir.',
+    facts: 'Bartın\'a 52 km uzaklıkta, kuzeyinde Karadeniz\'in yer aldığı ilçenin rakımı 1.500 metreye kadar çıkar; yüzölçümünün büyük bölümü ormanlarla kaplı olup tarım alanı oldukça sınırlıdır.',
+  },
+  'bartin/ulus': {
+    summary: 'Ulus, tarihi M.Ö. 3000 yıllarına uzanan, Ulus ve Eldeş çaylarının birleştiği bir vadide kurulu, Küre Dağları Milli Parkı sınırları içinde yer alan bir Bartın ilçesidir.',
+    facts: 'Şelaleleri ve yemyeşil yaylalarıyla bilinir; doğal limanları sayesinde antik dönemde Fenikeli gemicilerin ticari faaliyetlerine ev sahipliği yapmıştır.',
+  },
   'balikesir/karesi': {
     summary: 'Karesi, Balıkesir kent merkezinin iki merkez ilçesinden biri olup adını, bölgeye 14. yüzyılda hakim olan Karesi Beyliği\'nden alır.',
     facts: 'Yıldırım Camii (Eskicami) ve Zağnos Paşa Camii gibi tarihi eserler ilçe sınırlarındadır; Balıkesir\'in eski adı da Karesi\'dir.',
