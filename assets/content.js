@@ -227,6 +227,10 @@ export const defaultQuestions = [
 // This is populated incrementally, province by province — see /areas/mytourguide-web.md
 // for progress. Districts will get an equivalent districtCopy structure later.
 export const provinceCopy = {
+  balikesir: {
+    summary: 'Balıkesir, hem Ege hem Marmara denizlerine (toplam 290,5 km kıyı) kıyısı olan, tarihte Misya ve Karesi adlarıyla anılan, Kaz Dağları ile ünlü bir Güney Marmara ilidir.',
+    facts: 'Yüzölçümü 14.299 km²; Roma, Bizans, Anadolu Selçuklu, Karesi Beyliği ve Osmanlı egemenliğinde kalmıştır. İlin eski adı Karesi olup 24 Ekim 1926\'da Balıkesir olarak değiştirilmiştir. Yıldırım Bayezid tarafından yaptırılan Yıldırım Camii (Eskicami) bilinen en eski tarihi yapısıdır. Ekonomisi tarım, hayvancılık, madencilik (bor, metalik cevherler) ve turizme dayanır; coğrafi işaretli Ayvalık zeytinyağı ile tanınır. 20 ilçesi vardır.',
+  },
   aydin: {
     summary: 'Aydın, antik dönemde Tralles adıyla bilinen, Büyük Menderes Vadisi\'nin bereketli topraklarında kurulu, Afrodisias, Milet, Didyma ve Priene gibi UNESCO çapında antik kentlere ev sahipliği yapan bir Ege ilidir.',
     facts: 'Yüzölçümü 8.117 km², 2023 nüfusu 1.161.702\'dir. Batıda Ege Denizi, kuzeyde İzmir ve Manisa, doğuda Denizli, güneyde Muğla ile komşudur. Dünyada tescilli coğrafi işaretli "Aydın İnciri" (sarılop çeşidi, 2007) ile meyve veren incir ağacı sayısı ve üretiminde Türkiye birincisidir; ayrıca kestane, pamuk ve zeytin üretiminde önde gelen illerdendir. 17 ilçesi vardır; ekonomisi tarım ve turizme dayanır.',
@@ -278,6 +282,86 @@ export const provinceCopy = {
 };
 
 export const districtCopy = {
+  'balikesir/karesi': {
+    summary: 'Karesi, Balıkesir kent merkezinin iki merkez ilçesinden biri olup adını, bölgeye 14. yüzyılda hakim olan Karesi Beyliği\'nden alır.',
+    facts: 'Yıldırım Camii (Eskicami) ve Zağnos Paşa Camii gibi tarihi eserler ilçe sınırlarındadır; Balıkesir\'in eski adı da Karesi\'dir.',
+  },
+  'balikesir/altieylul': {
+    summary: 'Altıeylül, Balıkesir kent merkezinin Karesi ile birlikte iki merkez ilçesinden biri olup şehrin idari ve ticari hayatının önemli bir bölümünü barındırır.',
+    facts: '81 köy ve belediyeyi kapsayan geniş bir kırsal alana sahiptir; Susurluk Irmağı\'nın oluşturduğu alüvyonlu ovanın bir bölümünde yer alır.',
+  },
+  'balikesir/ayvalik': {
+    summary: 'Ayvalık, Midilli Adası\'nın tam karşısında, Ege kıyısında kurulu, tarihi taş evleri, Cunda (Alibey) Adası ve zeytinyağı üretimiyle tanınan bir Balıkesir ilçesidir.',
+    facts: 'Şeytan Sofrası\'ndan gün batımı manzarası ve Sarımsaklı Plajı ilçenin en bilinen turistik noktalarındandır; Ayvalık zeytinyağı coğrafi işaret tescilli bir üründür.',
+  },
+  'balikesir/balya': {
+    summary: 'Balya, Balıkesir\'in iç kesimlerinde, madencilik geçmişiyle bilinen, nüfus bakımından ilin en küçük ilçelerinden biridir.',
+    facts: 'Ekonomisi tarım, hayvancılık ve yer altı kaynaklarına dayanır.',
+  },
+  'balikesir/bandirma': {
+    summary: 'Bandırma, limanı ve sanayi altyapısıyla Balıkesir\'in ticaret ve ulaşım açısından en gelişmiş ilçelerinden biridir.',
+    facts: 'Marmara Denizi kıyısında 60 km\'lik kıyı şeridine sahiptir; nüfus ve refah düzeyi bakımından Güney Marmara\'nın önde gelen merkezlerindendir.',
+  },
+  'balikesir/bigadic': {
+    summary: 'Bigadiç, Türkiye ekonomisi için stratejik öneme sahip bor madeni rezervleriyle tanınan bir Balıkesir ilçesidir.',
+    facts: 'Domates ve salçalık biber üretiminde öne çıkan tarım ilçelerinden biridir.',
+  },
+  'balikesir/burhaniye': {
+    summary: 'Burhaniye, Ege Denizi kıyısında, ağırlıklı olarak zeytinyağı üretimine yönelik zeytincilik ve iç turizmiyle bilinen bir ilçedir.',
+    facts: 'Çanakkale-İzmir karayolu ilçe merkezinden geçer; 12 km\'lik Ege kıyı şeridine sahiptir.',
+  },
+  'balikesir/dursunbey': {
+    summary: 'Dursunbey, Balıkesir\'in doğusunda, Kütahya sınırında, 672 metre yükseklikte, dağlık ve ormanlarıyla tanınan bir ilçedir.',
+    facts: 'En büyük geçim kaynağı ormancılık ve hayvancılıktır; ilin elma üretiminde öne çıkan ilçesidir.',
+  },
+  'balikesir/edremit': {
+    summary: 'Edremit, Kaz Dağları ve zeytincilikle tanınan, Altınoluk ve Akçay gibi Türkiye\'nin ilk iç turizm merkezlerinden bazılarını barındıran, Balıkesir\'in en büyük ilçelerinden biridir.',
+    facts: '1336\'da Karesi topraklarının Osmanlı\'ya geçmesiyle Orhan Gazi döneminde Osmanlı topraklarına katılmıştır; yüzölçümü 708 km²\'dir.',
+  },
+  'balikesir/erdek': {
+    summary: 'Erdek, Marmara Denizi\'ne uzanan Kapıdağ Yarımadası\'nda, Erdek Körfezi kıyısında kurulu, Türkiye\'nin ilk sayfiye yerlerinden biridir.',
+    facts: '34,75 km\'lik Marmara kıyı şeridiyle, ilin en önemli deniz turizmi merkezlerinden biridir.',
+  },
+  'balikesir/gomec': {
+    summary: 'Gömeç, yüzölçümü bakımından Balıkesir\'in en küçük ilçesi olup Mustafa Kemal Atatürk\'ün siluetinin göründüğü Atatürk Kayaları ve asırlık çınarlarıyla tanınır.',
+    facts: 'Ana geçim kaynağı zeytin ve zeytinyağı yetiştiriciliğidir; koyun sütünden yapılan yöreye özgü bir yoğurt türü de burada üretilir.',
+  },
+  'balikesir/gonen': {
+    summary: 'Gönen, şifalı kaplıcalarıyla ünlü, yerleşim tarihinin M.Ö. dönemlere uzandığı kaplıca kazılarındaki mozaik ve sikke buluntularıyla bilinen bir Balıkesir ilçesidir.',
+    facts: 'Yüzölçümü 1.118 km²\'dir; kuzeyi Marmara Denizi ve Erdek Körfezi ile çevrilidir.',
+  },
+  'balikesir/havran': {
+    summary: 'Havran, Ege kıyı şeridinde, Edremit\'e komşu, tarım ve zeytinciliğe dayalı bir ekonomiye sahip Balıkesir ilçesidir.',
+    facts: 'Kaz Dağları\'nın eteklerinde yer alır.',
+  },
+  'balikesir/ivrindi': {
+    summary: 'İvrindi, Balıkesir\'in iç kesimlerinde, tarım ve hayvancılığa dayalı bir ekonomiye sahip bir ilçedir.',
+    facts: 'Sepet peyniri üretimiyle bilinen ilçelerden biridir.',
+  },
+  'balikesir/kepsut': {
+    summary: 'Kepsut, Balıkesir\'in ilk yerleşim alanı olduğu düşünülen antik Akhyraous (Hadrianoutherai) kentine yakınlığıyla bilinen, şeftali üretiminde öne çıkan bir ilçedir.',
+    facts: 'Balıkesir kent merkezine 26 km uzaklıktadır.',
+  },
+  'balikesir/manyas': {
+    summary: 'Manyas, adını taşıyan Manyas Gölü\'ne (Kuş Cenneti) yakınlığıyla ve kendine özgü Manyas peyniriyle tanınan bir Balıkesir ilçesidir.',
+    facts: 'Tarım ve hayvancılık ilçe ekonomisinin temelini oluşturur.',
+  },
+  'balikesir/marmara': {
+    summary: 'Marmara, adını taşıyan Marmara Denizi\'ndeki bir adada kurulu, Balıkesir\'in tek ada ilçesidir.',
+    facts: 'Paşalimanı Adası ise idari olarak Erdek ilçesine bağlıdır; yaz aylarında nüfusu belirgin şekilde artar.',
+  },
+  'balikesir/savastepe': {
+    summary: 'Savaştepe, Balıkesir\'in iç kesimlerinde, tarım ve hayvancılığa dayalı bir ekonomiye sahip küçük bir ilçedir.',
+    facts: 'Kavun üretiminde öne çıkan ilçelerden biridir.',
+  },
+  'balikesir/sindirgi': {
+    summary: 'Sındırgı, Balıkesir\'in en geniş yüzölçümlü ilçelerinden biri olup (1.433 km²) tarım ve keçi peyniri üretimiyle bilinir.',
+    facts: 'Domates ve salçalık biber üretiminde öne çıkan ilçelerdendir.',
+  },
+  'balikesir/susurluk': {
+    summary: 'Susurluk, adını taşıyan Susurluk Irmağı kıyısında, tarım, hayvancılık ve sanayi faaliyetleriyle bilinen bir Balıkesir ilçesidir.',
+    facts: 'Kelle peyniri ve keçi peyniri üretimiyle tanınan ilçelerden biridir; Balıkesir-Bursa karayolu üzerinde önemli bir geçiş noktasıdır.',
+  },
   'aydin/efeler': {
     summary: 'Efeler, Aydın\'ın merkez ilçesi olup adını Kurtuluş Savaşı\'nda bölgede direniş gösteren Efelerden alır; antik Tralleis kentinin de üzerinde kurulduğu ilçedir.',
     facts: 'Aydın Arkeoloji Müzesi, Yörük Ali Efe Müzesi, Aydın Atatürk Evi ve Müzesi ile Aydın Ulu Camii ilçenin başlıca kültürel noktalarıdır; zeytin, pamuk, incir ve tütün tarımı yapılır.',
