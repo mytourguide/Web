@@ -227,6 +227,10 @@ export const defaultQuestions = [
 // This is populated incrementally, province by province — see /areas/mytourguide-web.md
 // for progress. Districts will get an equivalent districtCopy structure later.
 export const provinceCopy = {
+  batman: {
+    summary: 'Batman, Dicle Nehri\'ne katılan Batman Çayı kıyısında, Anadolu ile Mezopotamya uygarlıkları arasındaki kavşak noktasında yer alan, petrol endüstrisiyle bölgeye önemli ekonomik gelişme getirmiş bir Güneydoğu Anadolu ilidir.',
+    facts: '16 Mayıs 1990\'da Türkiye\'nin 72. ili olmuştur. Hititler, Urartular, Selçuklular ve Osmanlılar gibi birçok medeniyete ev sahipliği yapmıştır; sınırları içinde 103 taşınmaz kültür varlığı ve 34 sit alanı bulunur. İlin en yüksek noktası Mereto Dağı\'dır. UNESCO Dünya Mirası Geçici Listesi\'ndeki Hasankeyf, ilin en önemli tarihi ve turistik merkezidir. Ekonomisi petrol, tarım ve hayvancılığa dayanır; 6 ilçesi vardır.',
+  },
   bartin: {
     summary: 'Bartın, adını antik dönemde "Muhteşem Akan Su" anlamına gelen Parthenios adlı çaydan alan, 59 km\'lik Karadeniz kıyı şeridine sahip, 1991\'de Zonguldak\'tan ayrılarak Türkiye\'nin 74. ili olmuş Batı Karadeniz iline.',
     facts: 'Yüzölçümü 2.330 km²; doğuda Kastamonu, güneydoğuda Karabük, batıda Zonguldak illeriyle komşudur. M.Ö. 9. yüzyılda Fenikeliler ve Karyalılar, ardından sırasıyla Kimmerler, Lidyalılar ve Persler bölgeye hakim olmuştur; M.Ö. 334\'te Makedonya Kralı İskender bölgeyi ele geçirmiştir. İl sınırları içinde antik Paphlagonia kentlerinden Sesamos (Amasra) ve Kromna (Kurucaşile) yer alır. Merkez, Amasra, Kurucaşile ve Ulus olmak üzere 4 ilçesi vardır.',
@@ -286,6 +290,30 @@ export const provinceCopy = {
 };
 
 export const districtCopy = {
+  'batman/merkez': {
+    summary: 'Batman Merkez, Dicle Nehri\'ne katılan Batman Çayı kıyısında, petrol endüstrisiyle bölgeye önemli sosyal ve ekonomik gelişme getiren il merkezidir.',
+    facts: 'Anadolu ile Mezopotamya uygarlıkları arasında önemli bir kavşak noktasında yer alır; il sınırlarında 103 taşınmaz kültür varlığı ve 34 sit alanı bulunur.',
+  },
+  'batman/besiri': {
+    summary: 'Beşiri, Batman\'ın en büyük ilçesi olup ekonomisi tarım ve hayvancılığa dayanır.',
+    facts: 'Mera vejetasyonu araştırmalarına konu olan geniş otlak alanlarıyla bilinir.',
+  },
+  'batman/gercus': {
+    summary: 'Gercüş, Batman\'ın güneyinde, tarım ve hayvancılığa dayalı bir ekonomiye sahip bir ilçedir.',
+    facts: 'Her yıl düzenlenen Seyyid Bilal Anma Haftası etkinlikleriyle bilinir.',
+  },
+  'batman/hasankeyf': {
+    summary: 'Hasankeyf, Dicle Nehri kıyısında, yaklaşık 12.000 yıllık yerleşim geçmişiyle UNESCO Dünya Mirası Geçici Listesi\'nde yer alan, kale, cami, medrese ve köprüleriyle ünlü tarihi bir ilçedir.',
+    facts: '1407\'de inşa edilen Sultan Süleyman Camii, Zeynel Bey Türbesi, Artuklu Hamamı ve Roma dönemi garnizonu olduğu düşünülen Büyük Saray ilçenin başlıca tarihi yapılarındandır; Hasankeyf\'in bir bölümü Ilısu Barajı nedeniyle su altında kalmıştır.',
+  },
+  'batman/kozluk': {
+    summary: 'Kozluk, Batman\'ın güneybatısında, Roma dönemine ait kalıntılara rastlanan, tarım ve hayvancılığa dayalı bir ekonomiye sahip bir ilçedir.',
+    facts: 'Doğal güzellikleriyle de tanınır.',
+  },
+  'batman/sason': {
+    summary: 'Sason, Batman\'ın güneydoğusunda, tarihi kalesi ve Kaletepe Dağı ile tanınan, ekonomisi tarım ve hayvancılığa dayanan bir ilçedir.',
+    facts: 'Her yıl düzenlenen Mereto Yaylası Helkis Şenlikleri ile Bal ve Ceviz Festivali ilçenin bilinen etkinliklerindendir.',
+  },
   'bartin/merkez': {
     summary: 'Bartın Merkez, adını taşıyan ve antik dönemde Parthenios ("Muhteşem Akan Su") olarak bilinen Bartın Çayı kıyısında kurulu il merkezidir.',
     facts: 'Bir dönem tersaneler diyarı ve geniş bir bölgenin pazar yeri olan Bartın, Karaelmas (kömür) üretimiyle de tarihsel bir öneme sahiptir.',
