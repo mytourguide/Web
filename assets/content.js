@@ -227,6 +227,34 @@ export const defaultQuestions = [
 // This is populated incrementally, province by province — see /areas/mytourguide-web.md
 // for progress. Districts will get an equivalent districtCopy structure later.
 export const provinceCopy = {
+  burdur: {
+    summary: 'Burdur, Göller Bölgesi\'nde, tarihi M.Ö. 7000\'lere uzanan Hacılar ve Kuruçay höyükleriyle bilinen, dünyanın en temiz göllerinden biri kabul edilen beyaz travertenli Salda Gölü\'ne ev sahipliği yapan bir Akdeniz-İç Anadolu geçiş ilidir.',
+    facts: 'Yüzölçümü 7.175 km² (296 km²\'si su yüzeyi); doğusunda Isparta, güneyinde Antalya ve Muğla, batı ve kuzeyinde Denizli ve Afyon illeri vardır. Antik Pisidya bölgesinde yer alan Burdur, Roma ve Bizans dönemlerinde önemli bir yerleşim olmuş, 1923\'te Cumhuriyet\'in ilanıyla il statüsüne kavuşmuştur. Sagalassos ve Kibyra antik kentleri, İnsuyu Mağarası ve Burdur Gölü (dikkuyruk ördek ve flamingo yaşam alanı) ilin başlıca turizm noktalarıdır. Ekonomisi tarım, hayvancılık, mermer sanayi ve turizme dayanır; 11 ilçesi vardır.',
+  },
+  mugla: {
+    summary: 'Muğla, Ege ve Akdeniz\'in kesiştiği Türkiye\'nin en uzun sahil şeridine (1.100 km\'yi aşan) sahip ilidir. Bodrum, Marmaris, Fethiye, Datça ve Köyceğiz gibi dünya çapında tanınan turistik merkezleriyle hem yerli hem yabancı ziyaretçilerin en çok tercih ettiği bölgelerden biridir.',
+    facts: 'Yüzölçümü: 12.655 km². Antik Karya bölgesinin merkezi olan Muğla, 103 ören yerine ev sahipliği yapar; Halikarnas Mozolesi gibi dünya harikaları arasında sayılan kalıntılar buradadır. Akdeniz iklimi hakimdir: yazlar sıcak-kurak, kışlar ılık-yağışlı geçer. Ekonomi turizm, zeytincilik, arıcılık (çam balı) ve mermercilik üzerine kuruludur; Fethiye ve Ortaca çevresinde narenciye tarımı yaygındır.',
+  },
+  bolu: {
+    summary: 'Bolu, İstanbul ile Ankara arasında TEM otoyolunun tam ortasında, Abant Gölü, Yedigöller Milli Parkı ve Kartalkaya Kayak Merkezi ile Türkiye\'nin en zengin doğa destinasyonlarından biri olan bir Batı Karadeniz ilidir.',
+    facts: 'Karadeniz Bölgesi\'nin batı bölümünde yer alır; batıda Düzce ve Bilecik, güneybatıda Eskişehir illeriyle komşudur. Tarihi Bebrikler\'den Bithynialılara, Roma\'dan Osmanlı\'ya uzanan geniş bir yelpazeye sahiptir. Zengin ormanları, kaplıcaları (Sarot, Kesenözü) ve Mengen aşçılık geleneğiyle tanınır; Göynük ve Mudurnu\'nun kentsel sit alanı ilan edilmiş eski Türk evleri il turizminin önemli unsurlarıdır. Merkez ilçeyle birlikte 9 ilçesi vardır.',
+  },
+  bitlis: {
+    summary: 'Bitlis, Van Gölü Havzası\'nda, Doğu Anadolu\'nun en dağlık bölgelerinden birinde kurulu, Bitlis ve Ahlat şehirleriyle Anadolu\'daki ilk Türk başkentlerini barındıran, M.Ö. 1400\'lere uzanan bir tarihe sahip ildir.',
+    facts: 'Yüzölçümü 8.294 km² (göller dahil), 2025 sonu nüfusu 360.423\'tür. Güneyde Siirt, doğuda Van, kuzeyde Muş, batıda Ağrı illeriyle komşudur; arazisinin %71\'i dağlıktır. Türkiye\'nin en büyük gölü Van Gölü\'nün 1.876 km²\'lik kısmı Bitlis sınırları içindedir. M.Ö. 1400\'lerden itibaren Urartuların, ardından Asur, Pers ve çeşitli medeniyetlerin yerleşim alanı olmuştur. Merkez ilçeyle birlikte 7 ilçesi vardır.',
+  },
+  bingol: {
+    summary: 'Bingöl, Doğu Anadolu\'nun Yukarı Fırat bölümünde, dağlık ve engebeli bir arazi üzerinde kurulu, dünyada güneşin doğuşunun en iyi izlendiği iki yerden biri olarak bilinen bir ildir.',
+    facts: 'Yüzölçümü 8.003 km²; doğusunda Muş, kuzeyinde Erzurum ve Erzincan, batısında Tunceli ve Elazığ, güneyinde Diyarbakır illeri bulunur. İl merkezi denizden 1.151 metre yükseklikte, Çapakçur Ovası\'nda, Murat Suyu\'na kavuşan Göynük Suyu kıyısında kurulmuştur; il genelinde arazi yüksekliği 1.250 metreyi aşar. 1936\'da il statüsü kazanmıştır; Merkez ilçeyle birlikte 8 ilçesi vardır.',
+  },
+  bilecik: {
+    summary: 'Bilecik, antik Bitinya (Bithynia) bölgesi sınırları içinde, Osmanlı Devleti\'nin 1299\'da Söğüt\'te kurulduğu topraklarda yer alan, Marmara, Karadeniz, İç Anadolu ve Ege bölgelerinin kesişim noktasındaki bir geçiş ilidir.',
+    facts: 'Yüzölçümü 4.310 km², nüfusu yaklaşık 220 bindir. Doğusunda Bolu ve Eskişehir, güneyinde Kütahya, batısında Bursa, kuzeyinde Sakarya illeri bulunur. En önemli akarsuyu Sakarya Irmağı\'dır; en yüksek noktası Bozüyük\'teki Kala Dağı\'dır. Selçuklu Sultanı Süleyman Şah tarafından 1071 Malazgirt sonrası fethedilmiş, Ertuğrul Gazi yönetimindeki Kayı boyunun Söğüt\'e yerleşmesiyle Osmanlı Devleti\'nin doğduğu topraklar olmuştur. 8 ilçesi vardır; İç Anadolu\'nun sert karasal iklimiyle Akdeniz-Karadeniz\'in ılıman iklimi arasında geçiş iklimine sahiptir.',
+  },
+  bayburt: {
+    summary: 'Bayburt, Doğu Anadolu\'yu Karadeniz\'e bağlayan tarihi İpek Yolu üzerinde, Çoruh Nehri kıyısında ve denizden 1.550 metre yükseklikte kurulu, Türkiye\'nin en küçük ve en seyrek nüfuslu illerinden biridir.',
+    facts: 'Yüzölçümü 3.745 km², 2025 sonu nüfusu 82.836\'dır (km² başına 22 kişi). 1927\'ye kadar Erzurum\'a, ardından Gümüşhane\'ye bağlıyken 21 Haziran 1989\'da 3578 sayılı yasayla yeniden il statüsü kazanmıştır. Doğu ve güneydoğusunda Erzurum, batısında Gümüşhane, kuzeyinde Trabzon ve Rize, güneyinde Erzincan illeriyle çevrilidir; Doğu Karadeniz ile Doğu Anadolu iklimleri arasında geçiş özelliği gösterir. Merkez, Aydıntepe ve Demirözü olmak üzere 3 ilçesi vardır.',
+  },
   batman: {
     summary: 'Batman, Dicle Nehri\'ne katılan Batman Çayı kıyısında, Anadolu ile Mezopotamya uygarlıkları arasındaki kavşak noktasında yer alan, petrol endüstrisiyle bölgeye önemli ekonomik gelişme getirmiş bir Güneydoğu Anadolu ilidir.',
     facts: '16 Mayıs 1990\'da Türkiye\'nin 72. ili olmuştur. Hititler, Urartular, Selçuklular ve Osmanlılar gibi birçok medeniyete ev sahipliği yapmıştır; sınırları içinde 103 taşınmaz kültür varlığı ve 34 sit alanı bulunur. İlin en yüksek noktası Mereto Dağı\'dır. UNESCO Dünya Mirası Geçici Listesi\'ndeki Hasankeyf, ilin en önemli tarihi ve turistik merkezidir. Ekonomisi petrol, tarım ve hayvancılığa dayanır; 6 ilçesi vardır.',
@@ -283,13 +311,194 @@ export const provinceCopy = {
     summary: '"Şehzadeler Şehri" olarak bilinen Amasya, Yeşilırmak kıyısındaki tarihi Yalıboyu Evleri ve Harşena Dağı\'ndaki Pontus Kral Kaya Mezarları ile tanınan, Karadeniz\'in iç kesimlerindeki köklü bir kültür şehridir.',
     facts: 'Yüzölçümü 5.690 km²; doğuda Tokat, güneyde Yozgat, batıda Çorum, kuzeyde Samsun ile komşudur. M.Ö. 4. yüzyılda Pontus Krallığı\'na başkentlik yapmış; Harşena Dağı eteklerindeki kayalara oyulmuş 21 Kral Kaya Mezarı bu döneme aittir. Osmanlı döneminde 183 yıl boyunca şehzadelerin yetiştiği bir sancak merkezi olmuştur; coğrafyacı Strabon\'un memleketidir. Yöresel lezzetleri arasında Amasya elması, bamyası ve çöreği öne çıkar.',
   },
-  mugla: {
-    summary: 'Muğla, Ege ve Akdeniz\'in kesiştiği Türkiye\'nin en uzun sahil şeridine (1.100 km\'yi aşan) sahip ilidir. Bodrum, Marmaris, Fethiye, Datça ve Köyceğiz gibi dünya çapında tanınan turistik merkezleriyle hem yerli hem yabancı ziyaretçilerin en çok tercih ettiği bölgelerden biridir.',
-    facts: 'Yüzölçümü: 12.655 km². Antik Karya bölgesinin merkezi olan Muğla, 103 ören yerine ev sahipliği yapar; Halikarnas Mozolesi gibi dünya harikaları arasında sayılan kalıntılar buradadır. Akdeniz iklimi hakimdir: yazlar sıcak-kurak, kışlar ılık-yağışlı geçer. Ekonomi turizm, zeytincilik, arıcılık (çam balı) ve mermercilik üzerine kuruludur; Fethiye ve Ortaca çevresinde narenciye tarımı yaygındır.',
-  },
+
 };
 
 export const districtCopy = {
+  'burdur/merkez': {
+    summary: 'Burdur Merkez, 1294\'te Felekküddin Dündar Bey tarafından yaptırılan Ulu Cami\'ye ve Burdur Gölü kıyısına ev sahipliği yapan il merkezidir.',
+    facts: 'Burdur Arkeoloji Müzesi ve Doğa Tarihi Müzesi (filin atası Mastodon fosili) ilçenin başlıca kültürel noktalarındandır.',
+  },
+  'burdur/aglasun': {
+    summary: 'Ağlasun, il merkezine 32 km uzaklıkta, Burdur\'un en önemli turizm çekiciliklerinden Sagalassos Antik Kenti\'ne ev sahipliği yapan bir ilçedir.',
+    facts: 'Yeraltı sularının bolluğu nedeniyle alabalık tesisleri yaygındır; 2.276 metre yüksekliğindeki Akdağ dağcılık ve doğa yürüyüşü için elverişlidir.',
+  },
+  'burdur/altinyayla': {
+    summary: 'Altınyayla, Burdur\'un iç kesimlerinde, tarım ve hayvancılığa dayalı bir ekonomiye sahip küçük bir ilçedir.',
+    facts: 'Göller Bölgesi\'nin yayla karakterindeki bölgelerinden birinde yer alır.',
+  },
+  'burdur/bucak': {
+    summary: 'Bucak, Antalya yolu üzerinde, Burdur\'un en büyük ve sanayi bakımından en gelişmiş ilçesi olup mermer sektöründe ülke çapında öne çıkar.',
+    facts: 'Coğrafi işaretli Melli İnciri ve Bucak Salebi ile tanınır; ilçenin kuzeydoğusunda Roma dönemine ait Cremna Antik Kenti, sınırlarında ise Susuz Kervansarayı ve İncirhan yer alır. Eski adı Oğuzhan olup 1926\'da Bucak adını almıştır.',
+  },
+  'burdur/cavdir': {
+    summary: 'Çavdır, Burdur\'un iç kesimlerinde, tarım ve hayvancılığa dayalı bir ekonomiye sahip bir ilçedir.',
+    facts: 'Göller Bölgesi\'nin batı geçit alanında yer alır.',
+  },
+  'burdur/celtikci': {
+    summary: 'Çeltikçi, Burdur\'un tarım ağırlıklı küçük ilçelerinden biridir.',
+    facts: 'Ekonomisi tarım ve hayvancılığa dayanır.',
+  },
+  'burdur/golhisar': {
+    summary: 'Gölhisar, il merkezine 107 km uzaklıkta, antik Kibyra (Cibyra) Kenti\'ne yakınlığıyla önemli bir turizm potansiyeline sahip bir ilçedir.',
+    facts: 'Denizli, Fethiye ve Antalya\'ya yaklaşık eşit mesafede, geçiş güzergahı üzerinde yer alır.',
+  },
+  'burdur/karamanli': {
+    summary: 'Karamanlı, Burdur\'un tarım ve hayvancılığa dayalı küçük ilçelerinden biridir.',
+    facts: 'Göller Bölgesi\'nin iç kesimlerinde yer alır.',
+  },
+  'burdur/kemer': {
+    summary: 'Kemer, Burdur\'un güneyinde, dağlık ve ova arazilerinin birleştiği, M.Ö. 1900\'lerde Pisidyalılar tarafından yerleşim gösterilen tarihi bir ilçedir.',
+    facts: '1075\'te Türkmenlerin hakimiyetine girmiş, 1987\'de ilçe statüsü kazanmıştır; yüzölçümü 350-400 km², yüksekliği 1.150-1.200 metre arasındadır.',
+  },
+  'burdur/tefenni': {
+    summary: 'Tefenni, Selçuklu Kapısı, Osmanlı Kapısı ve Cumhuriyet Kapısı adlı üç ayrı girişiyle bilinen, krom madenciliği ve coğrafi işaretli Tefenni Rezenesi ile tanınan bir ilçedir.',
+    facts: 'Güneyindeki Çamur Höyük\'te yapılan yüzey araştırmaları Kalkolitik Döneme uzanan bir yerleşim geçmişine işaret eder; ilçede kükürtlü "barutlu su" kaynağı bulunur.',
+  },
+  'burdur/yesilova': {
+    summary: 'Yeşilova, dünyanın en derin ve en temiz göllerinden biri olan, beyaz travertenleriyle bilinen Salda Gölü\'ne ev sahipliği yapan bir Burdur ilçesidir.',
+    facts: 'Dereköy ve Gençali\'deki yüzey araştırmalarında Kalkolitik Döneme (M.Ö. 5000) ait çanak-çömlek parçaları bulunmuştur; eski adı Acem Köyü\'dür, yemyeşil ovasından dolayı bugünkü adını almıştır.',
+  },
+  'bolu/merkez': {
+    summary: 'Bolu Merkez, İstanbul ile Ankara arasında TEM otoyolunun tam ortasında, Abant Gölü ve Yedigöller Milli Parkı\'na yakınlığıyla Türkiye\'nin en zengin doğa destinasyonlarından biri olan il merkezidir.',
+    facts: 'Tarihi Bebrikler\'den Bithynialılara, Roma\'dan Osmanlı\'ya uzanır; Bolu Müzesi ve şehir merkezindeki tarihi dokusu ilçenin kültürel noktalarındandır.',
+  },
+  'bolu/dortdivan': {
+    summary: 'Dörtdivan, Bolu\'nun tarım ve hayvancılığa dayalı ekonomiye sahip küçük ilçelerinden biridir.',
+    facts: 'Yaylaları ve doğal güzellikleriyle bilinir.',
+  },
+  'bolu/gerede': {
+    summary: 'Gerede, 1388\'de Yıldırım Bayezid adına yaptırılan tarihi hamamıyla bilinen, Bolu\'nun önemli tarihi ilçelerinden biridir.',
+    facts: 'Kitirler mahallesindeki hamam 14. yüzyıl sonlarında moloz taştan inşa edilmiştir; ilçe deri ve konfeksiyon sanayisiyle de tanınır.',
+  },
+  'bolu/goynuk': {
+    summary: 'Göynük, Osmanlı mimarisiyle süslü dar sokakları, Kentsel Sit Alanı ilan edilmiş eski Türk evleri ve Fatih Sultan Mehmet\'in hocası Akşemseddin\'in türbesiyle tanınan tarihi bir ilçedir.',
+    facts: '1464\'te Fatih tarafından yaptırılan Akşemseddin Türbesi Gazi Süleyman Paşa Camii avlusundadır; Kurtuluş Savaşı anısına yapılan altıgen taş Zafer Kulesi ve Göynük Kanyonu ilçenin diğer önemli noktalarıdır.',
+  },
+  'bolu/kibriscik': {
+    summary: 'Kıbrıscık, sakin yapısı ve doğayla iç içe yaşam tarzıyla bilinen, ormanlık alanları ve yaylalarıyla öne çıkan bir Bolu ilçesidir.',
+    facts: 'Ekoturizm potansiyeli yüksek ilçelerden biri olarak değerlendirilir.',
+  },
+  'bolu/mengen': {
+    summary: 'Mengen, Osmanlı saray mutfaklarına aşçı yetiştirme geleneğiyle Türk mutfağı tarihinde özel bir yere sahip olan, bugün de bu köklü bağı sürdüren bir Bolu ilçesidir.',
+    facts: 'Mengen pilavı ilçenin en tanınan yöresel lezzetlerindendir; Türkiye\'nin aşçılar diyarı olarak da bilinir.',
+  },
+  'bolu/mudurnu': {
+    summary: 'Mudurnu, Kentsel Sit Alanı ilan edilmiş eski Türk evleri, 1374 yapımı Yıldırım Bayezid Camii ve tarihi çarşısıyla Bolu\'nun en öne çıkan ilçesidir.',
+    facts: 'Armutçular Konağı ve Saat Kulesi ilçenin diğer tarihi yapılarındandır; 30 km kuzeybatısındaki Sarot Kaplıcası 38-63°C sıcaklıkta şifalı sularıyla bilinir.',
+  },
+  'bolu/seben': {
+    summary: 'Seben, kaya evleri ve doğal oluşumlarıyla son dönemde ilgi gören, Bolu\'nun doğal güzellikleriyle öne çıkan ilçelerinden biridir.',
+    facts: '14 km güneyindeki Kesenözü (Bağlum) Kaplıcası 78°C sıcaklığa sahiptir; ekonomisi tarım ve hayvancılığa dayanır.',
+  },
+  'bolu/yenicaga': {
+    summary: 'Yeniçağa, adını taşıyan Yeniçağa Gölü ve çevresindeki rekreasyon alanlarıyla hem yerel halkın hem ziyaretçilerin uğrak noktalarından biri olan bir Bolu ilçesidir.',
+    facts: 'Ekoturizm ve doğa turizmi açısından ilin gelecekte öne çıkması beklenen ilçelerinden biri olarak değerlendirilir.',
+  },
+  'bitlis/merkez': {
+    summary: 'Bitlis Merkez, eski adı Uaiis-Vaisis olan, Bitlis Çayı Vadisi\'nde, El Cezire düzlükleri ile Van Gölü Havzası arasındaki doğal bir geçit üzerinde kurulu, Anadolu\'daki ilk Türk başkentlerinden biridir.',
+    facts: 'Şehir merkezindeki vadiyi yukarıdan gören tarihi Bitlis Kalesi ilçenin simgesi konumundadır; M.Ö. 1400\'lerden itibaren Urartuların yerleşim alanı olmuştur.',
+  },
+  'bitlis/adilcevaz': {
+    summary: 'Adilcevaz, Van Gölü\'nün kuzey kıyısında, Süphan Dağı eteklerinde, dünyaca ünlü Adilcevaz cevizinin yetiştirildiği verimli Gülistan Ovası\'na sahip bir Bitlis ilçesidir.',
+    facts: 'Mikroklimal iklim özellikleri sayesinde yüksek kaliteli tarımsal üretim yapılır; arıcılık son yıllarda köylünün önemli gelir kaynaklarından biri haline gelmiştir.',
+  },
+  'bitlis/ahlat': {
+    summary: 'Ahlat, Selçuklu dönemine ait anıtsal mezar taşlarıyla açık hava müzesi niteliğindeki alanına, Urartu, Selçuklu ve Osmanlı dönemlerinden kalma üç kaleye ev sahipliği yapan, Van Gölü kuzey kıyısındaki tarihi bir ilçedir.',
+    facts: 'Nemrut Dağı\'nın batısında, Süphan Dağı\'nın doğusunda yer alır; Bitlis ile birlikte Anadolu\'daki ilk Türk başkentlerinden sayılır; Ahlat Ovası Van Gölü\'ne doğru uzanan verimli bir düzlüktür.',
+  },
+  'bitlis/guroymak': {
+    summary: 'Güroymak, Bitlis\'in en küçük ilçesi olup Güroymak Şelalesi, Güroymak Kalesi ve Güroymak Ulu Camii gibi tarihi ve doğal eserleriyle bilinir.',
+    facts: 'Rahva Ovası\'nın devamı niteliğindeki Güroymak Ovası ve ilin en büyük yaylası ilçe sınırları içindedir; termal kaynaklarıyla da tanınır.',
+  },
+  'bitlis/hizan': {
+    summary: 'Hizan, Bitlis\'in en dağlık ilçesi olup yüzölçümünün yaklaşık %90\'ı dağlık arazidir; ova neredeyse hiç bulunmaz.',
+    facts: 'Hizan Gölü, kaplıcaları ve şelaleleriyle doğal güzellikleri açısından zengindir; ilin orman varlığı bakımından en zengin ilçesidir.',
+  },
+  'bitlis/mutki': {
+    summary: 'Mutki, Bitlis\'in güneybatısında, ilin ikinci en dağlık ilçesi olarak bilinen, Garzan Çayı\'nın doğal sınırını oluşturduğu bir ilçedir.',
+    facts: 'Tarih boyunca Asur, Pers, İskender, Roma ve Bizans egemenliğinde kalmıştır; ekonomisi tarım ve hayvancılığa dayanır, göçerler tarafından tulum peyniri üretilir.',
+  },
+  'bitlis/tatvan': {
+    summary: 'Tatvan, Van Gölü kıyısında, ulaşım ağlarının kesişme noktasında yer alan, Bitlis\'in en hareketli ve gelişmiş ilçesidir.',
+    facts: 'Tatvan-Van feribot seferleri ile Van Gölü üzerinden ulaşım sağlanır; yakınındaki Nemrut Krater Gölü ve kayak merkezi ilçenin başlıca doğa turizmi noktalarıdır.',
+  },
+  'bingol/merkez': {
+    summary: 'Bingöl Merkez, denizden 1.151 metre yükseklikte, Çapakçur Ovası\'nın kuzeybatı köşesinde, Göynük Suyu\'na hakim bir düzlük üzerinde kurulu il merkezidir.',
+    facts: 'Bingöl, dünyada güneşin doğuşunun en iyi izlendiği iki yerden biri olarak bilinir; şehir 1950\'lerden sonra vadi içindeki eski yerinden bugünkü düzlüğe taşınmıştır.',
+  },
+  'bingol/adakli': {
+    summary: 'Adaklı, Bingöl\'ün daha sakin ve kırsal özellikleri ön planda olan, tarım ve hayvancılığa dayalı bir ekonomiye sahip ilçesidir.',
+    facts: 'İlin kuzeyinde, nüfus yoğunluğu düşük ilçeler arasında yer alır.',
+  },
+  'bingol/genc': {
+    summary: 'Genç, il merkezine 20 km uzaklıkta, Pers hükümdarı tarafından yaptırıldığı düşünülen Daraheni (Kral Kızı) Kalesi kalıntılarına ev sahipliği yapan bir Bingöl ilçesidir.',
+    facts: 'Sürekli (Diyarbug) köyü sınırlarında kale kalıntılarının yanı sıra iki kümbet de bulunur; il merkezinden sonra ilin en kalabalık ilçelerinden biridir.',
+  },
+  'bingol/karliova': {
+    summary: 'Karlıova, Bingöl ve Şeytan Dağları arasındaki ovada kurulu, Hitit, Huri, Bizans ve Selçuklu egemenliklerinden geçmiş, 1514\'te Yavuz Sultan Selim\'in Çaldıran Zaferi sonrası Osmanlı topraklarına katılmış bir ilçedir.',
+    facts: '1936\'ya kadar Muş iline bağlıyken yeni kurulan Bingöl\'e bağlanmış, 1938\'de bugünkü adını almıştır; Bingöl-Erzurum karayolu üzerinde stratejik bir konumdadır.',
+  },
+  'bingol/kigi': {
+    summary: 'Kiğı, il merkezine 150 km uzaklıkta, 1401-1402\'de Akkoyunlu Fahrettin Kutluk Bey\'in oğlu Pir Ali Bey tarafından yaptırılan Kiğı Camii\'ne ev sahipliği yapan tarihi bir ilçedir.',
+    facts: 'Balaban Bey Camii ve çeşmesi ile Çanakçı köyündeki Mürsel Paşa Abidesi de ilçenin tarihi yapılarındandır; geleneksel mimarisi ve düşük nüfus yoğunluğuyla bilinir.',
+  },
+  'bingol/solhan': {
+    summary: 'Solhan, geniş yaylaları ve doğal güzellikleriyle tanınan, Bingöl\'ün son yıllarda gelişim gösteren ilçelerinden biridir.',
+    facts: 'Hayvancılık, özellikle küçükbaş hayvancılık, ilçe ekonomisinin önemli bir parçasıdır; il merkezinden sonra en kalabalık ilçelerden biridir.',
+  },
+  'bingol/yayladere': {
+    summary: 'Yayladere, Bingöl\'ün kuzeyinde, düşük nüfus yoğunluğuna sahip küçük ilçelerinden biridir.',
+    facts: 'Ekonomisi tarım ve hayvancılığa dayanır.',
+  },
+  'bingol/yedisu': {
+    summary: 'Yedisu, Bingöl\'ün kuzeyindeki en küçük yüzölçümlü ilçelerinden biri olup nüfusunun büyük bölümü kırsal alanda yaşar.',
+    facts: 'Ekonomisi tarım ve hayvancılığa dayanır.',
+  },
+  'bilecik/merkez': {
+    summary: 'Bilecik Merkez, antik Bitinya (Bithynia) bölgesi sınırları içinde, Osmanlı Devleti\'nin doğduğu topraklarda yer alan il merkezidir.',
+    facts: 'Şeyh Edebali ile Mal Hatun türbeleri ve Orhan Gazi Camii ilçenin başlıca tarihi yapılarındandır; il merkezi Kocaeli, Sakarya, Bolu, Eskişehir, Kütahya ve Bursa illeriyle çevrilidir.',
+  },
+  'bilecik/bozuyuk': {
+    summary: 'Bozüyük, tarihi Frigler dönemine uzanan, Kurtuluş Savaşı\'nda İnönü Savaşları\'nın yapıldığı, Bilecik\'in en büyük ve en hareketli ilçesidir.',
+    facts: 'Kasımpaşa Camii ve İnönü Savaşları Şehitliği ilçenin Osmanlı ve Cumhuriyet dönemine ait izlerini taşır; Eskişehir, Bursa ve Kütahya\'ya stratejik yakınlığıyla sanayi açısından da gelişmiştir.',
+  },
+  'bilecik/golpazari': {
+    summary: 'Gölpazarı, Mihal Bey Camii\'ne ev sahipliği yapan, Bilecik\'in tarihi ilçelerinden biridir.',
+    facts: 'Ekonomisi tarım ve hayvancılığa dayanır.',
+  },
+  'bilecik/inhisar': {
+    summary: 'İnhisar, Bilecik\'in daha küçük nüfuslu ilçelerinden biri olup ekonomisi tarım ve ormancılığa dayanır.',
+    facts: 'İlin orman zenginliğinin bir bölümü İnhisar sınırları içindedir.',
+  },
+  'bilecik/osmaneli': {
+    summary: 'Osmaneli, tarihi Rüstem Paşa Camii\'ne ev sahipliği yapan, son yıllarda Osmanlı kuruluş dönemini konu alan yapımların tanıtıcı etkisiyle turizm hacmi artan bir Bilecik ilçesidir.',
+    facts: 'Sakarya Irmağı havzasında yer alır.',
+  },
+  'bilecik/pazaryeri': {
+    summary: 'Pazaryeri, Bilecik\'in tarım ve hayvancılığa dayalı ekonomisiyle bilinen ilçelerinden biridir.',
+    facts: 'İlin en bilinen ilçeleri arasında sayılır.',
+  },
+  'bilecik/sogut': {
+    summary: 'Söğüt, Osman Gazi\'nin 1299\'da bağımsızlığını ilan ettiği, Osmanlı Devleti\'nin doğduğu ilk başkent olan, Ertuğrul Gazi Türbesi\'ne ev sahipliği yapan tarihi bir ilçedir.',
+    facts: 'Şeyh Edebali ve Ahi Evran gibi İslam tasavvufunun önemli isimlerinin izlerini taşır; her yıl düzenlenen Ertuğrul Gazi\'yi Anma ve Yörük Şenlikleri ilçenin bilinen etkinliğidir.',
+  },
+  'bilecik/yenipazar': {
+    summary: 'Yenipazar, Bilecik\'in tarım ağırlıklı küçük ilçelerinden biridir.',
+    facts: 'Ekonomisi tarım ve hayvancılığa dayanır.',
+  },
+  'bayburt/merkez': {
+    summary: 'Bayburt Merkez, Erzurum-Trabzon tarihi İpek Yolu üzerinde, Çoruh Nehri kıyısında, denizden 1.550 metre yükseklikte kurulu il merkezidir; Marco Polo ve Evliya Çelebi bu yoldan geçmiştir.',
+    facts: 'Şehrin tarihi M.Ö. 3000\'lere uzanır; Cumhuriyet Caddesi üzerindeki Bayburt Ulu Camii (1913-1915) ve eski Yakutiye Medresesi ilçenin tarihi yapılarındandır.',
+  },
+  'bayburt/aydintepe': {
+    summary: 'Aydıntepe, Osmanlı döneminde "Hart" adıyla anılan, Bayburt il merkezinin 24 km kuzeybatısında yer alan, gizemli yer altı şehriyle tanınan bir ilçedir.',
+    facts: 'Aydıntepe Yer Altı Şehri, bölgenin Haldiler döneminden beri farklı medeniyetlere ev sahipliği yaptığını gösteren önemli bir kültürel mirastır; 1987\'de ilçe statüsü kazanmıştır.',
+  },
+  'bayburt/demirozu': {
+    summary: 'Demirözü, eski adı Kısanta olan, tarihi Otlukbeli Savaşı\'nın yapıldığı tepeye ev sahipliği yapan, Bayburt\'un güneybatısındaki bir ilçedir.',
+    facts: '594 km² yüzölçümüyle Bayburt\'un geniş ilçelerinden biridir; Demirözü Barajı tarımsal sulama ve rekreasyon açısından önemlidir, halkın geçim kaynağı tarım, hayvancılık ve arıcılıktır.',
+  },
   'batman/merkez': {
     summary: 'Batman Merkez, Dicle Nehri\'ne katılan Batman Çayı kıyısında, petrol endüstrisiyle bölgeye önemli sosyal ve ekonomik gelişme getiren il merkezidir.',
     facts: 'Anadolu ile Mezopotamya uygarlıkları arasında önemli bir kavşak noktasında yer alır; il sınırlarında 103 taşınmaz kültür varlığı ve 34 sit alanı bulunur.',
@@ -934,10 +1143,7 @@ export const districtCopy = {
     summary: 'Ortaköy, Aksaray\'ın nüfus bakımından en kalabalık ilçesi olup çevresindeki yaylalar ve mesire alanlarıyla bilinir.',
     facts: 'İlçede yapılan kazılarda çeşitli arkeolojik buluntular elde edilmiştir; 30 köy muhtarlığı ve 12 mahallesi vardır.',
   },
-  'aksaray/sariyahsi': {
-    summary: 'Sarıyahşi, Aksaray\'ın nüfus bakımından en küçük ilçesidir.',
-    facts: 'Ekonomisi tarım ve hayvancılığa dayanır.',
-  },
+
 };
 
 export const regionCopy = {
