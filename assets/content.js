@@ -227,6 +227,10 @@ export const defaultQuestions = [
 // This is populated incrementally, province by province — see /areas/mytourguide-web.md
 // for progress. Districts will get an equivalent districtCopy structure later.
 export const provinceCopy = {
+  canakkale: {
+    summary: 'Çanakkale, Truva (Troya) Antik Kenti\'nin UNESCO Dünya Mirası listesindeki kalıntılarına, Birinci Dünya Savaşı\'nda yaşanan Çanakkale Muharebeleri\'nin tarihi Gelibolu Yarımadası Milli Parkı\'na ve Assos\'un antik kalıntılarına ev sahipliği yapan, hem Ege hem Marmara\'ya kıyısı olan stratejik bir Marmara ilidir.',
+    facts: 'Çanakkale Boğazı, Asya ile Avrupa kıtalarını ayıran ve Ege Denizi\'ni Marmara Denizi\'ne bağlayan dünyanın en önemli suyollarından biridir. Truva Antik Kenti, Tevfikiye köyü yakınlarındaki Hisarlık Tepesi\'nde yer alır ve 1998\'den beri UNESCO listesindedir. Türkiye\'nin en büyük iki adası olan Gökçeada ve Bozcaada (eski adı Tenedos) il sınırları içindedir. 11 ilçesi vardır; ekonomisi tarım (zeytin, üzüm, kiraz), balıkçılık ve turizme dayanır.',
+  },
   bursa: {
     summary: 'Bursa, 1326\'da Orhan Gazi tarafından fethedilerek Osmanlı Devleti\'ne 39 yıl başkentlik yapmış, "Bursa devri" adı verilen ilk dönem Osmanlı mimarisinin doğduğu, UNESCO Dünya Mirası Listesi\'ndeki Cumalıkızık köyüyle tanınan bir Marmara ilidir.',
     facts: 'Cumhuriyet dönemindeki tüm nüfus sayımlarında İstanbul, Ankara ve İzmir\'den sonra Türkiye\'nin 4. büyük şehri olma özelliğini korumuştur. Antik dönemde Bithynia bölgesi sınırları içindeydi; şehir merkezindeki Hisar bölgesindeki bulgular M.Ö. 2500-2700\'lere uzanır. Ulu Cami (1399), Yeşil Cami ve Türbesi, Bursa Kalesi ile İpek Yolu ticaretinin simgesi Koza Han başlıca tarihi yapılardır. Uludağ, 1963\'te açılan teleferik hattıyla Türkiye\'nin en bilinen kayak merkezlerinden biridir. 17 ilçesi vardır; ekonomisi sanayi (özellikle otomotiv), tarım ve turizme dayanır.',
@@ -319,6 +323,54 @@ export const provinceCopy = {
 };
 
 export const districtCopy = {
+  'canakkale/merkez': {
+    summary: 'Çanakkale Merkez, UNESCO Dünya Mirası Listesi\'ndeki Truva Antik Kenti\'ne (Tevfikiye köyü yakınlarındaki Hisarlık Tepesi) ev sahipliği yapan il merkezidir.',
+    facts: 'Truva, 1998\'den beri UNESCO listesinde, 1996\'dan beri milli park statüsündedir; Athena Tapınağı ile özdeşleşmiştir. Merkez ilçe 52 köyle Çanakkale\'nin en geniş kırsal alanına sahiptir.',
+  },
+  'canakkale/ayvacik': {
+    summary: 'Ayvacık, sırtını İda Dağı\'na (Kazdağı) yaslayan, yüzünü Ege Denizi\'ne çeviren, Anadolu\'nun en batı ucu Bababurnu\'nu sınırları içinde barındıran bir Çanakkale ilçesidir.',
+    facts: 'Yüzölçümü 874 km², 78 km\'lik sahil şeridine sahiptir; antik Assos kenti de ilçe sınırlarındadır, Bababurnu\'ndan Midilli Adası\'na yalnızca 4 mil uzaklıktadır.',
+  },
+  'canakkale/bayramic': {
+    summary: 'Bayramiç, Kazdağı Milli Parkı\'na yakınlığı, M.Ö. 7. yüzyıla dayanan Kebrene Antik Kenti ve Ayazma Pınarı Tabiat Parkı ile bilinen bir Çanakkale ilçesidir.',
+    facts: 'Yüzölçümünün %63\'ü ormanlarla kaplıdır; halk geçimini el dokumacılığı ve zeytin yetiştiriciliğinden sağlar, Külcüler Kaplıcası ve Bayramiç Barajı ilçenin diğer önemli noktalarıdır.',
+  },
+  'canakkale/biga': {
+    summary: 'Biga, Çanakkale\'nin kuzeyinde, ilçeler arasında en fazla köye sahip olan (yaklaşık 90 köy), pirinç üretimiyle tanınan bir ilçedir.',
+    facts: 'Ekonomik açıdan Çanakkale\'nin güçlü ilçelerinden biridir.',
+  },
+  'canakkale/bozcaada': {
+    summary: 'Bozcaada, eski adı Tenedos olan, M.Ö. 6. yüzyıla uzanan tarihi eserleri, Rum mimarisiyle dolu sokakları ve coğrafi işaretli Çavuş üzümünden yapılan şarapları ile ünlü bir Ege adasıdır.',
+    facts: 'Türkiye\'nin Gökçeada\'dan sonraki ikinci büyük adasıdır; sınırları içinde köy bulunmayan tek Çanakkale ilçesidir, ekonomisi turizm ve balıkçılığa dayanır.',
+  },
+  'canakkale/can': {
+    summary: 'Çan, Çanakkale\'nin coğrafi merkezinde, tarihi kaynaklarda Gergithes adıyla anılan, 1999\'da bulunan Çan Lahdi ile yerleşim tarihinin M.Ö. 4. yüzyıla uzandığı tespit edilen bir ilçedir.',
+    facts: 'Kuzeyde Biga ve Lapseki, doğuda Yenice, batı ve güneyde Çanakkale Merkez ve Bayramiç ilçeleriyle çevrilidir; yöreye özgü ahlat turşusuyla bilinir.',
+  },
+  'canakkale/eceabat': {
+    summary: 'Eceabat, Gelibolu Yarımadası\'nın batı ucunda, Avrupa yakasında yer alan, Çanakkale Savaşı\'nın en önemli cephelerine, anıtlarına ve şehitliklerine ev sahipliği yapan bir ilçedir.',
+    facts: '12 köyü bulunan ilçe, bir dönem tuğla ocaklarıyla Çanakkale\'nin tuğla ihtiyacını karşılamış, çanakkale seramikleri üretiminde de önemli bir merkez olmuştur.',
+  },
+  'canakkale/ezine': {
+    summary: 'Ezine, coğrafi işaretli Ezine Peyniri ile marka haline gelmiş, sahil kesimindeki geniş zeytin ağaçlarıyla bilinen bir Çanakkale ilçesidir.',
+    facts: '49 köyüyle orta ölçekli bir kırsal yapıya sahiptir; Bozcaada\'ya deniz ulaşımının sağlandığı liman bağlantısı ilçenin önemini artırır.',
+  },
+  'canakkale/gelibolu': {
+    summary: 'Gelibolu, Birinci Dünya Savaşı\'nda 1915\'te yaşanan Çanakkale Muharebeleri ile dünya çapında tanınan, adını taşıyan yarımadanın kuzeydoğu kıyısında, Çanakkale Boğazı\'nın Marmara Denizi\'ne açıldığı noktada kurulu bir ilçedir.',
+    facts: 'Tarihi Milli Park kapsamındaki savaş batıkları, siperler, kaleler ve 60 binden fazla Türk şehidiyle birlikte 250 bini aşkın müttefik askerinin anısına adanmış bir alan barındırır; 17. yüzyılda 20 bin nüfuslu gelişmiş bir Osmanlı şehriydi.',
+  },
+  'canakkale/gokceada': {
+    summary: 'Gökçeada, Türkiye\'nin en büyük adası olup taş köyleri, organik tarımı ve özgün Rum köy dokusuyla (Zeytinli, Tepeköy, Kaleköy, Dereköy, Bademli) bilinir.',
+    facts: 'Doğa, deniz ve sakin köy atmosferini bir arada sunan ilçe, dalış ve rüzgar sörfü gibi su sporlarıyla da tanınır.',
+  },
+  'canakkale/lapseki': {
+    summary: 'Lapseki, Çanakkale şehir merkezine 34 km uzaklıkta, kirazlarıyla ünlü, her yıl Lapseki Kiraz Festivali\'nin düzenlendiği eski bir yerleşim yeridir.',
+    facts: 'Çardak Kum Adası, Osmanlı dönemi Yakup Bey Külliyesi ve Çardak Arıburnu Şehitliği ilçenin başlıca gezi noktalarıdır.',
+  },
+  'canakkale/yenice': {
+    summary: 'Yenice, Çanakkale şehir merkezine 90 km uzaklıkta, Kaz Dağları\'nın kuzey yamacında, yüzölçümünün %70\'i ormanlarla kaplı bir ilçedir.',
+    facts: 'Halkın büyük bölümü geçimini ormancılıktan sağlar; coğrafi işaretli kırmızı biberiyle de tanınır.',
+  },
   'bursa/osmangazi': {
     summary: 'Osmangazi, adını Osmanlı Devleti\'nin kurucusu Osman Gazi\'den alan, tarihi çarşıları, hanları ve kamu kurumlarıyla Bursa\'nın en büyük merkez ilçesidir.',
     facts: 'Uludağ\'ın eteklerinde, doğuda Gökdere Vadisi\'yle başlayıp batıda Nilüfer Deresi\'ne, kuzeyde Katırlı Dağları\'na uzanan geniş bir alanı kapsar; İzmir, İstanbul ve Eskişehir yollarının kesişme noktasındadır.',
