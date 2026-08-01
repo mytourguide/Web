@@ -227,6 +227,10 @@ export const defaultQuestions = [
 // This is populated incrementally, province by province — see /areas/mytourguide-web.md
 // for progress. Districts will get an equivalent districtCopy structure later.
 export const provinceCopy = {
+  bursa: {
+    summary: 'Bursa, 1326\'da Orhan Gazi tarafından fethedilerek Osmanlı Devleti\'ne 39 yıl başkentlik yapmış, "Bursa devri" adı verilen ilk dönem Osmanlı mimarisinin doğduğu, UNESCO Dünya Mirası Listesi\'ndeki Cumalıkızık köyüyle tanınan bir Marmara ilidir.',
+    facts: 'Cumhuriyet dönemindeki tüm nüfus sayımlarında İstanbul, Ankara ve İzmir\'den sonra Türkiye\'nin 4. büyük şehri olma özelliğini korumuştur. Antik dönemde Bithynia bölgesi sınırları içindeydi; şehir merkezindeki Hisar bölgesindeki bulgular M.Ö. 2500-2700\'lere uzanır. Ulu Cami (1399), Yeşil Cami ve Türbesi, Bursa Kalesi ile İpek Yolu ticaretinin simgesi Koza Han başlıca tarihi yapılardır. Uludağ, 1963\'te açılan teleferik hattıyla Türkiye\'nin en bilinen kayak merkezlerinden biridir. 17 ilçesi vardır; ekonomisi sanayi (özellikle otomotiv), tarım ve turizme dayanır.',
+  },
   burdur: {
     summary: 'Burdur, Göller Bölgesi\'nde, tarihi M.Ö. 7000\'lere uzanan Hacılar ve Kuruçay höyükleriyle bilinen, dünyanın en temiz göllerinden biri kabul edilen beyaz travertenli Salda Gölü\'ne ev sahipliği yapan bir Akdeniz-İç Anadolu geçiş ilidir.',
     facts: 'Yüzölçümü 7.175 km² (296 km²\'si su yüzeyi); doğusunda Isparta, güneyinde Antalya ve Muğla, batı ve kuzeyinde Denizli ve Afyon illeri vardır. Antik Pisidya bölgesinde yer alan Burdur, Roma ve Bizans dönemlerinde önemli bir yerleşim olmuş, 1923\'te Cumhuriyet\'in ilanıyla il statüsüne kavuşmuştur. Sagalassos ve Kibyra antik kentleri, İnsuyu Mağarası ve Burdur Gölü (dikkuyruk ördek ve flamingo yaşam alanı) ilin başlıca turizm noktalarıdır. Ekonomisi tarım, hayvancılık, mermer sanayi ve turizme dayanır; 11 ilçesi vardır.',
@@ -315,6 +319,74 @@ export const provinceCopy = {
 };
 
 export const districtCopy = {
+  'bursa/osmangazi': {
+    summary: 'Osmangazi, adını Osmanlı Devleti\'nin kurucusu Osman Gazi\'den alan, tarihi çarşıları, hanları ve kamu kurumlarıyla Bursa\'nın en büyük merkez ilçesidir.',
+    facts: 'Uludağ\'ın eteklerinde, doğuda Gökdere Vadisi\'yle başlayıp batıda Nilüfer Deresi\'ne, kuzeyde Katırlı Dağları\'na uzanan geniş bir alanı kapsar; İzmir, İstanbul ve Eskişehir yollarının kesişme noktasındadır.',
+  },
+  'bursa/nilufer': {
+    summary: 'Nilüfer, adını Orhan Gazi\'nin eşi Nilüfer Hatun\'dan alan, modern yapılaşması, geniş bulvarları ve sosyal yaşam alanlarıyla Bursa\'nın en gelişmiş ve yaşanabilir ilçelerinden biri olarak kabul edilir.',
+    facts: 'Doğuda Osmangazi, güneyde Orhaneli, batıda Mustafakemalpaşa, Uluabat Gölü ve Karacabey, kuzeyde Mudanya ilçeleriyle çevrilidir.',
+  },
+  'bursa/yildirim': {
+    summary: 'Yıldırım, Bursa\'nın merkezinde Osmangazi\'den sonraki ikinci büyük ve en çok göç alan ilçesi olup Uludağ\'ın eteklerine kuruludur.',
+    facts: 'Kentsel dönüşüm projeleriyle son yıllarda çehresi önemli ölçüde değişmiştir; doğusunda Kestel ve Gürsu, kuzey ve batısında Osmangazi ilçesi yer alır.',
+  },
+  'bursa/buyukorhan': {
+    summary: 'Büyükorhan, 1987\'de Orhaneli\'nin bir bucağıyken ilçe statüsü kazanmış, ormanlık ve dağlık bir Bursa ilçesidir.',
+    facts: 'Ekonomisi tarım, hayvancılık ve ormancılığa dayanır.',
+  },
+  'bursa/gemlik': {
+    summary: 'Gemlik, Marmara Denizi kıyısında, il merkezine 30 km uzaklıkta, dünyaca ünlü zeytin ve zeytinyağlarıyla tanınan bir Bursa ilçesidir.',
+    facts: 'Limanı sayesinde ticari açıdan da önemli bir konuma sahiptir; 1926\'dan beri Bursa\'ya bağlı ilçelerden biridir.',
+  },
+  'bursa/gursu': {
+    summary: 'Gürsu, il merkezine 12 km uzaklıkta, tarihi çınar ağaçları, Osmanlı evleri, hamam ve camileriyle bilinen, 1990\'da ilçe statüsü kazanmış bir Bursa ilçesidir.',
+    facts: 'Doğusunda ve güneyinde Kestel, batısında Yıldırım ve Osmangazi, kuzeyinde Gemlik ilçesi bulunur.',
+  },
+  'bursa/harmancik': {
+    summary: 'Harmancık, 1987\'de Orhaneli\'nin bir bucağıyken ilçe statüsü kazanmış, dağlık ve ormanlık bir Bursa ilçesidir.',
+    facts: 'Ekonomisi tarım, hayvancılık ve ormancılığa dayanır.',
+  },
+  'bursa/inegol': {
+    summary: 'İnegöl, coğrafi işaretli meşhur İnegöl köftesiyle ve Oylat Kaplıcaları ile tanınan, il merkezine yaklaşık 30 km uzaklıkta bir Bursa ilçesidir.',
+    facts: 'Güneybatısından güneydoğusuna kadar Uludağ sıradağları uzanır; turizm ve sanayisinin gelişmesi sayesinde ekonomik açıdan refah bir ilçedir, 1926\'da Bilecik\'ten Bursa\'ya bağlanmıştır.',
+  },
+  'bursa/iznik': {
+    summary: 'İznik, adını verdiği İznik Gölü\'nün doğu kıyısında, Bursa\'nın kuzeydoğusunda yer alan, dünyaca ünlü İznik çinileriyle tanınan tarihi bir ilçedir.',
+    facts: '1930\'da Yenişehir\'e bağlı bir bucakken Bursa\'ya bağlı bir ilçe merkezi olmuştur.',
+  },
+  'bursa/karacabey': {
+    summary: 'Karacabey, eski adıyla Mihaliç, Bursa\'nın 70 km batısında, nüfus bakımından ilin 5. büyük ilçesi olan bir Bursa ilçesidir.',
+    facts: 'Ilıman Marmara iklimine sahiptir; 1926\'dan beri Bursa\'ya bağlı ilçelerden biridir.',
+  },
+  'bursa/keles': {
+    summary: 'Keles, 1953\'te ilçe statüsü kazanmış, Uludağ\'ın güneyinde, dağlık ve ormanlık bir Bursa ilçesidir.',
+    facts: 'Ekonomisi tarım ve hayvancılığa dayanır; Orhaneli\'nin doğusunda yer alır.',
+  },
+  'bursa/kestel': {
+    summary: 'Kestel, 1990\'da ilçe statüsü kazanmış, Nilüfer, Osmangazi, Yıldırım, Mudanya, Gemlik ve Gürsu ile birlikte Bursa\'nın merkez ilçelerinden birini oluşturur.',
+    facts: 'Uludağ\'ın eteklerinde, ilin merkez ilçeleri arasında kalan bir konuma sahiptir.',
+  },
+  'bursa/mudanya': {
+    summary: 'Mudanya, Marmara Denizi kıyısında, Mudanya Ateşkes Antlaşması\'nın imzalandığı tarihi bir liman ilçesidir.',
+    facts: '1926\'dan beri Bursa\'ya bağlı ilçelerden biridir; liman faaliyetleri ve turizm potansiyeliyle bilinir.',
+  },
+  'bursa/mustafakemalpasa': {
+    summary: 'Mustafakemalpaşa, eski adıyla Kirmasti, tarımın yanı sıra her yıl çok sayıda ziyaretçi çeken Suuçtu Şelalesi gibi doğal güzellikleriyle de dikkat çeken bir Bursa ilçesidir.',
+    facts: 'Nüfus bakımından İnegöl\'den sonra Bursa\'nın büyük ilçelerinden biridir; 1926\'dan beri Bursa\'ya bağlıdır.',
+  },
+  'bursa/orhaneli': {
+    summary: 'Orhaneli, eski adı Adranos olan, merkezi Beyce kasabası olan bir Bursa ilçesidir.',
+    facts: 'Doğusunda Keles, batısında Mustafakemalpaşa, kuzeyinde Osmangazi ve Nilüfer ilçeleri bulunur; 1926\'dan beri Bursa\'ya bağlıdır.',
+  },
+  'bursa/orhangazi': {
+    summary: 'Orhangazi, eski adı Pazarköy olan, Marmara Denizi\'nin güneyinde, İznik Gölü\'nün batı kıyısında, verimli bir ovada kurulu bir Bursa ilçesidir.',
+    facts: '1926\'dan beri Bursa\'ya bağlı ilçelerden biridir; tarım ekonomisi güçlüdür.',
+  },
+  'bursa/yenisehir': {
+    summary: 'Yenişehir, 1926\'da Bilecik\'ten Bursa\'ya bağlanmış, İnegöl\'ün kuzeyinde, Bursa\'nın kuzeydoğusunda yer alan bir ilçedir.',
+    facts: '1930\'a kadar İznik bucağı bu ilçeye bağlıydı; ekonomisi tarıma dayanır.',
+  },
   'burdur/merkez': {
     summary: 'Burdur Merkez, 1294\'te Felekküddin Dündar Bey tarafından yaptırılan Ulu Cami\'ye ve Burdur Gölü kıyısına ev sahipliği yapan il merkezidir.',
     facts: 'Burdur Arkeoloji Müzesi ve Doğa Tarihi Müzesi (filin atası Mastodon fosili) ilçenin başlıca kültürel noktalarındandır.',
