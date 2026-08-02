@@ -10,3 +10,12 @@ migrations_dir = "migrations"
 
 [vars]
 ADMIN_USERNAME = "admin"
+# iyzico sanal POS ayarları:
+# - IYZICO_BASE_URL burada tanımlanabilir (secret değil): test için
+#   "https://sandbox-api.iyzipay.com", canlı için "https://api.iyzipay.com".
+#   Tanımlanmazsa sandbox varsayılır.
+# - IYZICO_API_KEY ve IYZICO_SECRET_KEY BURAYA YAZILMAZ (bu dosya git'e gider).
+#   Bunun yerine terminalden secret olarak eklenir:
+#     wrangler pages secret put IYZICO_API_KEY
+#     wrangler pages secret put IYZICO_SECRET_KEY
+IYZICO_BASE_URL = "https://sandbox-api.iyzipay.com"

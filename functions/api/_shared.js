@@ -34,6 +34,28 @@ function buildId(prefix) {
   return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 }
 
+async function hmacSha256Hex(secretKey, message) {
+  const enc = new TextEncoder();
+  const cryptoKey = await crypto.subtle.importKey(
+    'raw',
+    enc.encode(secretKey),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign'],
+  );
+  const signature = await crypto.subtle.sign('HMAC', cryptoKey, enc.encode(message));
+  return Array.from(new Uint8Array(signature))
+    .map((byte) => byte.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+function base64Encode(value) {
+  const bytes = new TextEncoder().encode(value);
+  let binary = '';
+  bytes.forEach((byte) => { binary += String.fromCharCode(byte); });
+  return btoa(binary);
+}
+
 function buildPdf(lines) {
   const text = lines.map((line, index) => `(${escapePdf(safeText(line))}) Tj\n0 -18 Td${index === 0 ? '' : ''}`).join('\n');
   const content = `BT\n/F1 12 Tf\n72 740 Td\n${lines.map((line, index) => `${index === 0 ? '' : 'T* '}${index === 0 ? '' : ''}(${escapePdf(safeText(line))}) Tj`).join('\nT*\n')}\nET`;
@@ -163,16 +185,19 @@ function clearAuthCookie(secure = true, cookieName = 'mytourguide_admin_session'
 }
 
 export {
+  base64Encode,
   buildAuthCookie,
   buildId,
   buildPdf,
   clearAuthCookie,
   cors,
   createSessionToken,
+  hmacSha256Hex,
   json,
   parseCookies,
   reservationSummary,
   resolveAuthConfig,
+  resolveEnvValue,
   safeText,
   verifySessionToken,
 };

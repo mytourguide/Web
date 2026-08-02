@@ -1270,6 +1270,9 @@ function parseRoute(pathname, params) {
   if (parts.length === 0) return { kind: 'home' };
   if (parts[0] === 'admin') return { kind: 'admin' };
   if (parts[0] === 'user') return { kind: 'user' };
+  if (parts[0] === 'odeme' && (parts[1] === 'basarili' || parts[1] === 'basarisiz')) {
+    return { kind: 'paymentResult', outcome: parts[1], order: params.get('order') || '' };
+  }
   if (parts[0] === 'sepet' || parts[0] === 'odeme') return { kind: 'checkout', tailor: params.get('tailor') === '1' };
   if (parts[0] === 'iletisim') return { kind: 'contact' };
   if (parts[0] === 'blog') return { kind: 'blog' };
@@ -1363,6 +1366,8 @@ function renderRoute() {
       return renderCustomPage(data.route.categorySlug, data.route.pageSlug);
     case 'checkout':
       return renderCheckoutPage(data.route.tailor);
+    case 'paymentResult':
+      return renderPaymentResultPage(data.route.outcome, data.route.order);
     case 'admin':
       return isAdminAuthenticated() ? renderAdminPage() : renderLoginPage();
     case 'user':
@@ -1953,14 +1958,9 @@ function renderCheckoutPage(tailorMode) {
               </div>
               <div class="step">
                 <h4>Ödeme</h4>
-                <div class="split">
-                  <label><span class="filter-label">Kart üzerindeki ad</span><input class="input" placeholder="Kart sahibi"></label>
-                  <label><span class="filter-label">Kart numarası</span><input class="input" inputmode="numeric" placeholder="1234 5678 9012 3456"></label>
-                  <label><span class="filter-label">Son kullanma</span><input class="input" placeholder="AA/YY"></label>
-                  <label><span class="filter-label">CVV</span><input class="input" inputmode="numeric" placeholder="123"></label>
-                </div>
-                <p class="meta-row"><span class="pill">3D Secure</span><span class="pill">KVKK</span><span class="pill">PCI-ready UI</span></p>
-                <button class="btn btn-primary" data-action="submit-reservation" type="button">Ödeme akışını başlat</button>
+                <p>Ödeme, kart bilgilerinin bizim sunucumuza hiç uğramadığı iyzico'nun güvenli, 3D Secure destekli ödeme sayfasında tamamlanır. Kart numarası ve CVV bu sitede hiçbir zaman toplanmaz.</p>
+                <p class="meta-row"><span class="pill">3D Secure</span><span class="pill">KVKK</span><span class="pill">iyzico ile güvenli ödeme</span></p>
+                <button class="btn btn-primary" data-action="submit-reservation" type="button" ${cartItems.length ? '' : 'disabled'}>Ödemeye geç — ${formatMoney(subtotal)}</button>
               </div>
             </div>
           </article>
@@ -1981,12 +1981,32 @@ function renderCheckoutPage(tailorMode) {
               <a class="btn" data-nav href="/user">Hesap ekranı</a>
             </div>
           </article>
-          <article class="panel glass-card">
-            <h3>Not</h3>
-            <p>Bu tek dosyalı sürüm, frontend deneyimini tamamlar. Gerçek ödeme, PDF üretimi, CRM aktarımı ve e-posta gönderimi için backend veya serverless fonksiyon katmanı bağlanmalıdır.</p>
-          </article>
         </section>
       </div>
+    </section>
+  `;
+}
+
+function renderPaymentResultPage(outcome, orderId) {
+  const success = outcome === 'basarili';
+  return `
+    <section class="page">
+      <div class="page-hero" style="--page-gradient: linear-gradient(135deg, ${success ? '#18c9c0, #4ade80' : '#ff6b8b, #ff9d5c'})">
+        <div class="hero-copy">
+          <div class="eyebrow">Ödeme</div>
+          <h1 class="page-title">${success ? 'Ödemeniz alındı' : 'Ödeme tamamlanamadı'}</h1>
+          <p>${success
+            ? 'Rezervasyonunuz onaylandı. Kısa süre içinde e-posta adresinize bir onay mesajı gönderilecektir.'
+            : 'Ödeme işlemi tamamlanamadı ya da iptal edildi. Kartınızdan herhangi bir tutar çekilmediyse endişelenmeyin; tekrar deneyebilirsiniz.'}</p>
+          ${orderId ? `<div class="meta-row"><span class="pill">Sipariş: ${escapeHtml(orderId)}</span></div>` : ''}
+        </div>
+      </div>
+      <article class="panel glass-card">
+        <div class="card-actions">
+          ${success ? '' : '<a class="btn btn-primary" data-nav href="/sepet">Tekrar dene</a>'}
+          <a class="btn" data-nav href="/">Ana sayfaya dön</a>
+        </div>
+      </article>
     </section>
   `;
 }
@@ -2734,11 +2754,44 @@ function copyMailSummary() {
 }
 
 async function submitReservation() {
+  if (!state.cart.length) {
+    alert('Sepetiniz boş. Ödemeye geçmeden önce en az bir tur ekleyin.');
+    return;
+  }
+  const profile = getUserProfile();
+  if (!(state.name || `${profile.firstName} ${profile.lastName}`.trim()) || !(state.email || profile.email) || !(state.phone || profile.phone)) {
+    alert('Lütfen ad soyad, e-posta ve telefon bilgilerinizi doldurun.');
+    return;
+  }
   const payload = buildReservationPayload();
+  const totalPrice = state.cart.reduce((sum, item) => {
+    const tour = data.tours.find((row) => row.id === item.id);
+    return sum + (tour?.price || 0) * item.quantity;
+  }, 0);
+  const paymentPayload = {
+    customer: {
+      name: state.name || `${profile.firstName} ${profile.lastName}`.trim(),
+      firstName: profile.firstName,
+      lastName: profile.lastName,
+      email: state.email || profile.email,
+      phone: state.phone || profile.phone,
+      tcNo: profile.tcNo,
+      address: profile.address || profile.accommodationAddress,
+    },
+    cart: state.cart.map((item) => {
+      const tour = data.tours.find((row) => row.id === item.id);
+      return {
+        id: item.id,
+        title: tour?.title?.[state.locale] || tour?.title?.tr || 'Tur',
+        linePrice: (tour?.price || 0) * item.quantity,
+      };
+    }),
+    totalPrice,
+  };
   try {
     const [reservation, payment] = await Promise.all([
       postJSON('/api/reservation', payload),
-      postJSON('/api/payment-intent', payload),
+      postJSON('/api/payment-intent', paymentPayload),
     ]);
     const pdfResponse = await fetch('/api/pdf', {
       method: 'POST',
@@ -2750,9 +2803,17 @@ async function submitReservation() {
     const pdfUrl = URL.createObjectURL(pdfBlob);
     state.notes = JSON.stringify({ reservation, payment, pdfUrl });
     saveState();
-    alert(`Rezervasyon alındı: ${reservation?.reservationId || 'OK'}`);
-    if (payment?.checkoutUrl) window.open(payment.checkoutUrl, '_blank', 'noreferrer');
     window.open(pdfUrl, '_blank', 'noreferrer');
+
+    if (payment?.ok && payment?.paymentPageUrl) {
+      window.location.href = payment.paymentPageUrl;
+      return;
+    }
+    if (payment?.configured === false) {
+      alert('Ödeme sistemi henüz aktif değil: iyzico hesabı bağlanana kadar kart tahsilatı yapılamıyor. Rezervasyon talebiniz kaydedildi, ekibimiz sizinle iletişime geçecek.');
+      return;
+    }
+    alert(`Ödeme başlatılamadı: ${payment?.message || 'bilinmeyen hata'}. Lütfen tekrar deneyin.`);
   } catch (error) {
     console.error(error);
     alert('Rezervasyon akışı başarısız. Backend endpointlerini kontrol edin.');
@@ -3517,6 +3578,15 @@ function renderAdminTab(tab) {
         <article class="panel glass-card">
           <h3>Rezervasyon ve CRM</h3>
           <div class="builder-steps">
+            <div class="step">
+              <h4>Ödeme altyapısı — iyzico Ödeme Formu</h4>
+              <p>Kart bilgileri hiçbir zaman bu sitenin sunucusuna uğramaz; ödeme iyzico'nun barındırdığı, PCI-DSS uyumlu, 3D Secure destekli sayfasında tamamlanır. Aktif hale gelmesi için Cloudflare Pages projenizde şu ortam değişkenlerinin tanımlı olması gerekir:</p>
+              <ul>
+                <li><code>IYZICO_API_KEY</code> ve <code>IYZICO_SECRET_KEY</code> — iyzico Merchant Panel &rarr; Ayarlar &rarr; API Anahtarları bölümünden alınır (secret olarak, ör. <code>wrangler pages secret put IYZICO_SECRET_KEY</code>)</li>
+                <li><code>IYZICO_BASE_URL</code> — test için <code>https://sandbox-api.iyzipay.com</code>, canlıya geçince <code>https://api.iyzipay.com</code> (opsiyonel değişken, tanımlanmazsa sandbox varsayılan kabul edilir)</li>
+              </ul>
+              <p>Bu değişkenler tanımlı olmadığı sürece müşteriler ödeme sayfasına yönlendirilmez; sistem otomatik olarak "ödeme sistemi henüz aktif değil" mesajı gösterir ve rezervasyon talebini yine de kaydeder.</p>
+            </div>
             <div class="step">
               <h4>Checkout metinleri</h4>
               <div class="split">
