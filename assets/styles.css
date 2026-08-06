@@ -1877,3 +1877,87 @@ html[data-theme="light"] .site-nav-bar {
   .admin-status-grid,
   .admin-hero-strip { grid-template-columns: 1fr; }
 }
+
+/* Rezervasyon (booking) widget'ı — il/ilçe, özel sayfa ve tur sayfalarında ortak kullanılır */
+.booking-widget .stepper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.booking-widget .stepper-value {
+  min-width: 28px;
+  text-align: center;
+  font-weight: 700;
+  font-family: var(--font-title);
+  font-size: 1.05rem;
+}
+
+.booking-widget .stepper .btn {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.booking-total-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 16px 0;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--primary) 10%, var(--surface-2));
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.booking-total-row strong {
+  font-family: var(--font-title);
+  font-size: 1.4rem;
+  color: var(--text);
+}
+
+.booking-editor {
+  display: grid;
+  gap: 14px;
+}
+
+.booking-dates-field {
+  display: grid;
+  gap: 8px;
+}
+
+.booking-dates-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.booking-date-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+  font-size: 0.82rem;
+}
+
+.booking-date-add {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.booking-date-add .input {
+  flex: 1;
+  min-width: 160px;
+}
